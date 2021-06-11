@@ -5,7 +5,7 @@
  */
 
 require('./bootstrap');
-require('./codeMirrorCustomCode'); //I would not like this code to always be available, only during lessons
+//require('./codeMirrorCustomCode'); //I would not like this code to always be available, only during lessons
 
 window.Vue = require('vue').default;
 
