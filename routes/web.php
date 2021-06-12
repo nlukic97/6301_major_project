@@ -21,6 +21,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/test', function(){
-    return view('test');
+Route::get('/class', function(){
+    return view('class'); //the class view will open the text editor for now
 });

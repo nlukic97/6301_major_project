@@ -11,22 +11,15 @@
 
 </head>
 <body>
-<div id="my-div"></div>
+    @yield('content')
 
-<!-- So this is how an iframe would work-->
-
-<iframe frameborder="1" id="i-frame" style="width: 100%;height:40vh;"></iframe>
-
-<button id="exe-btn">Execute</button>
-
-
-<!-- Requiered for the text editor to work -->
+<!-- Requiered for the code mirror editor to work -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/mode/javascript/javascript.min.js"></script>
 <!-- Requiered for the text editor to work -->
 
 
-<!-- User code which will be executed -->
+<!-- User code from codemirror which will be executed -->
 <script id="code-to-execute"></script>
 
 <!-- Initializing the codemirror instance -->
