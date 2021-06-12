@@ -16,6 +16,7 @@
 <!-- Requiered for the code mirror editor to work -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.61.1/mode/xml/xml.min.js" integrity="sha512-XPih7uxiYsO+igRn/NA2A56REKF3igCp5t0W1yYhddwHsk70rN1bbbMzYkxrvjQ6uk+W3m+qExHIJlFzE6m5eg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!-- Requiered for the text editor to work -->
 
 
@@ -23,6 +24,6 @@
 <script id="code-to-execute"></script>
 
 <!-- Initializing the codemirror instance -->
-<script src="{{asset('js/codeMirrorCustomCode.js')}}"></script>
+<script src="{{asset('js/codeMirror/codeExecution.js')}}"></script>
 </body>
 </html>
