@@ -27,10 +27,7 @@ function $_initialize_text_editor_$(){
     }
     console.log('done')
   },1000)
-})()
-
-
-`, // @@@ text is like this so that the new lines would not be indented in the browser.
+})()`, // @@@ text is like this so that the new lines would not be indented in the browser.
         mode: 'javascript',
         theme:'monokai' // @@@ additional cdn is used for this.
     });
