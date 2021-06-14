@@ -18,10 +18,11 @@ function $_initialize_text_editor_$() {
   $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "\n(function addHeading(){\n  var num = 3\n  var interval = setInterval(()=>{\n  if(num <= 0){\n    clearInterval(interval)\n      document.querySelectorAll('.added').forEach(el=>{\n      el.remove()\n      })\n    } else {\n    let a = document.createElement('h2')\n    a.className = 'added'\n   a.innerText = 'This text will be gone in ' + num + ' seconds'\n    document.body.appendChild(a)\n    num--\n    }\n    console.log('done')\n  },1000)\n})()\n\n\n",
+    value: "\n(function addHeading(){\n  var num = 3\n  var interval = setInterval(()=>{\n  if(num <= 0){\n    clearInterval(interval)\n      document.querySelectorAll('.added').forEach(el=>{\n      el.remove()\n      })\n    } else {\n    let a = document.createElement('h2')\n    a.className = 'added'\n   a.innerText = 'This text will be gone in ' + num + ' seconds'\n    document.body.appendChild(a)\n    num--\n    }\n    console.log('done')\n  },1000)\n})()",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'javascript',
     theme: 'monokai' // @@@ additional cdn is used for this.
+    // readOnly:true // @@@ can be used for 'view only' mode of the lesson
 
   });
   $_scriptToIframe_$('i-frame', $_CodeMirrorJavaScript_$.getValue());
@@ -29,7 +30,7 @@ function $_initialize_text_editor_$() {
 
 
 function $_scriptToIframe_$(frame_id, text) {
-  var $_ifrm_$ = document.getElementById(frame_id); // $_ifrm_$.contentWindow.document.body.textContent='';
+  var $_ifrm_$ = document.getElementById(frame_id);
 
   try {
     var scriptTag = $_ifrm_$.contentWindow.document.createElement('script'); // @@@ Scoping the script
@@ -50,10 +51,15 @@ function $_scriptToIframe_$(frame_id, text) {
   }
 }
 
+function getInstance() {
+  return $_CodeMirrorJavaScript_$;
+}
+
 module.exports = {
   $_getJsValue_$: $_getJsValue_$,
   $_initialize_text_editor_$: $_initialize_text_editor_$,
-  $_scriptToIframe_$: $_scriptToIframe_$
+  $_scriptToIframe_$: $_scriptToIframe_$,
+  getInstance: getInstance
 };
 
 /***/ }),
@@ -90,10 +96,15 @@ function $_xmlToIframe_$(frame_id, text) {
   $_ifrm_$.contentWindow.document.body.innerHTML = text;
 }
 
+function getInstance() {
+  return $_CodeMirrorXMl_$;
+}
+
 module.exports = {
   $_getXMLValue_$: $_getXMLValue_$,
   $_initialize_XML_editor_$: $_initialize_XML_editor_$,
-  $_xmlToIframe_$: $_xmlToIframe_$
+  $_xmlToIframe_$: $_xmlToIframe_$,
+  getInstance: getInstance
 };
 
 /***/ })
@@ -136,9 +147,6 @@ var xml = __webpack_require__(/*! ./xml.js */ "./resources/js/codeMirror/xml.js"
 var javaScript = __webpack_require__(/*! ./javaScript.js */ "./resources/js/codeMirror/javaScript.js"); //I might need to remove the thing that removes everything from the dom. Maybe that should be inside the xml module
 
 
-xml.$_initialize_XML_editor_$();
-javaScript.$_initialize_text_editor_$(); //must be called for this to work
-
 function $_removeIframeDom(frame_id) {
   var $_ifrm_$ = document.getElementById(frame_id);
   $_ifrm_$.contentWindow.document.body.textContent = '';
@@ -150,6 +158,17 @@ btn.addEventListener('click', function () {
 
   xml.$_xmlToIframe_$('i-frame', xml.$_getXMLValue_$());
   javaScript.$_scriptToIframe_$('i-frame', javaScript.$_getJsValue_$());
+}); //Instantiating the windows
+
+xml.$_initialize_XML_editor_$();
+javaScript.$_initialize_text_editor_$(); //must be called for this to work
+//Event listeners for changes in javascript and xml text editors
+
+javaScript.getInstance().on('change', function (instance, change) {
+  console.log(instance, change);
+});
+xml.getInstance().on('change', function (instance, change) {
+  console.log(instance, change);
 });
 })();
 

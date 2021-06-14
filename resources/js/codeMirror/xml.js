@@ -36,4 +36,14 @@ function $_xmlToIframe_$(frame_id,text){
     $_ifrm_$.contentWindow.document.body.innerHTML=text;
 }
 
-module.exports = {$_getXMLValue_$,$_initialize_XML_editor_$,$_xmlToIframe_$}
+
+function getInstance(){
+    return $_CodeMirrorXMl_$
+}
+
+module.exports = {
+    $_getXMLValue_$,
+    $_initialize_XML_editor_$,
+    $_xmlToIframe_$,
+    getInstance
+}

@@ -29,7 +29,8 @@ function $_initialize_text_editor_$(){
   },1000)
 })()`, // @@@ text is like this so that the new lines would not be indented in the browser.
         mode: 'javascript',
-        theme:'monokai' // @@@ additional cdn is used for this.
+        theme:'monokai', // @@@ additional cdn is used for this.
+        // readOnly:true // @@@ can be used for 'view only' mode of the lesson
     });
 
     $_scriptToIframe_$('i-frame',$_CodeMirrorJavaScript_$.getValue())
@@ -40,7 +41,6 @@ function $_initialize_text_editor_$(){
 //adding user entered script to the iframe, which will execute it in there.
 function $_scriptToIframe_$(frame_id,text){
     var $_ifrm_$ = document.getElementById(frame_id)
-    // $_ifrm_$.contentWindow.document.body.textContent='';
 
     try {
         var scriptTag = $_ifrm_$.contentWindow.document.createElement('script')
@@ -66,4 +66,13 @@ function $_scriptToIframe_$(frame_id,text){
     }
 }
 
-module.exports = {$_getJsValue_$,$_initialize_text_editor_$,$_scriptToIframe_$}
+function getInstance(){
+    return $_CodeMirrorJavaScript_$
+}
+
+module.exports = {
+    $_getJsValue_$,
+    $_initialize_text_editor_$,
+    $_scriptToIframe_$,
+    getInstance
+}
