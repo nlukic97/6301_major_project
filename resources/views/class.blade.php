@@ -1,6 +1,6 @@
 @extends('layouts.class')
 
-@section('content')
+@section('content') {{--This is not within the Vue, because it is not in a div with id: #app --}}
     <div id="my-div"></div>
     <div id="my-div-2"></div>
     <!-- So iframe is where the DOM output of the js code will be displayed-->

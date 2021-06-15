@@ -1,3 +1,5 @@
+require('../bootstrap');
+
 var xml = require('./xml.js');
 var javaScript = require('./javaScript.js'); //I might need to remove the thing that removes everything from the dom. Maybe that should be inside the xml module
 
@@ -28,3 +30,8 @@ javaScript.getInstance().on('change',(instance,change)=>{
 xml.getInstance().on('change',(instance,change)=>{
     console.log(instance,change)
 })
+
+Echo.channel('home')
+    .listen('NewMessage',e=>{
+        console.log(e.message)
+    })
