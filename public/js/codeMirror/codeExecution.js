@@ -43597,6 +43597,10 @@ javaScript.getInstance().on('change', function (instance, change) {
 xml.getInstance().on('change', function (instance, change) {
   console.log(instance, change);
 });
+/* @@@
+    Laravel Echo listening
+* */
+
 Echo.channel('home').listen('NewMessage', function (e) {
   console.log(e.message);
 });

@@ -7,4 +7,18 @@
     <iframe frameborder="1" id="i-frame" style="width: 100%;height:40vh;"></iframe>
 
     <button id="exe-btn">Execute</button>
+
+
+{{-- Another option, looks better --}}
+{{--<div class="d-flex">
+    <div style="width:50%">
+        <div id="my-div-2"></div>
+        <div id="my-div"></div>
+    </div>
+    <div style="width:50%">
+        <!-- So iframe is where the DOM output of the js code will be displayed-->
+        <button id="exe-btn">Execute</button>
+        <iframe frameborder="1" id="i-frame" style="width: 100%;height:40vh;"></iframe>
+    </div>
+</div>--}}
 @endsection

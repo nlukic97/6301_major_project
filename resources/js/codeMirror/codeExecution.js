@@ -31,6 +31,10 @@ xml.getInstance().on('change',(instance,change)=>{
     console.log(instance,change)
 })
 
+/* @@@
+    Laravel Echo listening
+* */
+
 Echo.channel('home')
     .listen('NewMessage',e=>{
         console.log(e.message)
