@@ -1,5 +1,3 @@
-require('../bootstrap');
-
 var xml = require('./xml.js');
 var javaScript = require('./javaScript.js'); //I might need to remove the thing that removes everything from the dom. Maybe that should be inside the xml module
 
@@ -16,6 +14,24 @@ btn.addEventListener('click',function(){
     xml.$_xmlToIframe_$('i-frame',xml.$_getXMLValue_$())
     javaScript.$_scriptToIframe_$('i-frame',javaScript.$_getJsValue_$())
 })
+
+
+/* @@@ Event broadcasting test */
+let btn2 = document.getElementById('msg-btn')
+btn2.addEventListener('click',function(){
+
+    axios.post('/api/send-msg',{msg:'Gas is going'})
+        .then(e=>{
+            console.log('Msg sent',e)
+        })
+        .catch(e=>{
+            console.log('Error',e)
+        })
+})
+/* @@@ Event broadcasting test */
+
+
+
 
 //Instantiating the windows
 xml.$_initialize_XML_editor_$()
