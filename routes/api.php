@@ -19,4 +19,3 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:api')->get('/all-users',[App\Http\Controllers\UserController::class,'getAllUsers']);
-//Installed Laravel passport, it does not work on the javaScript
