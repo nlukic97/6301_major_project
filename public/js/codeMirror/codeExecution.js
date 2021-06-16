@@ -1882,6 +1882,16 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   forceTLS: false,
   disableStats: true
 });
+/*Added to test the API request. There is a problem with the authenticating of users. */
+
+setTimeout(function () {
+  console.log('Button pressed');
+  axios.get('/api/all-users').then(function (e) {
+    console.log(e.data);
+  })["catch"](function (e) {
+    console.log(e);
+  });
+}, 3000);
 
 /***/ }),
 
