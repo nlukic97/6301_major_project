@@ -187,8 +187,22 @@ xml.getInstance().on('change', function (instance, change) {
 /* @@@
     Laravel Echo listening
 * */
+// Echo.private('home')
+//     .listen('NewMessage',e=>{
+//         console.log(e.message)
+//         console.log(Echo.socketId())
+//     })
+//I will need this to know for information
 
-Echo.channel('home').listen('NewMessage', function (e) {
+Echo.join("home").here(function (e) {
+  //who is here when I join
+  console.log(e, 'You are here');
+}).joining(function (e) {
+  //who is joining
+  console.log(e, 'Someone joined');
+}).leaving(function (e) {
+  console.log(e, 'Someone left');
+}).listen('NewMessage', function (e) {
   console.log(e.message);
 });
 })();
