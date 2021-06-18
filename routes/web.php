@@ -22,6 +22,6 @@ Route::get('/', function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/class', function(){
-    return view('class'); //the class view will open the text editor for now
+Route::get('/class/{id}', function(){
+    return view('class')    ; //the class view will open the text editor for now
 });

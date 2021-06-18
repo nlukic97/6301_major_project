@@ -199,9 +199,9 @@ Echo.join("home").here(function (e) {
   console.log(e, 'You are here');
 }).joining(function (e) {
   //who is joining
-  console.log(e, 'Someone joined');
+  console.log(e, Echo.socketId() + ' has joined');
 }).leaving(function (e) {
-  console.log(e, 'Someone left');
+  console.log(e, Echo.socketId() + ' has left');
 }).listen('NewMessage', function (e) {
   console.log(e.message);
 });

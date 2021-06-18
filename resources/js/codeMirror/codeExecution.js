@@ -64,10 +64,10 @@ Echo.join(`home`)
         console.log(e, 'You are here')
     })
     .joining(e=>{ //who is joining
-        console.log(e,'Someone joined')
+        console.log(e,Echo.socketId() + ' has joined')
     })
     .leaving(e=>{
-        console.log(e,'Someone left')
+        console.log(e, Echo.socketId() + ' has left')
 
     })
     .listen('NewMessage', (e) => {
