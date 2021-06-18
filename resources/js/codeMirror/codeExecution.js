@@ -15,24 +15,6 @@ btn.addEventListener('click',function(){
     javaScript.$_scriptToIframe_$('i-frame',javaScript.$_getJsValue_$())
 })
 
-
-/* @@@ Event broadcasting test */
-let btn2 = document.getElementById('msg-btn')
-btn2.addEventListener('click',function(){
-
-    axios.post('/api/send-msg',{msg:'Gas is going'})
-        .then(e=>{
-            console.log('Msg sent',e)
-        })
-        .catch(e=>{
-            console.log('Error',e)
-        })
-})
-/* @@@ Event broadcasting test */
-
-
-
-
 //Instantiating the windows
 xml.$_initialize_XML_editor_$()
 javaScript.$_initialize_text_editor_$() //must be called for this to work
@@ -46,30 +28,3 @@ javaScript.getInstance().on('change',(instance,change)=>{
 xml.getInstance().on('change',(instance,change)=>{
     console.log(instance,change)
 })
-
-/* @@@
-    Laravel Echo listening
-* */
-
-// Echo.private('home')
-//     .listen('NewMessage',e=>{
-//         console.log(e.message)
-//         console.log(Echo.socketId())
-//     })
-
-
-//I will need this to know for information
-Echo.join(`home`)
-    .here(e=>{  //who is here when I join
-        console.log(e, 'You are here')
-    })
-    .joining(e=>{ //who is joining
-        console.log(e,Echo.socketId() + ' has joined')
-    })
-    .leaving(e=>{
-        console.log(e, Echo.socketId() + ' has left')
-
-    })
-    .listen('NewMessage', (e) => {
-        console.log(e.message)
-    });

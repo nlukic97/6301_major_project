@@ -37,6 +37,9 @@
 
 <!-- Initializing the codemirror instance -->
 <script src="{{asset('js/app.js')}}"></script>
+
+
 <script src="{{asset('js/codeMirror/codeExecution.js')}}"></script>
+    <script src="{{asset('js/laravel-echo.js')}}"></script>
 </body>
 </html>
