@@ -1907,7 +1907,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['user_id'],
   data: function data() {
     return {
-      displayTextEditor: false,
+      displayTextEditor: true,
       id: null
     };
   },
@@ -44943,15 +44943,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      this.displayTextEditor ? _c("text-editor-component") : _vm._e(),
-      _vm._v(" "),
-      _c("video-component")
-    ],
-    1
-  )
+  return _c("div", [_c("video-component")], 1)
 }
 var staticRenderFns = []
 render._withStripped = true

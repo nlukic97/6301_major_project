@@ -1,6 +1,6 @@
 <template>
     <div>
-        <text-editor-component v-if="this.displayTextEditor"></text-editor-component>
+<!--        <text-editor-component v-if="this.displayTextEditor"></text-editor-component>-->
         <video-component></video-component>
     </div>
 </template>
@@ -14,7 +14,7 @@
         props: ['user_id'],
         data:function () {
             return{
-                displayTextEditor:false,
+                displayTextEditor:true,
                 id: null
             }
         },

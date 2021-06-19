@@ -35,9 +35,7 @@
     <!-- User code from codemirror which will be executed -->
     <script id="code-to-execute"></script>
 
-    <!-- Initializing the codemirror instance -->
     <script src="{{asset('js/app.js')}}"></script>
-    <script src="{{asset('js/laravel-echo.js')}}"></script>
 
 </body>
 </html>
