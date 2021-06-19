@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -18,10 +19,14 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('home',function($user){
-    return true; /* @ All *authenticated* users will have access to this channel.*/
+    return true; /* @ All *authenticated* users will have access listen to this channel.*/
+});
 
-//    return Auth::user() === $user;
-/* @@@  line above is unnecessary, because unauthenticated users
-        cannot make a broadcast/auth api post request -> 403 error */
-
+Broadcast::channel('user.{id}',function($user,$id){
+    /***
+     * You can only subscribe to this channel
+     * if the $id you are subscribing is
+     * the same user id under which you are authenticated
+     */
+    return (int) Auth::user()->id === (int) $id;
 });

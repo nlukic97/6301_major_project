@@ -16,6 +16,22 @@ class UserController extends Controller
     public function sendMsgToAll(Request $request)
     {
 //        \App\Events\NewMessage::dispatch($request->all()['msg']); //broadcast to absolutely everytone
-        broadcast(new \App\Events\NewMessage($request->all()['msg']))->toOthers(); //If I am sending to everyonce except me
+        broadcast(new \App\Events\NewMessage(
+            \Illuminate\Support\Facades\Auth::user()->id,
+            $request->all()['msg'])
+        )->toOthers(); //If I am sending to everyone except me
+    }
+
+
+
+    public function sendMsgToOne(Request $request)
+    {
+        broadcast(
+            new \App\Events\NewPrivateMessage(
+                \Illuminate\Support\Facades\Auth::user()->id,
+                $request->all()['receiverId'],
+                $request->all()['msg']
+            )
+        )->toOthers();//Obviously it will only be sent to ['receiverId'], but we have this just in case.
     }
 }

@@ -13,8 +13,8 @@
 </template>
 
 <script>
-    import xml from '../../codeMirror/xml.js';
-    import javaScript from '../../codeMirror/javaScript';
+    import xml from '../../../codeMirror/xml.js';
+    import javaScript from '../../../codeMirror/javaScript';
 
     export default {
         name: "TextEditorComponent",
@@ -34,6 +34,8 @@
             }
         },
         mounted(){
+            console.log('Mounted text editor')
+
             /** Text editor initializations*/
             xml.$_initialize_XML_editor_$()
             javaScript.$_initialize_text_editor_$()

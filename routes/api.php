@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('auth:api')->get('/all-users',[App\Http\Controllers\UserController::class,'getAllUsers']);
 
-Route::middleware('auth:api')->post('/send-msg',[App\Http\Controllers\UserController::class,'sendMsgToAll']);
+Route::middleware('auth:api')->post('/send-msg-all',[App\Http\Controllers\UserController::class,'sendMsgToAll']);
+Route::middleware('auth:api')->post('/send-msg-one',[App\Http\Controllers\UserController::class,'sendMsgToOne']);

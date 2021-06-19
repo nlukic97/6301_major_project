@@ -9,24 +9,25 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 
-class NewMessage implements ShouldBroadcast
+class NewPrivateMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
     public $senderId;
+    public $receiverId; //we don't need to send this to the user
     public $message;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($senderId,$message)
+    public function __construct($senderId,$receiverId,$message)
     {
         $this->senderId = $senderId;
+        $this->receiverId = $receiverId;
         $this->message = $message;
-
     }
 
     /**
@@ -36,6 +37,6 @@ class NewMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('home');
+        return new PrivateChannel("user.".$this->receiverId);
     }
 }
