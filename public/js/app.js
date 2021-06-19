@@ -1891,6 +1891,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../codeMirror/xml.js */ "./resources/js/codeMirror/xml.js");
+/* harmony import */ var _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../codeMirror/javaScript */ "./resources/js/codeMirror/javaScript.js");
+/* harmony import */ var _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1__);
 //
 //
 //
@@ -1905,19 +1909,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "TextEditorComponent",
   data: function data() {
-    return {// name:'E'
-    };
+    return {};
   },
-
-  /** All the methods are defined in resources/js/codeMirror/ ,
-   * and imported into views\class.blade.php
-   * Importing them here would be the best thing */
-  methods: {},
+  methods: {
+    $_removeIframeDom: function $_removeIframeDom(frame_id) {
+      var $_ifrm_$ = document.getElementById(frame_id);
+      $_ifrm_$.contentWindow.document.body.textContent = '';
+    },
+    $_codeExecute: function $_codeExecute() {
+      this.$_removeIframeDom('i-frame');
+      _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_xmlToIframe_$('i-frame', _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_getXMLValue_$());
+      _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_scriptToIframe_$('i-frame', _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
+    }
+  },
   mounted: function mounted() {
-    console.log('e');
+    /** Text editor initializations*/
+    _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_initialize_XML_editor_$();
+    _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_initialize_text_editor_$();
+    /** Listeners for code changes*/
+
+    _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().getInstance().on('change', function (instance, change) {
+      console.log(instance, change);
+    });
+    _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('change', function (instance, change) {
+      console.log(instance, change);
+    });
   }
 });
 
@@ -2079,6 +2100,114 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   forceTLS: false,
   disableStats: true
 });
+
+/***/ }),
+
+/***/ "./resources/js/codeMirror/javaScript.js":
+/*!***********************************************!*\
+  !*** ./resources/js/codeMirror/javaScript.js ***!
+  \***********************************************/
+/***/ ((module) => {
+
+var $_CodeMirrorJavaScript_$;
+
+function $_getJsValue_$() {
+  return $_CodeMirrorJavaScript_$.getValue();
+} //Initializing the CodeMirror instance, and injecting pre typed code.
+
+
+function $_initialize_text_editor_$() {
+  $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
+    lineNumbers: true,
+    tabSize: 4,
+    value: "\n(function addHeading(){\n  var num = 3\n  var interval = setInterval(()=>{\n  if(num <= 0){\n    clearInterval(interval)\n      document.querySelectorAll('.added').forEach(el=>{\n      el.remove()\n      })\n    } else {\n    let a = document.createElement('h2')\n    a.className = 'added'\n   a.innerText = 'This text will be gone in ' + num + ' seconds'\n    document.body.appendChild(a)\n    num--\n    }\n    console.log('done')\n  },1000)\n})()",
+    // @@@ text is like this so that the new lines would not be indented in the browser.
+    mode: 'javascript',
+    theme: 'monokai' // @@@ additional cdn is used for this.
+    // readOnly:true // @@@ can be used for 'view only' mode of the lesson
+
+  });
+  $_scriptToIframe_$('i-frame', $_CodeMirrorJavaScript_$.getValue());
+} //adding user entered script to the iframe, which will execute it in there.
+
+
+function $_scriptToIframe_$(frame_id, text) {
+  var $_ifrm_$ = document.getElementById(frame_id);
+
+  try {
+    var scriptTag = $_ifrm_$.contentWindow.document.createElement('script'); // @@@ Scoping the script
+    // @
+    //
+    // Containing the scope of the code
+    // entered by the user. Not doing this will
+    // result in an error if the same code is re-executed
+    // using the same names for const and let again (redeclaration error)
+    //
+    // @@
+
+    scriptTag.innerHTML = "(function(){\n            ".concat(text, "\n        })()");
+    scriptTag.setAttribute('id', 'code-to-execute');
+    $_ifrm_$.contentWindow.document.body.appendChild(scriptTag);
+  } catch (er) {
+    console.log(er);
+  }
+}
+
+function getInstance() {
+  return $_CodeMirrorJavaScript_$;
+}
+
+module.exports = {
+  $_getJsValue_$: $_getJsValue_$,
+  $_initialize_text_editor_$: $_initialize_text_editor_$,
+  $_scriptToIframe_$: $_scriptToIframe_$,
+  getInstance: getInstance
+};
+
+/***/ }),
+
+/***/ "./resources/js/codeMirror/xml.js":
+/*!****************************************!*\
+  !*** ./resources/js/codeMirror/xml.js ***!
+  \****************************************/
+/***/ ((module) => {
+
+var $_CodeMirrorXMl_$;
+
+function $_getXMLValue_$() {
+  return $_CodeMirrorXMl_$.getValue();
+} //Initializing the CodeMirror instance, and injecting pre typed code.
+
+
+function $_initialize_XML_editor_$() {
+  $_CodeMirrorXMl_$ = CodeMirror(document.querySelector('#my-div-2'), {
+    lineNumbers: true,
+    tabSize: 4,
+    value: "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width\">\n  <title>JS Bin</title>\n</head>\n<body>\n    <h1>How is it going?</h1>\n\n</body>\n</html>",
+    // @@@ text is like this so that the new lines would not be indented in the browser.
+    mode: 'xml',
+    theme: 'monokai' // @@@ additional cdn is used for this.
+
+  });
+  $_xmlToIframe_$('i-frame', $_CodeMirrorXMl_$.getValue());
+} //adding user entered script to the iframe, which will execute it in there.
+
+
+function $_xmlToIframe_$(frame_id, text) {
+  var $_ifrm_$ = document.getElementById(frame_id);
+  $_ifrm_$.contentWindow.document.body.innerHTML = text;
+}
+
+function getInstance() {
+  return $_CodeMirrorXMl_$;
+}
+
+module.exports = {
+  $_getXMLValue_$: $_getXMLValue_$,
+  $_initialize_XML_editor_$: $_initialize_XML_editor_$,
+  $_xmlToIframe_$: $_xmlToIframe_$,
+  getInstance: getInstance
+};
 
 /***/ }),
 
@@ -44621,28 +44750,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "d-flex" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticStyle: { width: "50%" } }, [
+      _c(
+        "button",
+        { attrs: { id: "exe-btn" }, on: { click: _vm.$_codeExecute } },
+        [_vm._v("Execute")]
+      ),
+      _vm._v(" "),
+      _c("iframe", {
+        staticStyle: { width: "100%", height: "40vh" },
+        attrs: { frameborder: "1", id: "i-frame" }
+      })
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "d-flex" }, [
-      _c("div", { staticStyle: { width: "50%" } }, [
-        _c("div", { attrs: { id: "my-div-2" } }),
-        _vm._v(" "),
-        _c("div", { attrs: { id: "my-div" } })
-      ]),
+    return _c("div", { staticStyle: { width: "50%" } }, [
+      _c("div", { attrs: { id: "my-div-2" } }),
       _vm._v(" "),
-      _c("div", { staticStyle: { width: "50%" } }, [
-        _c("button", { attrs: { id: "exe-btn" } }, [_vm._v("Execute")]),
-        _vm._v(" "),
-        _c("iframe", {
-          staticStyle: { width: "100%", height: "40vh" },
-          attrs: { frameborder: "1", id: "i-frame" }
-        })
-      ])
+      _c("div", { attrs: { id: "my-div" } })
     ])
   }
 ]

@@ -4,6 +4,6 @@
 
 <div id='app'>
     <video-component></video-component>
-    <text-editor-component></text-editor-component>
+{{--    <text-editor-component></text-editor-component>--}}
 </div>
 @endsection

@@ -1,3 +1,15 @@
+/**
+ *  All commented, because it is imported into TextEditorComponent.vue
+ * To use this again, simply import this:
+ *
+ * {{--<script src="{{asset('js/codeMirror/codeExecution.js')}}"></script>
+ *
+ * ... into views/class.blade.php at the bottom, and remove all methods and listeners from the vue.
+ *
+ * Also, uncomment the 2nd webpack compilation line.
+ * */
+
+/*
 var xml = require('./xml.js');
 var javaScript = require('./javaScript.js'); //I might need to remove the thing that removes everything from the dom. Maybe that should be inside the xml module
 
@@ -28,3 +40,4 @@ javaScript.getInstance().on('change',(instance,change)=>{
 xml.getInstance().on('change',(instance,change)=>{
     console.log(instance,change)
 })
+*/

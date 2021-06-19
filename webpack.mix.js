@@ -19,7 +19,7 @@ const mix = require('laravel-mix');
 // });
 
 mix.js('resources/js/app.js', 'public/js')
-    .js('resources/js/codeMirror/codeExecution.js','public/js/codeMirror/codeExecution.js')
+    // .js('resources/js/codeMirror/codeExecution.js','public/js/codeMirror/codeExecution.js')
     .js('resources/js/laravel-echo.js','public/js/laravel-echo.js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css'); //custom code for executing codeMirror
