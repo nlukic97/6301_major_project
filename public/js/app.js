@@ -2141,6 +2141,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateLesson",
@@ -2162,6 +2168,8 @@ __webpack_require__.r(__webpack_exports__);
       this.slides.push(newSlide);
       console.log(this.slides);
       this.markdownValue = '';
+      this.currentSlideIndex = this.slides.length - 1;
+      this.displaySlide(this.slides[this.currentSlideIndex].content);
     },
     displaySlide: function displaySlide(text) {
       this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_0___default()(text); //converts the entered xml into html
@@ -2208,12 +2216,12 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     shortenText: function shortenText(index) {
-      var content = this.slides[index].content.substring(0, 23).trim();
+      var content = this.slides[index].content;
 
       if (content.length > 23) {
-        return this.slides[index].content.trim();
+        return this.slides[index].content.substring(0, 20).trim() + '...';
       } else {
-        return content + '...';
+        return content;
       }
     }
   },
@@ -46804,17 +46812,43 @@ var render = function() {
         _vm._v(" "),
         _vm._l(_vm.slides, function(slide, index) {
           return _c("ul", { key: index }, [
-            _c(
-              "li",
-              {
-                on: {
-                  click: function($event) {
-                    return _vm.jumpToSlide(index)
-                  }
-                }
-              },
-              [_vm._v(_vm._s(index) + " " + _vm._s(_vm.shortenText(index)))]
-            )
+            index === _vm.currentSlideIndex
+              ? _c(
+                  "li",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.jumpToSlide(index)
+                      }
+                    }
+                  },
+                  [
+                    _c("strong", [
+                      _vm._v(
+                        _vm._s(index) + " " + _vm._s(_vm.shortenText(index))
+                      )
+                    ])
+                  ]
+                )
+              : _c(
+                  "li",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.jumpToSlide(index)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                " +
+                        _vm._s(index) +
+                        " " +
+                        _vm._s(_vm.shortenText(index)) +
+                        "\n            "
+                    )
+                  ]
+                )
           ])
         })
       ],

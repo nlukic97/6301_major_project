@@ -15,7 +15,13 @@
             <button id="present-slide" @click="presentNextSlide(currentSlideIndex)">Next slide</button>
 
             <ul v-for="(slide,index) in slides" :key="index">
-                <li @click="jumpToSlide(index)">{{index}} {{shortenText(index)}}</li>
+                <li v-if="index === currentSlideIndex" @click="jumpToSlide(index)">
+                    <strong>{{index}} {{shortenText(index)}}</strong>
+                </li>
+
+                <li v-else @click="jumpToSlide(index)">
+                    {{index}} {{shortenText(index)}}
+                </li>
             </ul>
 
         </div>
@@ -51,6 +57,8 @@
                 this.slides.push(newSlide)
                 console.log(this.slides)
                 this.markdownValue = ''
+                this.currentSlideIndex = this.slides.length - 1
+                this.displaySlide(this.slides[this.currentSlideIndex].content)
             },
             displaySlide(text){
                 this.activeSlideText = marked(text) //converts the entered xml into html
@@ -95,11 +103,11 @@
                 }
             },
             shortenText(index){
-                let content = this.slides[index].content.substring(0,23).trim()
+                let content = this.slides[index].content
                 if(content.length > 23){
-                    return this.slides[index].content.trim()
+                    return (this.slides[index].content).substring(0,20).trim() + '...'
                 } else {
-                    return content + '...'
+                    return content
                 }
             }
         },
