@@ -26,3 +26,5 @@ Route::middleware('auth')->get('/class/{id}', function(){
     $myId = Auth::user()->id;
     return view('class',compact('myId'))    ; //the class view will open the text editor for now
 });
+
+Route::middleware('auth')->get('/edit-lesson',[\App\Http\Controllers\HomeController::class,'edit_lesson']);

@@ -24,6 +24,8 @@ Vue.component('video-component', require('./components/classroom/comps/VideoComp
 Vue.component('text-editor-component', require('./components/classroom/comps/TextEditorComponent').default);
 Vue.component('classroom-component', require('./components/classroom/Classroom').default);
 
+Vue.component('create-lesson', require('./components/create-lesson/CreateLesson').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
