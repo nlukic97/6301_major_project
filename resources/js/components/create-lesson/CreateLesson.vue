@@ -125,8 +125,8 @@
             },
             shortenText(index){
                 let content = this.slides[index].content
-                if(content.length > 23){
-                    return (this.slides[index].content).substring(0,20).trim() + '...'
+                if(content.length > 10){
+                    return (this.slides[index].content).substring(0,10).trim() + '...'
                 } else {
                     return content
                 }
