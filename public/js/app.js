@@ -2151,6 +2151,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateLesson",
@@ -2167,7 +2171,7 @@ __webpack_require__.r(__webpack_exports__);
     addNewSlide: function addNewSlide(slideType) {
       var newSlide = {
         type: slideType,
-        content: this.markdownValue
+        content: ''
       };
       this.slides.push(newSlide);
       console.log(this.slides);
@@ -2177,7 +2181,13 @@ __webpack_require__.r(__webpack_exports__);
       console.log(JSON.stringify(this.slides));
     },
     displaySlide: function displaySlide(text) {
-      this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_0___default()(text); //converts the entered xml into html
+      this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_0___default()(text); //converts the entered xml into html to be displayed
+
+      this.markdownValue = text;
+    },
+    updateSlide: function updateSlide(text) {
+      this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_0___default()(text);
+      this.slides[this.currentSlideIndex].content = text; //axios request to api goes here
     },
     clearSlide: function clearSlide() {
       this.activeSlideText = '';
@@ -2237,16 +2247,19 @@ __webpack_require__.r(__webpack_exports__);
         return content;
       }
     },
-    removeSlide: function removeSlide(index) {
+    removeSlide: function removeSlide() {
       //klikni zadnju, i onda briis od prve. Nastace greska
-      if (index === this.slides.length - 1 && this.currentSlideIndex === index) {
+      var deleteIndex = this.currentSlideIndex;
+
+      if (this.slides.length - 1 === deleteIndex) {
+        //if we are deleting the last slide
         this.currentSlideIndex--;
       }
 
-      console.log("Remove slide of index ".concat(index));
-      this.slides.splice(index, 1);
+      this.slides.splice(deleteIndex, 1);
 
       if (this.slides.length > 0) {
+        //if there are still slides to be shown
         this.displaySlide(this.slides[this.currentSlideIndex].content);
       } else {
         this.displaySlide('');
@@ -8282,7 +8295,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n#content {\n    width: 100%;\n}\n#content .slide {\n    background-color: #002b36;\n    color:#fff;\n    font-family: 'Arial',sans-serif;\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start; /*default to having it on the left*/\n    padding:2.22vw 2.22vw;\n}\n#content .slide *\n{\n    width:100%;\n    word-break: break-word;\n    text-align: left;\n    margin:0;\n}\n#content .slide ul {\n    display: inline-block;\n    width:100%;\n    padding:1.66vh 2.22vw;\n}\n#content .slide ul * {\n    font-size:1.35vw;\n}\n#content .slide ol {\n    display: inline-block;\n    width:100%;\n    padding:0 2.2vw;\n}\n#content .slide ol * {\n    font-size:1.1vw;\n}\n#content .slide h1  {\n    font-size: 2.50vw;\n}\n#content .slide h2  {\n    font-size: 2vw;\n}\n#content .slide h3  {\n    font-size: 1.75vw;\n}\n#content .slide h4  {\n    font-size: 1.5vw;\n}\n#content .slide h5  {\n    font-size: 1.35vw;\n}\n#content .slide h6  {\n    font-size: 1vw;\n}\n#content .slide p  {\n    font-size: 1.11vw;\n}\n.hidden {\n    display: none;\n}\n.x-btn {\n    background-color: red;\n    color:#fff;\n    border-radius: 50%;\n    border:1px solid #000;\n    padding:0 8px;\n    display: inline-block;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#slide-list li {\n    cursor: pointer;\n}\n#slide-list li:hover {\n    cursor: pointer;\n}\n#content {\n    width: 100%;\n}\n#content .slide {\n    background-color: #002b36;\n    color:#fff;\n    font-family: 'Arial',sans-serif;\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start; /*default to having it on the left*/\n    padding:2.22vw 2.22vw;\n}\n#content .slide *\n{\n    width:100%;\n    word-break: break-word;\n    text-align: left;\n    margin:0;\n}\n#content .slide ul {\n    display: inline-block;\n    width:100%;\n    padding:1.66vh 2.22vw;\n}\n#content .slide ul * {\n    font-size:1.35vw;\n}\n#content .slide ol {\n    display: inline-block;\n    width:100%;\n    padding:0 2.2vw;\n}\n#content .slide ol * {\n    font-size:1.1vw;\n}\n#content .slide h1  {\n    font-size: 2.50vw;\n}\n#content .slide h2  {\n    font-size: 2vw;\n}\n#content .slide h3  {\n    font-size: 1.75vw;\n}\n#content .slide h4  {\n    font-size: 1.5vw;\n}\n#content .slide h5  {\n    font-size: 1.35vw;\n}\n#content .slide h6  {\n    font-size: 1vw;\n}\n#content .slide p  {\n    font-size: 1.11vw;\n}\n.hidden {\n    display: none;\n}\n.x-btn {\n    background-color: red;\n    color:#fff;\n    border-radius: 50%;\n    border:1px solid #000;\n    padding:0 8px;\n    display: inline-block;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -46762,80 +46775,88 @@ var render = function() {
     _c(
       "div",
       [
-        _c("textarea", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.markdownValue,
-              expression: "markdownValue"
-            }
-          ],
-          attrs: { id: "the-slide", cols: "30", rows: "10" },
-          domProps: { value: _vm.markdownValue },
-          on: {
-            keyup: function($event) {
-              return _vm.displaySlide(_vm.markdownValue)
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+        this.slides.length > 0
+          ? _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.markdownValue,
+                  expression: "markdownValue"
+                }
+              ],
+              attrs: { id: "the-slide", cols: "30", rows: "10" },
+              domProps: { value: _vm.markdownValue },
+              on: {
+                keyup: function($event) {
+                  return _vm.updateSlide(_vm.markdownValue)
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.markdownValue = $event.target.value
+                }
               }
-              _vm.markdownValue = $event.target.value
-            }
-          }
-        }),
+            })
+          : _vm._e(),
         _vm._v(" "),
-        _c(
-          "button",
-          {
-            on: {
-              click: function($event) {
-                return _vm.addNewSlide("slide")
-              }
-            }
-          },
-          [_vm._v("New Slide")]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            on: {
-              click: function($event) {
-                return _vm.addNewSlide("exercise")
-              }
-            }
-          },
-          [_vm._v("Exercise Slide")]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            on: {
-              click: function($event) {
-                return _vm.presentPrevSlide(_vm.currentSlideIndex)
-              }
-            }
-          },
-          [_vm._v("Prev slide")]
-        ),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            on: {
-              click: function($event) {
-                return _vm.presentNextSlide(_vm.currentSlideIndex)
-              }
-            }
-          },
-          [_vm._v("Next slide")]
-        ),
+        _c("div", [
+          _c("div", [
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.addNewSlide("slide")
+                  }
+                }
+              },
+              [_vm._v("New Slide")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.addNewSlide("exercise")
+                  }
+                }
+              },
+              [_vm._v("Exercise Slide")]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.presentPrevSlide(_vm.currentSlideIndex)
+                  }
+                }
+              },
+              [_vm._v("Previous slide")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.presentNextSlide(_vm.currentSlideIndex)
+                  }
+                }
+              },
+              [_vm._v("Next slide")]
+            )
+          ])
+        ]),
         _vm._v(" "),
         _vm._l(_vm.slides, function(slide, index) {
-          return _c("ul", { key: index }, [
+          return _c("ul", { key: index, attrs: { id: "slide-list" } }, [
             index === _vm.currentSlideIndex
               ? _c("li", [
                   _c("strong", [
@@ -46856,20 +46877,7 @@ var render = function() {
                         )
                       ]
                     )
-                  ]),
-                  _vm._v("#\n\n                "),
-                  _c(
-                    "span",
-                    {
-                      staticClass: "x-btn",
-                      on: {
-                        click: function($event) {
-                          return _vm.removeSlide(index)
-                        }
-                      }
-                    },
-                    [_vm._v("x")]
-                  )
+                  ])
                 ])
               : _c("li", [
                   _c(
@@ -46886,19 +46894,6 @@ var render = function() {
                         _vm._s(index + 1) + " " + _vm._s(_vm.shortenText(index))
                       )
                     ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "span",
-                    {
-                      staticClass: "x-btn",
-                      on: {
-                        click: function($event) {
-                          return _vm.removeSlide(index)
-                        }
-                      }
-                    },
-                    [_vm._v("x")]
                   )
                 ])
           ])
@@ -46907,14 +46902,29 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c("div", { attrs: { id: "content" } }, [
-      _c("div", {
-        staticClass: "slide",
-        class: { hidden: _vm.hideSlide },
-        attrs: { id: "display-slide" },
-        domProps: { innerHTML: _vm._s(_vm.activeSlideText) }
-      })
-    ])
+    this.slides.length > 0
+      ? _c("div", { attrs: { id: "content" } }, [
+          _c("div", {
+            staticClass: "slide",
+            class: { hidden: _vm.hideSlide },
+            attrs: { id: "display-slide" },
+            domProps: { innerHTML: _vm._s(_vm.activeSlideText) }
+          }),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              staticClass: "x-btn",
+              on: {
+                click: function($event) {
+                  return _vm.removeSlide()
+                }
+              }
+            },
+            [_vm._v("x")]
+          )
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []

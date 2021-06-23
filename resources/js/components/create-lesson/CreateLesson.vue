@@ -1,41 +1,45 @@
 <template>
     <div style="display: flex;">
         <div>
-            <textarea
+            <textarea v-if="this.slides.length > 0"
                 id="the-slide"
                 cols="30"
                 rows="10"
                 v-model="markdownValue"
-                @keyup="displaySlide(markdownValue)"
+                @keyup="updateSlide(markdownValue)"
             ></textarea>
 
-            <button @click="addNewSlide('slide')">New Slide</button>
-            <button @click="addNewSlide('exercise')">Exercise Slide</button>
-            <button @click="presentPrevSlide(currentSlideIndex)">Prev slide</button>
-            <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
+           <div>
+               <div>
+                   <button @click="addNewSlide('slide')">New Slide</button>
+                   <button @click="addNewSlide('exercise')">Exercise Slide</button>
+               </div>
+               <div>
+                   <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
+                   <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
+               </div>
+           </div>
 
-            <ul v-for="(slide,index) in slides" :key="index">
+            <ul v-for="(slide,index) in slides" :key="index" id="slide-list">
                 <li v-if="index === currentSlideIndex">
                     <strong>
                         <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
-                    </strong>#
-
-                    <span class="x-btn" @click="removeSlide(index)">x</span>
+                    </strong>
                 </li>
 
                 <li v-else>
                     <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
-                    <span class="x-btn" @click="removeSlide(index)">x</span>
                 </li>
             </ul>
         </div>
 
-        <div id="content">
+        <div v-if="this.slides.length > 0" id="content">
             <div class="slide"
                  id="display-slide"
                  v-html="activeSlideText"
                  :class="{hidden: hideSlide}"
             ></div>
+            <span class="x-btn" @click="removeSlide()">x</span>
         </div>
 
     </div>
@@ -57,7 +61,7 @@
         },
         methods:{
             addNewSlide(slideType){
-                let newSlide = {type:slideType,content:this.markdownValue}
+                let newSlide = {type:slideType,content:''}
                 this.slides.push(newSlide)
                 console.log(this.slides)
                 this.markdownValue = ''
@@ -66,7 +70,14 @@
                 console.log(JSON.stringify(this.slides))
             },
             displaySlide(text){
-                this.activeSlideText = marked(text) //converts the entered xml into html
+                this.activeSlideText = marked(text) //converts the entered xml into html to be displayed
+                this.markdownValue = text
+            },
+            updateSlide(text){
+                this.activeSlideText = marked(text)
+                this.slides[this.currentSlideIndex].content = text
+
+                //axios request to api goes here
             },
             clearSlide(){
                 this.activeSlideText = ''
@@ -120,13 +131,17 @@
                     return content
                 }
             },
-            removeSlide(index){ //klikni zadnju, i onda briis od prve. Nastace greska
-                if(index === this.slides.length - 1 && this.currentSlideIndex === index){
+            removeSlide(){ //klikni zadnju, i onda briis od prve. Nastace greska
+                let deleteIndex = this.currentSlideIndex;
+
+                if(this.slides.length - 1 === deleteIndex){ //if we are deleting the last slide
                     this.currentSlideIndex--;
                 }
-                console.log(`Remove slide of index ${index}`)
-                this.slides.splice(index,1);
-                if(this.slides.length > 0){
+
+
+                this.slides.splice(deleteIndex,1);
+
+                if(this.slides.length > 0){ //if there are still slides to be shown
                     this.displaySlide(this.slides[this.currentSlideIndex].content)
                 } else {
                     this.displaySlide('')
@@ -142,6 +157,14 @@
 </script>
 
 <style>
+    #slide-list li {
+        cursor: pointer;
+    }
+
+    #slide-list li:hover {
+        cursor: pointer;
+    }
+
     #content {
         width: 100%;
     }
