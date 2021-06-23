@@ -2146,6 +2146,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateLesson",
@@ -2169,6 +2174,7 @@ __webpack_require__.r(__webpack_exports__);
       this.markdownValue = '';
       this.currentSlideIndex = this.slides.length - 1;
       this.displaySlide(this.slides[this.currentSlideIndex].content);
+      console.log(JSON.stringify(this.slides));
     },
     displaySlide: function displaySlide(text) {
       this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_0___default()(text); //converts the entered xml into html
@@ -2177,6 +2183,10 @@ __webpack_require__.r(__webpack_exports__);
       this.activeSlideText = '';
     },
     presentNextSlide: function presentNextSlide(index) {
+      if (this.slides.length <= 0) {
+        return null;
+      }
+
       index++;
 
       if (index > this.slides.length - 1) {
@@ -2186,6 +2196,10 @@ __webpack_require__.r(__webpack_exports__);
       this.slideTypeHandler(index);
     },
     presentPrevSlide: function presentPrevSlide(index) {
+      if (this.slides.length <= 0) {
+        return null;
+      }
+
       index--;
 
       if (index < 0) {
@@ -2222,11 +2236,26 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         return content;
       }
+    },
+    removeSlide: function removeSlide(index) {
+      //klikni zadnju, i onda briis od prve. Nastace greska
+      if (index === this.slides.length - 1 && this.currentSlideIndex === index) {
+        this.currentSlideIndex--;
+      }
+
+      console.log("Remove slide of index ".concat(index));
+      this.slides.splice(index, 1);
+
+      if (this.slides.length > 0) {
+        this.displaySlide(this.slides[this.currentSlideIndex].content);
+      } else {
+        this.displaySlide('');
+      }
     }
   },
   mounted: function mounted() {
     //testing purposes - this is where we will make a get request to my slides. If we are making a new one, it will make a new record
-    this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"}]");
+    this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]");
     this.displaySlide(this.slides[this.currentSlideIndex].content);
   }
 });
@@ -8253,7 +8282,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n#content {\n    width: 100%;\n    padding: 0 30px;\n}\n#content .slide {\n    background-color: #002b36;\n    color:#fff;\n    font-family: 'Arial',sans-serif;\n    /*width:575px;*/\n    /*height:380px;*/\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start; /*default to having it on the left*/\n    padding:10px 20px;\n}\n#content .slide *\n{\n    display: block;\n    width:100%;\n    word-break: break-word;\n    text-align: left;\n}\n#content .slide ul {\n    display: block;\n    width:100%;\n}\n#content .slide h1  {\n    font-size: 2.25vw;\n}\n#content .slide h2  {\n    font-size: 1.8vw;\n}\n#content .slide h3  {\n    font-size: 1.575vw;\n}\n#content .slide h4  {\n    font-size: 1.35vw;\n}\n#content .slide h5  {\n    font-size: 1.215vw;\n}\n#content .slide h6  {\n    font-size: 1vw;\n}\n#content .slide p  {\n    font-size: 1vw;\n}\n#content .slide ul * {\n    font-size:1vw;\n}\n#content .slide ol * {\n    font-size:1vw;\n}\n.hidden {\n    display: none;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#content {\n    width: 100%;\n}\n#content .slide {\n    background-color: #002b36;\n    color:#fff;\n    font-family: 'Arial',sans-serif;\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start; /*default to having it on the left*/\n    padding:2.22vw 2.22vw;\n}\n#content .slide *\n{\n    width:100%;\n    word-break: break-word;\n    text-align: left;\n    margin:0;\n}\n#content .slide ul {\n    display: inline-block;\n    width:100%;\n    padding:1.66vh 2.22vw;\n}\n#content .slide ul * {\n    font-size:1.35vw;\n}\n#content .slide ol {\n    display: inline-block;\n    width:100%;\n    padding:0 2.2vw;\n}\n#content .slide ol * {\n    font-size:1.1vw;\n}\n#content .slide h1  {\n    font-size: 2.50vw;\n}\n#content .slide h2  {\n    font-size: 2vw;\n}\n#content .slide h3  {\n    font-size: 1.75vw;\n}\n#content .slide h4  {\n    font-size: 1.5vw;\n}\n#content .slide h5  {\n    font-size: 1.35vw;\n}\n#content .slide h6  {\n    font-size: 1vw;\n}\n#content .slide p  {\n    font-size: 1.11vw;\n}\n.hidden {\n    display: none;\n}\n.x-btn {\n    background-color: red;\n    color:#fff;\n    border-radius: 50%;\n    border:1px solid #000;\n    padding:0 8px;\n    display: inline-block;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -46808,42 +46837,70 @@ var render = function() {
         _vm._l(_vm.slides, function(slide, index) {
           return _c("ul", { key: index }, [
             index === _vm.currentSlideIndex
-              ? _c(
-                  "li",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.jumpToSlide(index)
+              ? _c("li", [
+                  _c("strong", [
+                    _c(
+                      "span",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.jumpToSlide(index)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(index + 1) +
+                            " " +
+                            _vm._s(_vm.shortenText(index))
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v("#\n\n                "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "x-btn",
+                      on: {
+                        click: function($event) {
+                          return _vm.removeSlide(index)
+                        }
                       }
-                    }
-                  },
-                  [
-                    _c("strong", [
+                    },
+                    [_vm._v("x")]
+                  )
+                ])
+              : _c("li", [
+                  _c(
+                    "span",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.jumpToSlide(index)
+                        }
+                      }
+                    },
+                    [
                       _vm._v(
                         _vm._s(index + 1) + " " + _vm._s(_vm.shortenText(index))
                       )
-                    ])
-                  ]
-                )
-              : _c(
-                  "li",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.jumpToSlide(index)
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "x-btn",
+                      on: {
+                        click: function($event) {
+                          return _vm.removeSlide(index)
+                        }
                       }
-                    }
-                  },
-                  [
-                    _vm._v(
-                      "\n                " +
-                        _vm._s(index + 1) +
-                        " " +
-                        _vm._s(_vm.shortenText(index)) +
-                        "\n            "
-                    )
-                  ]
-                )
+                    },
+                    [_vm._v("x")]
+                  )
+                ])
           ])
         })
       ],

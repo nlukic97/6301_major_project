@@ -15,12 +15,17 @@
             <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
 
             <ul v-for="(slide,index) in slides" :key="index">
-                <li v-if="index === currentSlideIndex" @click="jumpToSlide(index)">
-                    <strong>{{index + 1}} {{shortenText(index)}}</strong>
+                <li v-if="index === currentSlideIndex">
+                    <strong>
+                        <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
+                    </strong>#
+
+                    <span class="x-btn" @click="removeSlide(index)">x</span>
                 </li>
 
-                <li v-else @click="jumpToSlide(index)">
-                    {{index + 1}} {{shortenText(index)}}
+                <li v-else>
+                    <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
+                    <span class="x-btn" @click="removeSlide(index)">x</span>
                 </li>
             </ul>
         </div>
@@ -58,6 +63,7 @@
                 this.markdownValue = ''
                 this.currentSlideIndex = this.slides.length - 1
                 this.displaySlide(this.slides[this.currentSlideIndex].content)
+                console.log(JSON.stringify(this.slides))
             },
             displaySlide(text){
                 this.activeSlideText = marked(text) //converts the entered xml into html
@@ -66,6 +72,9 @@
                 this.activeSlideText = ''
             },
             presentNextSlide(index){
+                if(this.slides.length <= 0){
+                    return null;
+                }
                 index++;
                 if(index > this.slides.length - 1){
                     index = 0; //to switch from the last slide back to the 1st slide
@@ -73,6 +82,9 @@
                 this.slideTypeHandler(index)
             },
             presentPrevSlide(index){
+                if(this.slides.length <= 0){
+                    return null;
+                }
                 index--
                 if(index < 0){
                     index = this.slides.length - 1 //to go from the 1st slide all the way to the last one
@@ -107,11 +119,23 @@
                 } else {
                     return content
                 }
+            },
+            removeSlide(index){ //klikni zadnju, i onda briis od prve. Nastace greska
+                if(index === this.slides.length - 1 && this.currentSlideIndex === index){
+                    this.currentSlideIndex--;
+                }
+                console.log(`Remove slide of index ${index}`)
+                this.slides.splice(index,1);
+                if(this.slides.length > 0){
+                    this.displaySlide(this.slides[this.currentSlideIndex].content)
+                } else {
+                    this.displaySlide('')
+                }
             }
         },
         mounted(){
             //testing purposes - this is where we will make a get request to my slides. If we are making a new one, it will make a new record
-            this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"}]")
+            this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]")
             this.displaySlide(this.slides[this.currentSlideIndex].content)
         }
     }
@@ -120,67 +144,80 @@
 <style>
     #content {
         width: 100%;
-        padding: 0 30px;
     }
 
     #content .slide {
         background-color: #002b36;
         color:#fff;
         font-family: 'Arial',sans-serif;
-        /*width:575px;*/
-        /*height:380px;*/
         display: flex;
         flex-direction: column;
         align-items: flex-start; /*default to having it on the left*/
-        padding:10px 20px;
+        padding:2.22vw 2.22vw;
     }
 
     #content .slide *
     {
-        display: block;
         width:100%;
         word-break: break-word;
         text-align: left;
+        margin:0;
     }
 
     #content .slide ul {
-        display: block;
+        display: inline-block;
         width:100%;
+        padding:1.66vh 2.22vw;
+    }
+
+    #content .slide ul * {
+        font-size:1.35vw;
+    }
+
+    #content .slide ol {
+        display: inline-block;
+        width:100%;
+        padding:0 2.2vw;
+    }
+
+    #content .slide ol * {
+        font-size:1.1vw;
     }
 
     #content .slide h1  {
-        font-size: 2.25vw;
+        font-size: 2.50vw;
     }
 
     #content .slide h2  {
-        font-size: 1.8vw;
+        font-size: 2vw;
     }
     #content .slide h3  {
-        font-size: 1.575vw;
+        font-size: 1.75vw;
     }
     #content .slide h4  {
-        font-size: 1.35vw;
+        font-size: 1.5vw;
     }
     #content .slide h5  {
-        font-size: 1.215vw;
+        font-size: 1.35vw;
     }
     #content .slide h6  {
         font-size: 1vw;
     }
 
     #content .slide p  {
-        font-size: 1vw;
-    }
-
-    #content .slide ul * {
-        font-size:1vw;
-    }
-
-    #content .slide ol * {
-        font-size:1vw;
+        font-size: 1.11vw;
     }
 
     .hidden {
         display: none;
+    }
+
+    .x-btn {
+        background-color: red;
+        color:#fff;
+        border-radius: 50%;
+        border:1px solid #000;
+        padding:0 8px;
+        display: inline-block;
     }
 </style>

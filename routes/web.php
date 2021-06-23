@@ -22,7 +22,7 @@ Route::get('/', function () {
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->get('/class/{id}', function(){
+Route::middleware('auth')->get('/class', function(){
     $myId = Auth::user()->id;
     return view('class',compact('myId'))    ; //the class view will open the text editor for now
 });
