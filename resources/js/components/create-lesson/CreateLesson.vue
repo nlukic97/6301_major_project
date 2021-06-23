@@ -1,47 +1,53 @@
 <template>
-    <div style="display: flex;">
+    <div>
         <div>
+            <label for="slide_title">Slide title</label>
+            <input type="text" id="slide_title" v-model="slideTitle">
+        </div>
+        <div style="display: flex;">
+            <div>
             <textarea v-if="this.slides.length > 0"
-                id="the-slide"
-                cols="30"
-                rows="10"
-                v-model="markdownValue"
-                @keyup="updateSlide(markdownValue)"
+                      id="the-slide"
+                      cols="30"
+                      rows="10"
+                      v-model="markdownValue"
+                      @keyup="updateSlide(markdownValue)"
             ></textarea>
 
-           <div>
-               <div>
-                   <button @click="addNewSlide('slide')">New Slide</button>
-                   <button @click="addNewSlide('exercise')">Exercise Slide</button>
-               </div>
-               <div>
-                   <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
-                   <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
-               </div>
-           </div>
+                <div>
+                    <div>
+                        <button @click="addNewSlide('slide')">New Slide</button>
+                        <button @click="addNewSlide('exercise')">Exercise Slide</button>
+                    </div>
+                    <div>
+                        <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
+                        <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
+                    </div>
+                </div>
 
-            <ul v-for="(slide,index) in slides" :key="index" id="slide-list">
-                <li v-if="index === currentSlideIndex">
-                    <strong>
+                <ul v-for="(slide,index) in slides" :key="index" id="slide-list">
+                    <li v-if="index === currentSlideIndex">
+                        <strong>
+                            <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
+                        </strong>
+                    </li>
+
+                    <li v-else>
                         <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
-                    </strong>
-                </li>
+                    </li>
+                </ul>
+            </div>
 
-                <li v-else>
-                    <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
-                </li>
-            </ul>
+            <div v-if="this.slides.length > 0" id="content">
+                <div class="slide"
+                     id="display-slide"
+                     v-html="activeSlideText"
+                     :class="{hidden: hideSlide}"
+                ></div>
+                <span class="x-btn" @click="removeSlide()">x</span>
+            </div>
+
         </div>
-
-        <div v-if="this.slides.length > 0" id="content">
-            <div class="slide"
-                 id="display-slide"
-                 v-html="activeSlideText"
-                 :class="{hidden: hideSlide}"
-            ></div>
-            <span class="x-btn" @click="removeSlide()">x</span>
-        </div>
-
     </div>
 </template>
 
@@ -54,6 +60,7 @@
             return {
                 currentSlideIndex:0,
                 hideSlide:false,
+                slideTitle:'',
                 slides:[],
                 markdownValue:'',
                 activeSlideText:``,
@@ -152,16 +159,17 @@
             //testing purposes - this is where we will make a get request to my slides. If we are making a new one, it will make a new record
             this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]")
             this.displaySlide(this.slides[this.currentSlideIndex].content)
+            this.slideTitle = 'Lesson about something'
         }
     }
 </script>
 
 <style>
-    #slide-list li {
+    #slide-list li span{
         cursor: pointer;
     }
 
-    #slide-list li:hover {
+    #slide-list li span:hover {
         cursor: pointer;
     }
 
