@@ -24,20 +24,32 @@ class SlideController extends Controller
         if($slides->owner_id !== Auth::user()->id) {
             return abort(404);
         }
-        return view('edit-slide',compact('slides'));
+        return view('edit-slides',compact('slides'));
+    }
+
+
+    public function new_slides()
+    {
+        $newSlides = Slide::create([
+            'owner_id'=>Auth::id(),
+            'title'=>null,
+            'data'=>'[]'
+        ]);
+
+        return redirect('/edit-slides/'.$newSlides->id);
     }
 
 
     public function update_slides(Request $request)
     {
         $request->validate([
-            'id'=>'required|integer|exists:slides',
-            'data'=>'required|string',
-            'title'=>'nullable|string'
+            'id' => 'required|integer|exists:slides',
+            'data' => 'required|string',
+            'title' => 'nullable|string'
         ]);
 
         $slide = Slide::findOrFail($request->all()['id']);
-        if($slide->owner_id !== Auth::id()){
+        if ($slide->owner_id !== Auth::id()) {
             return abort(403);
         }
 
