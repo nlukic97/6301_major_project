@@ -14,6 +14,13 @@ class SlideController extends Controller
         $this->middleware('auth');
     }
 
+
+    public function index()
+    {
+        $allSlides = Slide::where('owner_id',Auth::id())->get();
+        dd($allSlides);
+    }
+
     public function edit_lesson($id)
     {
         $slides = Slide::find($id);
