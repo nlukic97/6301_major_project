@@ -2,7 +2,7 @@
     <div>
         <div>
             <label for="slide_title">Slide title</label>
-            <input type="text" id="slide_title" v-model="slideTitle">
+            <input type="text" id="slide_title" v-model="slideTitle" @keyup="updateTitle()">
         </div>
         <div style="display: flex;">
             <div>
@@ -56,14 +56,20 @@
 
     export default {
         name: "CreateLesson",
+        props:[
+            'load_slides'
+        ],
         data: function(){
             return {
                 currentSlideIndex:0,
                 hideSlide:false,
+                slideId:null,
                 slideTitle:'',
                 slides:[],
                 markdownValue:'',
                 activeSlideText:``,
+                editing:false, /** For the interval in this.typing() */
+                secondsEditing:0, /** For the interval in this.typing() */
             }
         },
         methods:{
@@ -75,16 +81,49 @@
                 this.currentSlideIndex = this.slides.length - 1
                 this.displaySlide(this.slides[this.currentSlideIndex].content)
                 console.log(JSON.stringify(this.slides))
+
+                this.saveSlidesToDb()
             },
             displaySlide(text){
                 this.activeSlideText = marked(text) //converts the entered xml into html to be displayed
                 this.markdownValue = text
             },
+
+            /** Activated when a slide is edited.*/
             updateSlide(text){
                 this.activeSlideText = marked(text)
                 this.slides[this.currentSlideIndex].content = text
 
-                //axios request to api goes here
+                this.typing()
+
+            },
+            updateTitle(){
+                /** The title is already saved with a v-model. But upon typing, we want to update the row
+                    in the database with the slides and with the title */
+                this.typing()
+            },
+            typing(){
+                /** This will check if the user has already commenced with typing */
+                if(this.editing === false){
+
+                    /** If they haven't started editing, start the interval counter*/
+                    this.editing = true;
+
+                    let int = setInterval( ()=> {
+                        this.secondsEditing++;
+                        if(this.secondsEditing >= 1){ /** When clock reaches 4, it will stop counting, reset, and send the axios request to the database */
+                            clearInterval(int)
+                            this.editing = false;
+                            this.secondsEditing = 0;
+                            this.saveSlidesToDb()
+                        }
+                    },1000)
+
+                } else {
+                    /** If a user types, it will reset the clock to 0 but continue the previously set interval.
+                        Because this.editing is true, it means they have already started typing */
+                    this.secondsEditing = 0;
+                }
             },
             clearSlide(){
                 this.activeSlideText = ''
@@ -153,13 +192,34 @@
                 } else {
                     this.displaySlide('')
                 }
+
+                this.saveSlidesToDb()
+            },
+            async saveSlidesToDb(){
+                try {
+                    let ans = await axios.post('/api/update-slides',{
+                        id: this.slideId,
+                        data: JSON.stringify(this.slides),
+                        title: this.slideTitle
+                    })
+                    console.log('Saved to db');
+                } catch(e){
+                    console.log(e)
+                }
             }
         },
         mounted(){
-            //testing purposes - this is where we will make a get request to my slides. If we are making a new one, it will make a new record
-            this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]")
-            this.displaySlide(this.slides[this.currentSlideIndex].content)
-            this.slideTitle = 'Lesson about something'
+            // this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]")
+            let rowFromDb = JSON.parse(this.load_slides);
+            let slidesFromDb = JSON.parse(rowFromDb.data);
+
+            this.slides = slidesFromDb
+            this.slideTitle = rowFromDb.title
+            this.slideId = rowFromDb.id /** used later for post requests*/
+
+            if(this.slides.length > 0){ /** If the array returned is zero */
+                this.displaySlide(this.slides[this.currentSlideIndex].content)
+            }
         }
     }
 </script>

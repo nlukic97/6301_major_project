@@ -2106,8 +2106,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _marked_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../marked.js */ "./resources/js/marked.js");
-/* harmony import */ var _marked_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_marked_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _marked_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../marked.js */ "./resources/js/marked.js");
+/* harmony import */ var _marked_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_marked_js__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -2164,14 +2172,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateLesson",
+  props: ['load_slides'],
   data: function data() {
     return {
       currentSlideIndex: 0,
       hideSlide: false,
+      slideId: null,
       slideTitle: '',
       slides: [],
       markdownValue: '',
-      activeSlideText: ""
+      activeSlideText: "",
+      editing: false,
+
+      /** For the interval in this.typing() */
+      secondsEditing: 0
+      /** For the interval in this.typing() */
+
     };
   },
   methods: {
@@ -2186,15 +2202,50 @@ __webpack_require__.r(__webpack_exports__);
       this.currentSlideIndex = this.slides.length - 1;
       this.displaySlide(this.slides[this.currentSlideIndex].content);
       console.log(JSON.stringify(this.slides));
+      this.saveSlidesToDb();
     },
     displaySlide: function displaySlide(text) {
-      this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_0___default()(text); //converts the entered xml into html to be displayed
+      this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_1___default()(text); //converts the entered xml into html to be displayed
 
       this.markdownValue = text;
     },
+
+    /** Activated when a slide is edited.*/
     updateSlide: function updateSlide(text) {
-      this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_0___default()(text);
-      this.slides[this.currentSlideIndex].content = text; //axios request to api goes here
+      this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_1___default()(text);
+      this.slides[this.currentSlideIndex].content = text;
+      this.typing();
+    },
+    updateTitle: function updateTitle() {
+      /** The title is already saved with a v-model. But upon typing, we want to update the row
+          in the database with the slides and with the title */
+      this.typing();
+    },
+    typing: function typing() {
+      var _this = this;
+
+      /** This will check if the user has already commenced with typing */
+      if (this.editing === false) {
+        /** If they haven't started editing, start the interval counter*/
+        this.editing = true;
+
+        var _int = setInterval(function () {
+          _this.secondsEditing++;
+
+          if (_this.secondsEditing >= 1) {
+            /** When clock reaches 4, it will stop counting, reset, and send the axios request to the database */
+            clearInterval(_int);
+            _this.editing = false;
+            _this.secondsEditing = 0;
+
+            _this.saveSlidesToDb();
+          }
+        }, 1000);
+      } else {
+        /** If a user types, it will reset the clock to 0 but continue the previously set interval.
+            Because this.editing is true, it means they have already started typing */
+        this.secondsEditing = 0;
+      }
     },
     clearSlide: function clearSlide() {
       this.activeSlideText = '';
@@ -2271,13 +2322,59 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.displaySlide('');
       }
+
+      this.saveSlidesToDb();
+    },
+    saveSlidesToDb: function saveSlidesToDb() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var ans;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return axios.post('/api/update-slides', {
+                  id: _this2.slideId,
+                  data: JSON.stringify(_this2.slides),
+                  title: _this2.slideTitle
+                });
+
+              case 3:
+                ans = _context.sent;
+                console.log('Saved to db');
+                _context.next = 10;
+                break;
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](0);
+                console.log(_context.t0);
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 7]]);
+      }))();
     }
   },
   mounted: function mounted() {
-    //testing purposes - this is where we will make a get request to my slides. If we are making a new one, it will make a new record
-    this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]");
-    this.displaySlide(this.slides[this.currentSlideIndex].content);
-    this.slideTitle = 'Lesson about something';
+    // this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]")
+    var rowFromDb = JSON.parse(this.load_slides);
+    var slidesFromDb = JSON.parse(rowFromDb.data);
+    this.slides = slidesFromDb;
+    this.slideTitle = rowFromDb.title;
+    this.slideId = rowFromDb.id;
+    /** used later for post requests*/
+
+    if (this.slides.length > 0) {
+      /** If the array returned is zero */
+      this.displaySlide(this.slides[this.currentSlideIndex].content);
+    }
   }
 });
 
@@ -46795,6 +46892,9 @@ var render = function() {
         attrs: { type: "text", id: "slide_title" },
         domProps: { value: _vm.slideTitle },
         on: {
+          keyup: function($event) {
+            return _vm.updateTitle()
+          },
           input: function($event) {
             if ($event.target.composing) {
               return

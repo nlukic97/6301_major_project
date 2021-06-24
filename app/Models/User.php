@@ -42,4 +42,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function slides()
+    {
+        return $this->hasMany(Slide::class,'owner_id');
+    }
 }

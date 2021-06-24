@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Slide;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -24,11 +26,5 @@ class HomeController extends Controller
     public function index()
     {
         return view('home');
-    }
-
-
-    public function edit_lesson()
-    {
-        return view('create-lesson');
     }
 }
