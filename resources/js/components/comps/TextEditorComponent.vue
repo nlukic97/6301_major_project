@@ -13,8 +13,8 @@
 </template>
 
 <script>
-    import xml from '../../../codeMirror/xml.js';
-    import javaScript from '../../../codeMirror/javaScript';
+    import xml from '../../codeMirror/xml.js';
+    import javaScript from '../../codeMirror/javaScript';
 
     export default {
         name: "TextEditorComponent",

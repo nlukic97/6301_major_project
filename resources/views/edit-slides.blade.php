@@ -1,5 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.class') {{--Changed this to 'class' instead of 'app'. Check if I even need the class thing--}}
 
 @section('content')
-    <create-lesson load_slides="{{$slides}}"></create-lesson>
+    <div id="app">
+        <create-lesson load_slides="{{$slides}}"></create-lesson>
+    </div>
 @endsection

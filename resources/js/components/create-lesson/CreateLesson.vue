@@ -38,13 +38,18 @@
                 </ul>
             </div>
 
-            <div v-if="this.slides.length > 0" id="content">
-                <div class="slide"
+            <div v-if="this.slides.length > 0" id="content" :class="{hidden: hideSlide}">
+                <span class="x-btn" @click="removeSlide()">x</span>
+                <div
+                    class="slide"
                      id="display-slide"
                      v-html="activeSlideText"
-                     :class="{hidden: hideSlide}"
                 ></div>
+            </div>
+
+            <div :class="{hidden: !hideSlide}"> <!-- still need to add listeners to this, I might need to make this custom rather than use the component here. Have a component that can emit data -->
                 <span class="x-btn" @click="removeSlide()">x</span>
+                <text-editor-component></text-editor-component>
             </div>
 
         </div>
@@ -70,6 +75,7 @@
                 activeSlideText:``,
                 editing:false, /** For the interval in this.typing() */
                 secondsEditing:0, /** For the interval in this.typing() */
+                currSlideType:'slide'
             }
         },
         methods:{
@@ -79,7 +85,8 @@
                 console.log(this.slides)
                 this.markdownValue = ''
                 this.currentSlideIndex = this.slides.length - 1
-                this.displaySlide(this.slides[this.currentSlideIndex].content)
+                // this.displaySlide(this.slides[this.currentSlideIndex].content)
+                this.slideTypeHandler(this.currentSlideIndex)
                 console.log(JSON.stringify(this.slides))
 
                 this.saveSlidesToDb()
@@ -165,7 +172,8 @@
             },
             jumpToSlide(index){
                 if(index != this.currentSlideIndex){
-                    this.displaySlide(this.slides[index].content)
+                    // this.displaySlide(this.slides[index].content)
+                    this.slideTypeHandler(index) /** This seems to work as of now*/
                     this.currentSlideIndex = index
                 }
             },
@@ -177,7 +185,7 @@
                     return content
                 }
             },
-            removeSlide(){ //klikni zadnju, i onda briis od prve. Nastace greska
+            removeSlide(){ //Bug when deleting the text editor slide last
                 let deleteIndex = this.currentSlideIndex;
 
                 if(this.slides.length - 1 === deleteIndex){ //if we are deleting the last slide
@@ -188,7 +196,9 @@
                 this.slides.splice(deleteIndex,1);
 
                 if(this.slides.length > 0){ //if there are still slides to be shown
-                    this.displaySlide(this.slides[this.currentSlideIndex].content)
+
+                    // this.displaySlide(this.slides[this.currentSlideIndex].content)
+                    this.slideTypeHandler(this.currentSlideIndex)
                 } else {
                     this.displaySlide('')
                 }
@@ -218,7 +228,8 @@
             this.slideId = rowFromDb.id /** used later for post requests*/
 
             if(this.slides.length > 0){ /** If the array returned is zero */
-                this.displaySlide(this.slides[this.currentSlideIndex].content)
+                // this.displaySlide(this.slides[this.currentSlideIndex].content)
+                this.slideTypeHandler(this.currentSlideIndex)
             }
         }
     }
@@ -300,7 +311,7 @@
     }
 
     .hidden {
-        display: none;
+        display: none!important;
     }
 
     .x-btn {
