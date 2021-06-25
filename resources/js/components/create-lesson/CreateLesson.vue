@@ -7,14 +7,6 @@
         <div style="display: flex;">
 
             <div>
-                <textarea v-if="this.slides.length > 0"
-                          id="the-slide"
-                          cols="30"
-                          rows="10"
-                          v-model="markdownValue"
-                          @keyup="updateSlide(markdownValue)"
-                ></textarea>
-
                 <div>
                     <div>
                         <button @click="addNewSlide('slide')">New Slide</button>
@@ -37,9 +29,18 @@
                         <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
                     </li>
                 </ul>
+
+                <textarea v-if="this.slides.length > 0"
+                          id="the-slide"
+                          cols="30"
+                          rows="10"
+                          v-model="markdownValue"
+                          @keyup="updateSlide(markdownValue)"
+                          :class="{hidden: hideSlide}"
+                ></textarea>
             </div>
 
-
+            <!-- When it is a slide-->
             <div v-if="this.slides.length > 0" id="content" :class="{hidden: hideSlide}">
                 <span class="x-btn" @click="removeSlide()">x</span>
                 <div
@@ -49,10 +50,12 @@
                 ></div>
             </div>
 
-
-            <!-- When there is not slide-->
+            <!-- When it is an exercise-->
             <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}">
                 <span class="x-btn" @click="removeSlide()">x</span>
+
+                <text-editor-component></text-editor-component> <!-- Adding a class binding directly to the component does not display the text of the component until I click on it -->
+
             </div>
         </div>
     </div>
@@ -104,7 +107,6 @@
                 this.typing()
 
             },
-
             updateTitle(){
                 /** The title is already saved with a v-model. But upon typing, we want to update the row
                     in the database with the slides and with the title */

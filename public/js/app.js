@@ -2141,6 +2141,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateLesson",
@@ -46771,32 +46774,6 @@ var render = function() {
       _c(
         "div",
         [
-          this.slides.length > 0
-            ? _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.markdownValue,
-                    expression: "markdownValue"
-                  }
-                ],
-                attrs: { id: "the-slide", cols: "30", rows: "10" },
-                domProps: { value: _vm.markdownValue },
-                on: {
-                  keyup: function($event) {
-                    return _vm.updateSlide(_vm.markdownValue)
-                  },
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.markdownValue = $event.target.value
-                  }
-                }
-              })
-            : _vm._e(),
-          _vm._v(" "),
           _c("div", [
             _c("div", [
               _c(
@@ -46895,7 +46872,34 @@ var render = function() {
                     )
                   ])
             ])
-          })
+          }),
+          _vm._v(" "),
+          this.slides.length > 0
+            ? _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.markdownValue,
+                    expression: "markdownValue"
+                  }
+                ],
+                class: { hidden: _vm.hideSlide },
+                attrs: { id: "the-slide", cols: "30", rows: "10" },
+                domProps: { value: _vm.markdownValue },
+                on: {
+                  keyup: function($event) {
+                    return _vm.updateSlide(_vm.markdownValue)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.markdownValue = $event.target.value
+                  }
+                }
+              })
+            : _vm._e()
         ],
         2
       ),
@@ -46928,20 +46932,27 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       this.slides.length > 0
-        ? _c("div", { class: { hidden: !_vm.hideSlide } }, [
-            _c(
-              "span",
-              {
-                staticClass: "x-btn",
-                on: {
-                  click: function($event) {
-                    return _vm.removeSlide()
+        ? _c(
+            "div",
+            { class: { hidden: !_vm.hideSlide } },
+            [
+              _c(
+                "span",
+                {
+                  staticClass: "x-btn",
+                  on: {
+                    click: function($event) {
+                      return _vm.removeSlide()
+                    }
                   }
-                }
-              },
-              [_vm._v("x")]
-            )
-          ])
+                },
+                [_vm._v("x")]
+              ),
+              _vm._v(" "),
+              _c("text-editor-component")
+            ],
+            1
+          )
         : _vm._e()
     ])
   ])

@@ -27,6 +27,6 @@ Route::middleware('auth')->get('/class', function(){
     return view('class',compact('myId'))    ; //the class view will open the text editor for now
 });
 
-Route::get('/all-slides',[\App\Http\Controllers\SlideController::class,'index']);
-Route::get('/new-slides',[\App\Http\Controllers\SlideController::class,'new_slides']);
-Route::get('/edit-slides/{id}',[\App\Http\Controllers\SlideController::class,'edit_lesson']);
+Route::middleware('auth')->get('/all-slides',[\App\Http\Controllers\SlideController::class,'index']);
+Route::middleware('auth')->get('/new-slides',[\App\Http\Controllers\SlideController::class,'new_slides']);
+Route::middleware('auth')->get('/edit-slides/{id}',[\App\Http\Controllers\SlideController::class,'edit_lesson']);
