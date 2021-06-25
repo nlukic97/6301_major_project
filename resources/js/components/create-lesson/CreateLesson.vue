@@ -5,14 +5,15 @@
             <input type="text" id="slide_title" v-model="slideTitle" @keyup="updateTitle()">
         </div>
         <div style="display: flex;">
+
             <div>
-            <textarea v-if="this.slides.length > 0"
-                      id="the-slide"
-                      cols="30"
-                      rows="10"
-                      v-model="markdownValue"
-                      @keyup="updateSlide(markdownValue)"
-            ></textarea>
+                <textarea v-if="this.slides.length > 0"
+                          id="the-slide"
+                          cols="30"
+                          rows="10"
+                          v-model="markdownValue"
+                          @keyup="updateSlide(markdownValue)"
+                ></textarea>
 
                 <div>
                     <div>
@@ -38,6 +39,7 @@
                 </ul>
             </div>
 
+
             <div v-if="this.slides.length > 0" id="content" :class="{hidden: hideSlide}">
                 <span class="x-btn" @click="removeSlide()">x</span>
                 <div
@@ -47,11 +49,11 @@
                 ></div>
             </div>
 
-            <div :class="{hidden: !hideSlide}"> <!-- still need to add listeners to this, I might need to make this custom rather than use the component here. Have a component that can emit data -->
-                <span class="x-btn" @click="removeSlide()">x</span>
-                <text-editor-component></text-editor-component>
-            </div>
 
+            <!-- When there is not slide-->
+            <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}">
+                <span class="x-btn" @click="removeSlide()">x</span>
+            </div>
         </div>
     </div>
 </template>
@@ -75,22 +77,20 @@
                 activeSlideText:``,
                 editing:false, /** For the interval in this.typing() */
                 secondsEditing:0, /** For the interval in this.typing() */
-                currSlideType:'slide'
             }
         },
         methods:{
             addNewSlide(slideType){
                 let newSlide = {type:slideType,content:''}
                 this.slides.push(newSlide)
-                console.log(this.slides)
+
                 this.markdownValue = ''
                 this.currentSlideIndex = this.slides.length - 1
-                // this.displaySlide(this.slides[this.currentSlideIndex].content)
-                this.slideTypeHandler(this.currentSlideIndex)
-                console.log(JSON.stringify(this.slides))
 
+                this.slideTypeHandler(this.currentSlideIndex)
                 this.saveSlidesToDb()
             },
+
             displaySlide(text){
                 this.activeSlideText = marked(text) //converts the entered xml into html to be displayed
                 this.markdownValue = text
@@ -104,11 +104,13 @@
                 this.typing()
 
             },
+
             updateTitle(){
                 /** The title is already saved with a v-model. But upon typing, we want to update the row
                     in the database with the slides and with the title */
                 this.typing()
             },
+
             typing(){
                 /** This will check if the user has already commenced with typing */
                 if(this.editing === false){
@@ -132,9 +134,11 @@
                     this.secondsEditing = 0;
                 }
             },
+
             clearSlide(){
                 this.activeSlideText = ''
             },
+
             presentNextSlide(index){
                 if(this.slides.length <= 0){
                     return null;
@@ -145,6 +149,7 @@
                 }
                 this.slideTypeHandler(index)
             },
+
             presentPrevSlide(index){
                 if(this.slides.length <= 0){
                     return null;
@@ -155,6 +160,7 @@
                 }
                 this.slideTypeHandler(index)
             },
+
             slideTypeHandler(index){
                 if(this.slides[index].type == 'slide'){
                     this.clearSlide()
@@ -163,13 +169,14 @@
 
                 } else if(this.slides[index].type == 'exercise'){
                     this.hideSlide = true //this will hide the slide
-
+                    this.markdownValue = this.slides[index].content
                     //insert code to add the CodeMirror exercise here
                     console.log('Here is the exercise for slide of index ' + index +'. We will not display this slide but just show an empty canvas');
                 }
 
                 this.currentSlideIndex = index;
             },
+
             jumpToSlide(index){
                 if(index != this.currentSlideIndex){
                     // this.displaySlide(this.slides[index].content)
@@ -177,6 +184,7 @@
                     this.currentSlideIndex = index
                 }
             },
+
             shortenText(index){
                 let content = this.slides[index].content
                 if(content.length > 10){
@@ -185,7 +193,8 @@
                     return content
                 }
             },
-            removeSlide(){ //Bug when deleting the text editor slide last
+
+            removeSlide(){
                 let deleteIndex = this.currentSlideIndex;
 
                 if(this.slides.length - 1 === deleteIndex){ //if we are deleting the last slide
@@ -205,6 +214,7 @@
 
                 this.saveSlidesToDb()
             },
+
             async saveSlidesToDb(){
                 try {
                     let ans = await axios.post('/api/update-slides',{

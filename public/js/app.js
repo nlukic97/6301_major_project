@@ -2139,6 +2139,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateLesson",
@@ -2155,10 +2157,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       editing: false,
 
       /** For the interval in this.typing() */
-      secondsEditing: 0,
-
+      secondsEditing: 0
       /** For the interval in this.typing() */
-      currSlideType: 'slide'
+
     };
   },
   methods: {
@@ -2168,12 +2169,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         content: ''
       };
       this.slides.push(newSlide);
-      console.log(this.slides);
       this.markdownValue = '';
-      this.currentSlideIndex = this.slides.length - 1; // this.displaySlide(this.slides[this.currentSlideIndex].content)
-
+      this.currentSlideIndex = this.slides.length - 1;
       this.slideTypeHandler(this.currentSlideIndex);
-      console.log(JSON.stringify(this.slides));
       this.saveSlidesToDb();
     },
     displaySlide: function displaySlide(text) {
@@ -2255,7 +2253,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.displaySlide(this.slides[index].content);
       } else if (this.slides[index].type == 'exercise') {
         this.hideSlide = true; //this will hide the slide
-        //insert code to add the CodeMirror exercise here
+
+        this.markdownValue = this.slides[index].content; //insert code to add the CodeMirror exercise here
 
         console.log('Here is the exercise for slide of index ' + index + '. We will not display this slide but just show an empty canvas');
       }
@@ -2281,7 +2280,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     removeSlide: function removeSlide() {
-      //Bug when deleting the text editor slide last
       var deleteIndex = this.currentSlideIndex;
 
       if (this.slides.length - 1 === deleteIndex) {
@@ -46929,27 +46927,22 @@ var render = function() {
           )
         : _vm._e(),
       _vm._v(" "),
-      _c(
-        "div",
-        { class: { hidden: !_vm.hideSlide } },
-        [
-          _c(
-            "span",
-            {
-              staticClass: "x-btn",
-              on: {
-                click: function($event) {
-                  return _vm.removeSlide()
+      this.slides.length > 0
+        ? _c("div", { class: { hidden: !_vm.hideSlide } }, [
+            _c(
+              "span",
+              {
+                staticClass: "x-btn",
+                on: {
+                  click: function($event) {
+                    return _vm.removeSlide()
+                  }
                 }
-              }
-            },
-            [_vm._v("x")]
-          ),
-          _vm._v(" "),
-          _c("text-editor-component")
-        ],
-        1
-      )
+              },
+              [_vm._v("x")]
+            )
+          ])
+        : _vm._e()
     ])
   ])
 }
