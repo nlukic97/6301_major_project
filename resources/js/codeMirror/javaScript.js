@@ -10,9 +10,7 @@ function $_initialize_text_editor_$(){
         lineNumbers: true,
         tabSize: 4,
         value: `console.log('ide gas')
-
 console.log('message two')
-
 `, // @@@ text is like this so that the new lines would not be indented in the browser.
         mode: 'javascript',
         theme:'monokai', // @@@ additional cdn is used for this.
@@ -21,7 +19,6 @@ console.log('message two')
 
     $_scriptToIframe_$('i-frame',$_CodeMirrorJavaScript_$.getValue())
 }
-
 
 
 //adding user entered script to the iframe, which will execute it in there.

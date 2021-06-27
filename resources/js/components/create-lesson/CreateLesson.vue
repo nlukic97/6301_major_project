@@ -54,7 +54,11 @@
             <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}">
                 <span class="x-btn" @click="removeSlide()">x</span>
 
-                <text-editor-component></text-editor-component> <!-- Adding a class binding directly to the component does not display the text of the component until I click on it -->
+                <text-editor-component
+                    :state="text_editor_state"
+                    v-on:javaScriptChange="updateJavaScript"
+                    v-on:xmlChange="updateXML"
+                ></text-editor-component> <!-- Adding a class binding directly to the component does not display the text of the component until I click on it -->
 
             </div>
         </div>
@@ -80,11 +84,17 @@
                 activeSlideText:``,
                 editing:false, /** For the interval in this.typing() */
                 secondsEditing:0, /** For the interval in this.typing() */
+                text_editor_state: null
             }
         },
         methods:{
             addNewSlide(slideType){
-                let newSlide = {type:slideType,content:''}
+                var newSlide;
+                if(slideType === 'exercise'){
+                    newSlide = {type:slideType,content:'Exercise slide',data:{xml:'someHtml',javaScript:'someJs'}}
+                } else {
+                    newSlide = {type:slideType,content:''}
+                }
                 this.slides.push(newSlide)
 
                 this.markdownValue = ''
@@ -128,7 +138,7 @@
                             this.secondsEditing = 0;
                             this.saveSlidesToDb()
                         }
-                    },1000)
+                    },500)
 
                 } else {
                     /** If a user types, it will reset the clock to 0 but continue the previously set interval.
@@ -168,8 +178,10 @@
                     this.clearSlide()
                     this.hideSlide = false
                     this.displaySlide(this.slides[index].content)
+                    this.text_editor_state = 'not_shown'
 
                 } else if(this.slides[index].type == 'exercise'){
+                    this.text_editor_state = 'shown'
                     this.hideSlide = true //this will hide the slide
                     this.markdownValue = this.slides[index].content
                     //insert code to add the CodeMirror exercise here
@@ -215,6 +227,16 @@
                 }
 
                 this.saveSlidesToDb()
+            },
+
+            updateJavaScript(data){
+                this.slides[this.currentSlideIndex].data.javaScript = data
+                console.log('updated javascript',this.slides)
+            },
+
+            updateXML(data){
+                this.slides[this.currentSlideIndex].data.xml = data
+                console.log('updated xml',this.slides)
             },
 
             async saveSlidesToDb(){

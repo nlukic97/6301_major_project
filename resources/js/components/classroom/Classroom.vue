@@ -1,6 +1,6 @@
 <template>
     <div>
-        <text-editor-component v-if="this.displayTextEditor"></text-editor-component>
+<!--        <text-editor-component v-if="this.displayTextEditor"></text-editor-component>-->
         <video-component></video-component>
     </div>
 </template>
@@ -11,11 +11,13 @@
 
     export default {
         name: "Classroom",
-        props: ['user_id'],
+        props: ['user_id','class_id'],
         data:function () {
             return{
                 displayTextEditor:true,
-                id: null
+                id: null,
+                class:null
+
             }
         },
         methods:{
@@ -23,9 +25,11 @@
         },
         beforeMount(){
             this.id = parseInt(this.user_id)
-            console.log('Your id and channel id: ' + this.id)
-
+            this.class = this.class_id
             echoInit.init(this.id)
+
+        },
+        mounted() {
         }
     }
 </script>

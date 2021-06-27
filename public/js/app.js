@@ -1869,19 +1869,21 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Classroom",
-  props: ['user_id'],
+  props: ['user_id', 'class_id'],
   data: function data() {
     return {
       displayTextEditor: true,
-      id: null
+      id: null,
+      "class": null
     };
   },
   methods: {},
   beforeMount: function beforeMount() {
     this.id = parseInt(this.user_id);
-    console.log('Your id and channel id: ' + this.id);
+    this["class"] = this.class_id;
     _laravel_echo_js__WEBPACK_IMPORTED_MODULE_0___default().init(this.id);
-  }
+  },
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -1920,7 +1922,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "TextEditorComponent",
   data: function data() {
-    return {};
+    return {
+      initialized: false
+    };
+  },
+  props: ['state'],
+  watch: {
+    state: function state() {
+      this.initialize();
+    }
   },
   methods: {
     $_removeIframeDom: function $_removeIframeDom(frame_id) {
@@ -1931,22 +1941,43 @@ __webpack_require__.r(__webpack_exports__);
       this.$_removeIframeDom('i-frame');
       _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_xmlToIframe_$('i-frame', _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_getXMLValue_$());
       _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_scriptToIframe_$('i-frame', _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
+    },
+    initialize: function initialize() {
+      var _this = this;
+
+      if (this.state == 'shown' && this.initialized === false) {
+        /** Text editor initializations*/
+        _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_initialize_XML_editor_$();
+        _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_initialize_text_editor_$();
+        /** Listeners for code changes*/
+
+        _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().getInstance().on('change', function (instance, change) {
+          _this.$emit('javaScriptChange', _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
+
+          _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().setValue(_codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
+        });
+        _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('change', function (instance, change) {
+          _this.$emit('xmlChange', _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_getXMLValue_$());
+          /** Can't be uncommented like this at the same time as line 51 to set the XML distance
+           * because we make an infinite reaction loop.
+           * We type something in javascript, the change registers it and updates it on the other users side.
+           * However, the other user registers a change in javascript, so it will send us back the change, which
+           * will cause or editor to change, and the loop goes on. So a keypress reaction would be better. */
+          // javaScript.getInstance().setValue(xml.$_getXMLValue_$())
+
+        });
+        this.initialized = true;
+        /** This will prevent from reinitialization,
+        since we only need it to happen once per page load. Reinitialization causes multiple
+        text editor div's to be appended. It will only happen if this.state is shown
+        which is a prop passed in from the CreateLesson.vue component */
+      }
     }
   },
   mounted: function mounted() {
     console.log('Mounted text editor');
-    /** Text editor initializations*/
-
-    _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_initialize_XML_editor_$();
-    _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_initialize_text_editor_$();
-    /** Listeners for code changes*/
-
-    _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().getInstance().on('change', function (instance, change) {
-      console.log(instance, change);
-    });
-    _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('change', function (instance, change) {
-      console.log(instance, change);
-    });
+    console.log(this.state);
+    this.initialize();
   }
 });
 
@@ -2144,6 +2175,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateLesson",
@@ -2160,17 +2195,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       editing: false,
 
       /** For the interval in this.typing() */
-      secondsEditing: 0
-      /** For the interval in this.typing() */
+      secondsEditing: 0,
 
+      /** For the interval in this.typing() */
+      text_editor_state: null
     };
   },
   methods: {
     addNewSlide: function addNewSlide(slideType) {
-      var newSlide = {
-        type: slideType,
-        content: ''
-      };
+      var newSlide;
+
+      if (slideType === 'exercise') {
+        newSlide = {
+          type: slideType,
+          content: 'Exercise slide',
+          data: {
+            xml: 'someHtml',
+            javaScript: 'someJs'
+          }
+        };
+      } else {
+        newSlide = {
+          type: slideType,
+          content: ''
+        };
+      }
+
       this.slides.push(newSlide);
       this.markdownValue = '';
       this.currentSlideIndex = this.slides.length - 1;
@@ -2213,7 +2263,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
             _this.saveSlidesToDb();
           }
-        }, 1000);
+        }, 500);
       } else {
         /** If a user types, it will reset the clock to 0 but continue the previously set interval.
             Because this.editing is true, it means they have already started typing */
@@ -2254,7 +2304,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.clearSlide();
         this.hideSlide = false;
         this.displaySlide(this.slides[index].content);
+        this.text_editor_state = 'not_shown';
       } else if (this.slides[index].type == 'exercise') {
+        this.text_editor_state = 'shown';
         this.hideSlide = true; //this will hide the slide
 
         this.markdownValue = this.slides[index].content; //insert code to add the CodeMirror exercise here
@@ -2301,6 +2353,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       this.saveSlidesToDb();
+    },
+    updateJavaScript: function updateJavaScript(data) {
+      this.slides[this.currentSlideIndex].data.javaScript = data;
+      console.log('updated javascript', this.slides);
+    },
+    updateXML: function updateXML(data) {
+      this.slides[this.currentSlideIndex].data.xml = data;
+      console.log('updated xml', this.slides);
     },
     saveSlidesToDb: function saveSlidesToDb() {
       var _this2 = this;
@@ -2466,7 +2526,7 @@ function $_initialize_text_editor_$() {
   $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "console.log('ide gas')\n\nconsole.log('message two')\n\n",
+    value: "console.log('ide gas')\nconsole.log('message two')\n",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'javascript',
     theme: 'monokai' // @@@ additional cdn is used for this.
@@ -46607,15 +46667,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      this.displayTextEditor ? _c("text-editor-component") : _vm._e(),
-      _vm._v(" "),
-      _c("video-component")
-    ],
-    1
-  )
+  return _c("div", [_c("video-component")], 1)
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -46955,7 +47007,13 @@ var render = function() {
                 [_vm._v("x")]
               ),
               _vm._v(" "),
-              _c("text-editor-component")
+              _c("text-editor-component", {
+                attrs: { state: _vm.text_editor_state },
+                on: {
+                  javaScriptChange: _vm.updateJavaScript,
+                  xmlChange: _vm.updateXML
+                }
+              })
             ],
             1
           )
