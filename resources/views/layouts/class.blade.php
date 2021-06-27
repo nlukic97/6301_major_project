@@ -33,7 +33,7 @@
 
 
     <!-- User code from codemirror which will be executed -->
-    <script id="code-to-execute"></script>
+{{--    <script id="code-to-execute"></script>--}}
 
     <script src="{{asset('js/app.js')}}"></script>
 

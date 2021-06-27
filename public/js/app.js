@@ -2466,7 +2466,7 @@ function $_initialize_text_editor_$() {
   $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "\n(function addHeading(){\n  var num = 3\n  var interval = setInterval(()=>{\n  if(num <= 0){\n    clearInterval(interval)\n      document.querySelectorAll('.added').forEach(el=>{\n      el.remove()\n      })\n    } else {\n    let a = document.createElement('h2')\n    a.className = 'added'\n   a.innerText = 'This text will be gone in ' + num + ' seconds'\n    document.body.appendChild(a)\n    num--\n    }\n    console.log('done')\n  },1000)\n})()",
+    value: "console.log('ide gas')\n\nconsole.log('message two')\n\n",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'javascript',
     theme: 'monokai' // @@@ additional cdn is used for this.
@@ -2480,6 +2480,10 @@ function $_initialize_text_editor_$() {
 function $_scriptToIframe_$(frame_id, text) {
   var $_ifrm_$ = document.getElementById(frame_id);
 
+  if ($_ifrm_$.contentWindow.document.getElementById('code-to-execute')) {
+    $_ifrm_$.contentWindow.document.getElementById('code-to-execute').remove();
+  }
+
   try {
     var scriptTag = $_ifrm_$.contentWindow.document.createElement('script'); // @@@ Scoping the script
     // @
@@ -2490,8 +2494,10 @@ function $_scriptToIframe_$(frame_id, text) {
     // using the same names for const and let again (redeclaration error)
     //
     // @@
+    // Updated console functions so that we could see what the user has logged/ output of the log
 
-    scriptTag.innerHTML = "(function(){\n            ".concat(text, "\n        })()");
+    var consoleFunctions = "\n        var arr = []\n\n        let exLog = console.log\n        console.log = (msg) =>{\n            arr.push({type:'log',data:msg})\n            exLog(msg)\n        };\n";
+    scriptTag.innerHTML = "\n        (function(){\n            ".concat(consoleFunctions, "\n\n            ").concat(text, "\n\n        exLog(arr);\n        exLog('Code executed successfully');\n\n        })()");
     scriptTag.setAttribute('id', 'code-to-execute');
     $_ifrm_$.contentWindow.document.body.appendChild(scriptTag);
   } catch (er) {
