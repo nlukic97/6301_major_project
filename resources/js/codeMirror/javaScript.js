@@ -41,7 +41,8 @@ function $_scriptToIframe_$(frame_id,text){
         // @@
 
 
-        // Updated console functions so that we could see what the user has logged/ output of the log
+        // Updated console functions so that we could see what the user
+        // has logged/ output of the log. But I will not use this for this project.
         let consoleFunctions =`
         var arr = []
 

@@ -2592,7 +2592,8 @@ function $_scriptToIframe_$(frame_id, text) {
     // using the same names for const and let again (redeclaration error)
     //
     // @@
-    // Updated console functions so that we could see what the user has logged/ output of the log
+    // Updated console functions so that we could see what the user
+    // has logged/ output of the log. But I will not use this for this project.
 
     var consoleFunctions = "\n        var arr = []\n\n        let exLog = console.log\n        console.log = (msg) =>{\n            arr.push({type:'log',data:msg})\n            exLog(msg)\n        };\n";
     scriptTag.innerHTML = "\n        (function(){\n            ".concat(text, "\n        })()");
