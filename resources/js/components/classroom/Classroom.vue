@@ -1,7 +1,7 @@
 <template>
     <div>
-<!--        <text-editor-component v-if="this.displayTextEditor"></text-editor-component>-->
-        <video-component></video-component>
+        <text-editor-component v-if="this.displayTextEditor" state="shown"></text-editor-component>
+<!--        <video-component></video-component>-->
     </div>
 </template>
 

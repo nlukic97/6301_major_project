@@ -1966,6 +1966,48 @@ __webpack_require__.r(__webpack_exports__);
           // javaScript.getInstance().setValue(xml.$_getXMLValue_$())
 
         });
+        /** Testing different listeners to use for codemirror */
+
+        /*xml.getInstance().on('focus',()=>{
+             console.log('XML IS FOCUSED')
+             xml.getInstance().on('change',()=>{
+                 console.log('You have typed something')
+             })
+         })
+         xml.getInstance().on('blur',()=>{
+             console.log('XML IS blur')
+             xml.getInstance().on('change',()=>{
+                 console.log('This has been changed without you typing')
+             })
+         })
+          xml.getInstance().on('update',()=>{
+             console.log('XML HAS BEEN UPDATED')
+         })*/
+
+        /** This will work with ctrl+x and ctrl+v only if the user
+         * types something into the text editor before doing a copy-paste*/
+
+        _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('paste', function (e) {
+          console.log('You have pasted text');
+          setTimeout(function () {
+            console.log(e.getValue());
+          }, 2);
+        });
+        _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('cut', function (e) {
+          console.log('You have cut text');
+          setTimeout(function () {
+            console.log(e.getValue());
+          }, 2);
+        }); //maybe I could use key down, but only under the condition that the ctrl key is pressed
+        //Keydown causes errors. Keyup might be ok, but it will not be a live update.
+        // I should also add ctrl + z and ctrl + y for back and forth
+
+        _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('keydown', function (e) {
+          console.log('You are typing');
+          setTimeout(function () {
+            console.log(e.getValue());
+          }, 2);
+        });
         this.initialized = true;
         /** This will prevent from reinitialization,
         since we only need it to happen once per page load. Reinitialization causes multiple
@@ -2208,7 +2250,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (slideType === 'exercise') {
         newSlide = {
           type: slideType,
-          content: 'Exercise slide',
+          content: 'Exercise',
           data: {
             xml: 'someHtml',
             javaScript: 'someJs'
@@ -2226,6 +2268,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.currentSlideIndex = this.slides.length - 1;
       this.slideTypeHandler(this.currentSlideIndex);
       this.saveSlidesToDb();
+      console.log(this.slides);
     },
     displaySlide: function displaySlide(text) {
       this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_1___default()(text); //converts the entered xml into html to be displayed
@@ -2410,7 +2453,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     if (this.slides.length > 0) {
       /** If the array returned is zero */
-      // this.displaySlide(this.slides[this.currentSlideIndex].content)
       this.slideTypeHandler(this.currentSlideIndex);
     }
   }
@@ -2526,7 +2568,7 @@ function $_initialize_text_editor_$() {
   $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "console.log('ide gas')\nconsole.log('message two')\n",
+    value: "(function addHeading(){\n  var num = 3\n  var interval = setInterval(()=>{\n  if(num <= 0){\n    clearInterval(interval)\n      document.querySelectorAll('.added').forEach(el=>{\n      el.remove()\n      })\n    } else {\n    let a = document.createElement('h2')\n    a.className = 'added'\n   a.innerText = 'This text will be gone in ' + num + ' seconds'\n    document.body.appendChild(a)\n    num--\n    }\n    console.log('done')\n  },1000)\n})()\n",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'javascript',
     theme: 'monokai' // @@@ additional cdn is used for this.
@@ -2557,7 +2599,7 @@ function $_scriptToIframe_$(frame_id, text) {
     // Updated console functions so that we could see what the user has logged/ output of the log
 
     var consoleFunctions = "\n        var arr = []\n\n        let exLog = console.log\n        console.log = (msg) =>{\n            arr.push({type:'log',data:msg})\n            exLog(msg)\n        };\n";
-    scriptTag.innerHTML = "\n        (function(){\n            ".concat(consoleFunctions, "\n\n            ").concat(text, "\n\n        exLog(arr);\n        exLog('Code executed successfully');\n\n        })()");
+    scriptTag.innerHTML = "\n        (function(){\n            ".concat(text, "\n        })()");
     scriptTag.setAttribute('id', 'code-to-execute');
     $_ifrm_$.contentWindow.document.body.appendChild(scriptTag);
   } catch (er) {
@@ -2595,7 +2637,7 @@ function $_initialize_XML_editor_$() {
   $_CodeMirrorXMl_$ = CodeMirror(document.querySelector('#my-div-2'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width\">\n  <title>JS Bin</title>\n</head>\n<body>\n    <h1>How is it going?</h1>\n\n</body>\n</html>",
+    value: "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width\">\n  <title>JS Bin</title>\n</head>\n<body>\n    <h1>Heading example</h1>\n    <div style=\"display: flex; justify-content:space-around;\">\n      <div style='text-align:left;border:1px solid red;'>r</div>\n      <div style='text-align:left;border:1px solid red;'>r</div>\n    </div>\n\n</body>\n</html>",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'xml',
     theme: 'monokai' // @@@ additional cdn is used for this.
@@ -46667,7 +46709,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_c("video-component")], 1)
+  return _c(
+    "div",
+    [
+      this.displayTextEditor
+        ? _c("text-editor-component", { attrs: { state: "shown" } })
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

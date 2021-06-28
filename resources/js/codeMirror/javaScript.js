@@ -9,8 +9,24 @@ function $_initialize_text_editor_$(){
     $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
         lineNumbers: true,
         tabSize: 4,
-        value: `console.log('ide gas')
-console.log('message two')
+        value: `(function addHeading(){
+  var num = 3
+  var interval = setInterval(()=>{
+  if(num <= 0){
+    clearInterval(interval)
+      document.querySelectorAll('.added').forEach(el=>{
+      el.remove()
+      })
+    } else {
+    let a = document.createElement('h2')
+    a.className = 'added'
+   a.innerText = 'This text will be gone in ' + num + ' seconds'
+    document.body.appendChild(a)
+    num--
+    }
+    console.log('done')
+  },1000)
+})()
 `, // @@@ text is like this so that the new lines would not be indented in the browser.
         mode: 'javascript',
         theme:'monokai', // @@@ additional cdn is used for this.
@@ -57,13 +73,7 @@ function $_scriptToIframe_$(frame_id,text){
 
         scriptTag.innerHTML = `
         (function(){
-            ${consoleFunctions}
-
             ${text}
-
-        exLog(arr);
-        exLog('Code executed successfully');
-
         })()`;
 
         scriptTag.setAttribute('id','code-to-execute')

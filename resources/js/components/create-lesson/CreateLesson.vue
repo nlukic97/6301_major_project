@@ -91,7 +91,7 @@
             addNewSlide(slideType){
                 var newSlide;
                 if(slideType === 'exercise'){
-                    newSlide = {type:slideType,content:'Exercise slide',data:{xml:'someHtml',javaScript:'someJs'}}
+                    newSlide = {type:slideType,content:'Exercise',data:{xml:'someHtml',javaScript:'someJs'}}
                 } else {
                     newSlide = {type:slideType,content:''}
                 }
@@ -102,6 +102,9 @@
 
                 this.slideTypeHandler(this.currentSlideIndex)
                 this.saveSlidesToDb()
+
+
+                console.log(this.slides)
             },
 
             displaySlide(text){
@@ -262,7 +265,6 @@
             this.slideId = rowFromDb.id /** used later for post requests*/
 
             if(this.slides.length > 0){ /** If the array returned is zero */
-                // this.displaySlide(this.slides[this.currentSlideIndex].content)
                 this.slideTypeHandler(this.currentSlideIndex)
             }
         }
