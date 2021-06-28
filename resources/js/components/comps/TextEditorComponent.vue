@@ -48,19 +48,21 @@
                     xml.$_initialize_XML_editor_$()
                     javaScript.$_initialize_text_editor_$()
 
-                    /** Listeners for code changes*/
+                    /** Listeners for code changes, and emitting to CreateLesson.vue */
                     javaScript.getInstance().on('change',(instance,change)=>{
-                        //this.$emit('javaScriptChange',javaScript.$_getJsValue_$())
-                        console.log('change js')
+                        this.$emit('javaScriptChange',javaScript.$_getJsValue_$())
                     })
                    xml.getInstance().on('change',(instance,change)=>{
-                       //this.$emit('xmlChange',xml.$_getXMLValue_$())
-                       console.log('change xml')
+                       this.$emit('xmlChange',xml.$_getXMLValue_$())
+
+                       //adding the typed in html straight away as the user types
+                       xml.$_xmlToIframe_$('i-frame',xml.$_getXMLValue_$())
                     })
 
                     this.initialized = true
                     /** This will prevent from reinitialization, which would cause
                      * more than two coding text boxes to be generated. */
+                    this.addCode(this.code_props)
                 }
             },
             /** Activated when the code_props prop changes (when a new slide is loaded from the CreateLesson.vue component)*/

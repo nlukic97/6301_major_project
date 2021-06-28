@@ -9,18 +9,7 @@ function $_initialize_XML_editor_$(){
     $_CodeMirrorXMl_$ = CodeMirror(document.querySelector('#my-div-2'), {
         lineNumbers: true,
         tabSize: 4,
-        value: `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>JS Bin</title>
-</head>
-<body>
-    <!-- type some HTML... -->
-
-</body>
-</html>`, // @@@ text is like this so that the new lines would not be indented in the browser.
+        value: ``, // @@@ text is like this so that the new lines would not be indented in the browser.
         mode: 'xml',
         theme:'monokai' // @@@ additional cdn is used for this.
     });

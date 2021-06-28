@@ -9,7 +9,7 @@ function $_initialize_text_editor_$(){
     $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
         lineNumbers: true,
         tabSize: 4,
-        value: `//type in some javaScript [o_0] ...`, // @@@ text is like this so that the new lines would not be indented in the browser.
+        value: ``, // @@@ text is like this so that the new lines would not be indented in the browser.
         mode: 'javascript',
         theme:'monokai', // @@@ additional cdn is used for this.
         // readOnly:true // @@@ can be used for 'view only' mode of the lesson

@@ -1946,23 +1946,28 @@ __webpack_require__.r(__webpack_exports__);
       _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_scriptToIframe_$('i-frame', _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
     },
     initialize: function initialize() {
+      var _this = this;
+
       if (this.state == 'shown' && this.initialized === false) {
         /** Text editor initializations*/
         _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_initialize_XML_editor_$();
         _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_initialize_text_editor_$();
-        /** Listeners for code changes*/
+        /** Listeners for code changes, and emitting to CreateLesson.vue */
 
         _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().getInstance().on('change', function (instance, change) {
-          //this.$emit('javaScriptChange',javaScript.$_getJsValue_$())
-          console.log('change js');
+          _this.$emit('javaScriptChange', _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
         });
         _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('change', function (instance, change) {
-          //this.$emit('xmlChange',xml.$_getXMLValue_$())
-          console.log('change xml');
+          _this.$emit('xmlChange', _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_getXMLValue_$()); //adding the typed in html straight away as the user types
+
+
+          _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_xmlToIframe_$('i-frame', _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_getXMLValue_$());
         });
         this.initialized = true;
         /** This will prevent from reinitialization, which would cause
          * more than two coding text boxes to be generated. */
+
+        this.addCode(this.code_props);
       }
     },
 
@@ -2213,7 +2218,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           type: slideType,
           content: 'Exercise',
           data: {
-            xml: "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width\">\n  <title>JS Bin</title>\n</head>\n<body>\n    <!-- type some HTML... -->\n\n</body>\n</html>",
+            /** text must be unindented here like this so it can
+             *  be added with no indentation in the text editor*/
+            xml: "<!DOCTYPE html>\n<html>\n<head>\n  <title>JS Bin</title>\n\n  <style>\n  </style>\n</head>\n<body>\n    <!-- type some HTML... -->\n\n</body>\n</html>",
             javaScript: "//type in some javaScript [o_0] ..."
           }
         };
@@ -2237,7 +2244,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.markdownValue = text;
     },
 
-    /** Activated when a slide is edited.*/
+    /** Activated when a regular slide is edited (not exercise one,
+     * that is done directly in TextEditorVue). */
     updateSlide: function updateSlide(text) {
       this.activeSlideText = _marked_js__WEBPACK_IMPORTED_MODULE_1___default()(text);
       this.slides[this.currentSlideIndex].content = text;
@@ -2248,35 +2256,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           in the database with the slides and with the title */
       this.typing();
     },
+
+    /**  @@@
+     * This will check if the user has already commenced with typing new content
+     * both in regular slides and text editor slides.
+     * */
     typing: function typing() {
       var _this = this;
 
-      /** This will check if the user has already commenced with typing */
       if (this.editing === false) {
         /** If they haven't started editing, start the interval counter*/
         this.editing = true;
 
         var _int = setInterval(function () {
           _this.secondsEditing++;
+          /**
+           * When clock reaches 2, it will stop
+           * counting, reset, and will send the axios
+           * request to the database to save all the slides */
 
-          if (_this.secondsEditing >= 1) {
-            /** When clock reaches 4, it will stop counting, reset, and send the axios request to the database */
+          if (_this.secondsEditing >= 2) {
             clearInterval(_int);
             _this.editing = false;
             _this.secondsEditing = 0;
 
             _this.saveSlidesToDb();
           }
-        }, 500);
+        }, 1000);
       } else {
-        /** If a user types, it will reset the clock to 0 but continue the previously set interval.
-            Because this.editing is true, it means they have already started typing */
+        /** @@@@
+         *  If a user types, it will reset the clock to 0
+         *  but continue the previously set interval.
+         *  */
         this.secondsEditing = 0;
       }
     },
     clearSlide: function clearSlide() {
       this.activeSlideText = '';
     },
+
+    /** @@@
+     * Slide navigation
+     * */
     presentNextSlide: function presentNextSlide(index) {
       if (this.slides.length <= 0) {
         return null;
@@ -2303,38 +2324,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       this.slideTypeHandler(index);
     },
-    slideTypeHandler: function slideTypeHandler(index) {
-      if (this.slides[index].type == 'slide') {
-        this.clearSlide();
-        this.hideSlide = false;
-        this.displaySlide(this.slides[index].content);
-        this.text_editor_state = 'not_shown';
-      } else if (this.slides[index].type == 'exercise') {
-        this.text_editor_state = 'shown';
-        this.codeMirrorProps = {
-          xml: this.slides[index].data.xml,
-          javaScript: this.slides[index].data.javaScript
-        };
-        this.hideSlide = true; //this will hide the slide
-        //this.markdownValue = this.slides[index].content
-        //insert code to add the CodeMirror exercise here
-      }
-
-      this.currentSlideIndex = index;
-    },
     jumpToSlide: function jumpToSlide(index) {
       if (index != this.currentSlideIndex) {
-        // this.displaySlide(this.slides[index].content)
         this.slideTypeHandler(index);
         /** This seems to work as of now*/
 
         this.currentSlideIndex = index;
       }
     },
+
+    /** @@@@
+     * Deciding how to display the data of the
+     * current slide based on its type.
+     * */
+    slideTypeHandler: function slideTypeHandler(index) {
+      if (this.slides[index].type == 'slide') {
+        /**
+            1. show slide and hide the TextEditorComponent.vue
+         */
+        this.clearSlide();
+        this.hideSlide = false;
+        this.text_editor_state = 'not_shown';
+        this.displaySlide(this.slides[index].content);
+      } else if (this.slides[index].type == 'exercise') {
+        /**
+            2. Opposite of previous,and we pass the js and xml data
+               to this.codeMirrorProps, bound to the prop titled
+                code_props on the TextEditorComponent.vue
+         */
+        this.hideSlide = true; //this will hide the slide
+
+        this.text_editor_state = 'shown';
+        this.codeMirrorProps = {
+          xml: this.slides[index].data.xml,
+          javaScript: this.slides[index].data.javaScript
+        };
+      }
+
+      this.currentSlideIndex = index;
+    },
     shortenText: function shortenText(index) {
       var content = this.slides[index].content;
 
       if (content.length > 10) {
+        /** displaying only part of the slide text within the slide list */
         return this.slides[index].content.substring(0, 10).trim() + '...';
       } else {
         return content;
@@ -2352,21 +2385,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       if (this.slides.length > 0) {
         //if there are still slides to be shown
-        // this.displaySlide(this.slides[this.currentSlideIndex].content)
         this.slideTypeHandler(this.currentSlideIndex);
       } else {
-        this.displaySlide('');
+        this.displaySlide(''); //which will display nothing
       }
 
       this.saveSlidesToDb();
     },
+
+    /** When the javascript or xml window are updated */
     updateJavaScript: function updateJavaScript(data) {
       this.slides[this.currentSlideIndex].data.javaScript = data;
-      console.log('updated javascript', this.slides);
+      this.typing();
     },
     updateXML: function updateXML(data) {
       this.slides[this.currentSlideIndex].data.xml = data;
-      console.log('updated xml', this.slides);
+      this.typing();
     },
     saveSlidesToDb: function saveSlidesToDb() {
       var _this2 = this;
@@ -2406,7 +2440,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    // this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]")
     var rowFromDb = JSON.parse(this.load_slides);
     var slidesFromDb = JSON.parse(rowFromDb.data);
     this.slides = slidesFromDb;
@@ -2531,7 +2564,7 @@ function $_initialize_text_editor_$() {
   $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "//type in some javaScript [o_0] ...",
+    value: "",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'javascript',
     theme: 'monokai' // @@@ additional cdn is used for this.
@@ -2600,7 +2633,7 @@ function $_initialize_XML_editor_$() {
   $_CodeMirrorXMl_$ = CodeMirror(document.querySelector('#my-div-2'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width\">\n  <title>JS Bin</title>\n</head>\n<body>\n    <!-- type some HTML... -->\n\n</body>\n</html>",
+    value: "",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'xml',
     theme: 'monokai' // @@@ additional cdn is used for this.

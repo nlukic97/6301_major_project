@@ -40,7 +40,7 @@
                 ></textarea>
             </div>
 
-            <!-- When it is a slide-->
+            <!-- When it is a regular display slide-->
             <div v-if="this.slides.length > 0" id="content" :class="{hidden: hideSlide}">
                 <span class="x-btn" @click="removeSlide()">x</span>
                 <div
@@ -97,12 +97,15 @@
                 var newSlide;
                 if(slideType === 'exercise'){
                     newSlide = {type:slideType,content:'Exercise',data:{
+                        /** text must be unindented here like this so it can
+                         *  be added with no indentation in the text editor*/
                         xml:`<!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
   <title>JS Bin</title>
+
+  <style>
+  </style>
 </head>
 <body>
     <!-- type some HTML... -->
@@ -131,7 +134,8 @@
                 this.markdownValue = text
             },
 
-            /** Activated when a slide is edited.*/
+            /** Activated when a regular slide is edited (not exercise one,
+             * that is done directly in TextEditorVue). */
             updateSlide(text){
                 this.activeSlideText = marked(text)
                 this.slides[this.currentSlideIndex].content = text
@@ -145,26 +149,35 @@
                 this.typing()
             },
 
+            /**  @@@
+             * This will check if the user has already commenced with typing new content
+             * both in regular slides and text editor slides.
+             * */
             typing(){
-                /** This will check if the user has already commenced with typing */
                 if(this.editing === false){
-
                     /** If they haven't started editing, start the interval counter*/
                     this.editing = true;
 
                     let int = setInterval( ()=> {
                         this.secondsEditing++;
-                        if(this.secondsEditing >= 1){ /** When clock reaches 4, it will stop counting, reset, and send the axios request to the database */
+
+                        /**
+                         * When clock reaches 2, it will stop
+                         * counting, reset, and will send the axios
+                         * request to the database to save all the slides */
+                        if(this.secondsEditing >= 2){
                             clearInterval(int)
                             this.editing = false;
                             this.secondsEditing = 0;
                             this.saveSlidesToDb()
                         }
-                    },500)
+                    },1000)
 
                 } else {
-                    /** If a user types, it will reset the clock to 0 but continue the previously set interval.
-                        Because this.editing is true, it means they have already started typing */
+                    /** @@@@
+                     *  If a user types, it will reset the clock to 0
+                     *  but continue the previously set interval.
+                     *  */
                     this.secondsEditing = 0;
                 }
             },
@@ -173,6 +186,10 @@
                 this.activeSlideText = ''
             },
 
+
+            /** @@@
+             * Slide navigation
+             * */
             presentNextSlide(index){
                 if(this.slides.length <= 0){
                     return null;
@@ -183,7 +200,6 @@
                 }
                 this.slideTypeHandler(index)
             },
-
             presentPrevSlide(index){
                 if(this.slides.length <= 0){
                     return null;
@@ -194,16 +210,35 @@
                 }
                 this.slideTypeHandler(index)
             },
+            jumpToSlide(index){
+                if(index != this.currentSlideIndex){
+                    this.slideTypeHandler(index) /** This seems to work as of now*/
+                    this.currentSlideIndex = index
+                }
+            },
 
+            /** @@@@
+             * Deciding how to display the data of the
+             * current slide based on its type.
+             * */
             slideTypeHandler(index){
                 if(this.slides[index].type == 'slide'){
+                    /**
+                        1. show slide and hide the TextEditorComponent.vue
+                     */
                     this.clearSlide()
                     this.hideSlide = false
-
-                    this.displaySlide(this.slides[index].content)
                     this.text_editor_state = 'not_shown'
 
+                    this.displaySlide(this.slides[index].content)
+
                 } else if(this.slides[index].type == 'exercise'){
+                    /**
+                        2. Opposite of previous,and we pass the js and xml data
+                           to this.codeMirrorProps, bound to the prop titled
+                            code_props on the TextEditorComponent.vue
+                     */
+                    this.hideSlide = true //this will hide the slide
                     this.text_editor_state = 'shown'
 
                     this.codeMirrorProps = {
@@ -211,25 +246,15 @@
                         javaScript: this.slides[index].data.javaScript
                     }
 
-                    this.hideSlide = true //this will hide the slide
-                    //this.markdownValue = this.slides[index].content
-                    //insert code to add the CodeMirror exercise here
                 }
 
                 this.currentSlideIndex = index;
             },
 
-            jumpToSlide(index){
-                if(index != this.currentSlideIndex){
-                    // this.displaySlide(this.slides[index].content)
-                    this.slideTypeHandler(index) /** This seems to work as of now*/
-                    this.currentSlideIndex = index
-                }
-            },
-
             shortenText(index){
                 let content = this.slides[index].content
                 if(content.length > 10){
+                    /** displaying only part of the slide text within the slide list */
                     return (this.slides[index].content).substring(0,10).trim() + '...'
                 } else {
                     return content
@@ -242,29 +267,25 @@
                 if(this.slides.length - 1 === deleteIndex){ //if we are deleting the last slide
                     this.currentSlideIndex--;
                 }
-
-
                 this.slides.splice(deleteIndex,1);
 
                 if(this.slides.length > 0){ //if there are still slides to be shown
-
-                    // this.displaySlide(this.slides[this.currentSlideIndex].content)
                     this.slideTypeHandler(this.currentSlideIndex)
                 } else {
-                    this.displaySlide('')
+                    this.displaySlide('') //which will display nothing
                 }
 
                 this.saveSlidesToDb()
             },
 
+            /** When the javascript or xml window are updated */
             updateJavaScript(data){
                 this.slides[this.currentSlideIndex].data.javaScript = data
-                console.log('updated javascript',this.slides)
+                this.typing()
             },
-
             updateXML(data){
                 this.slides[this.currentSlideIndex].data.xml = data
-                console.log('updated xml',this.slides)
+                this.typing()
             },
 
             async saveSlidesToDb(){
@@ -281,7 +302,6 @@
             }
         },
         mounted(){
-            // this.slides = JSON.parse("[{\"type\":\"slide\",\"content\":\"# slide 1\"},{\"type\":\"slide\",\"content\":\"$lide 2\"},{\"type\":\"exercise\",\"content\":\"# This is an exercise \\n\\n ## Buckle up \"},{\"type\":\"slide\",\"content\":\"# e \\n- a \\n- e\\n- a\\n\\n1. 2 \\n2. 3\\n3. a\"}]")
             let rowFromDb = JSON.parse(this.load_slides);
             let slidesFromDb = JSON.parse(rowFromDb.data);
 
