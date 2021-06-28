@@ -1926,10 +1926,13 @@ __webpack_require__.r(__webpack_exports__);
       initialized: false
     };
   },
-  props: ['state'],
+  props: ['state', 'code_props'],
   watch: {
     state: function state() {
       this.initialize();
+    },
+    code_props: function code_props() {
+      this.addCode(this.code_props);
     }
   },
   methods: {
@@ -1943,8 +1946,6 @@ __webpack_require__.r(__webpack_exports__);
       _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_scriptToIframe_$('i-frame', _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
     },
     initialize: function initialize() {
-      var _this = this;
-
       if (this.state == 'shown' && this.initialized === false) {
         /** Text editor initializations*/
         _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_initialize_XML_editor_$();
@@ -1952,68 +1953,23 @@ __webpack_require__.r(__webpack_exports__);
         /** Listeners for code changes*/
 
         _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().getInstance().on('change', function (instance, change) {
-          _this.$emit('javaScriptChange', _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
-
-          _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().setValue(_codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().$_getJsValue_$());
+          //this.$emit('javaScriptChange',javaScript.$_getJsValue_$())
+          console.log('change js');
         });
         _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('change', function (instance, change) {
-          _this.$emit('xmlChange', _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().$_getXMLValue_$());
-          /** Can't be uncommented like this at the same time as line 51 to set the XML distance
-           * because we make an infinite reaction loop.
-           * We type something in javascript, the change registers it and updates it on the other users side.
-           * However, the other user registers a change in javascript, so it will send us back the change, which
-           * will cause or editor to change, and the loop goes on. So a keypress reaction would be better. */
-          // javaScript.getInstance().setValue(xml.$_getXMLValue_$())
-
-        });
-        /** Testing different listeners to use for codemirror */
-
-        /*xml.getInstance().on('focus',()=>{
-             console.log('XML IS FOCUSED')
-             xml.getInstance().on('change',()=>{
-                 console.log('You have typed something')
-             })
-         })
-         xml.getInstance().on('blur',()=>{
-             console.log('XML IS blur')
-             xml.getInstance().on('change',()=>{
-                 console.log('This has been changed without you typing')
-             })
-         })
-          xml.getInstance().on('update',()=>{
-             console.log('XML HAS BEEN UPDATED')
-         })*/
-
-        /** This will work with ctrl+x and ctrl+v only if the user
-         * types something into the text editor before doing a copy-paste*/
-
-        _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('paste', function (e) {
-          console.log('You have pasted text');
-          setTimeout(function () {
-            console.log(e.getValue());
-          }, 2);
-        });
-        _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('cut', function (e) {
-          console.log('You have cut text');
-          setTimeout(function () {
-            console.log(e.getValue());
-          }, 2);
-        }); //maybe I could use key down, but only under the condition that the ctrl key is pressed
-        //Keydown causes errors. Keyup might be ok, but it will not be a live update.
-        // I should also add ctrl + z and ctrl + y for back and forth
-
-        _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().on('keydown', function (e) {
-          console.log('You are typing');
-          setTimeout(function () {
-            console.log(e.getValue());
-          }, 2);
+          //this.$emit('xmlChange',xml.$_getXMLValue_$())
+          console.log('change xml');
         });
         this.initialized = true;
-        /** This will prevent from reinitialization,
-        since we only need it to happen once per page load. Reinitialization causes multiple
-        text editor div's to be appended. It will only happen if this.state is shown
-        which is a prop passed in from the CreateLesson.vue component */
+        /** This will prevent from reinitialization, which would cause
+         * more than two coding text boxes to be generated. */
       }
+    },
+
+    /** Activated when the code_props prop changes (when a new slide is loaded from the CreateLesson.vue component)*/
+    addCode: function addCode(props) {
+      _codeMirror_javaScript__WEBPACK_IMPORTED_MODULE_1___default().getInstance().setValue(props.javaScript);
+      _codeMirror_xml_js__WEBPACK_IMPORTED_MODULE_0___default().getInstance().setValue(props.xml);
     }
   },
   mounted: function mounted() {
@@ -2221,6 +2177,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CreateLesson",
@@ -2240,7 +2197,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       secondsEditing: 0,
 
       /** For the interval in this.typing() */
-      text_editor_state: null
+      text_editor_state: null,
+      codeMirrorProps: {
+        xml: null,
+        javaScript: null
+      }
     };
   },
   methods: {
@@ -2252,8 +2213,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           type: slideType,
           content: 'Exercise',
           data: {
-            xml: 'someHtml',
-            javaScript: 'someJs'
+            xml: "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width\">\n  <title>JS Bin</title>\n</head>\n<body>\n    <!-- type some HTML... -->\n\n</body>\n</html>",
+            javaScript: "//type in some javaScript [o_0] ..."
           }
         };
       } else {
@@ -2350,11 +2311,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.text_editor_state = 'not_shown';
       } else if (this.slides[index].type == 'exercise') {
         this.text_editor_state = 'shown';
+        this.codeMirrorProps = {
+          xml: this.slides[index].data.xml,
+          javaScript: this.slides[index].data.javaScript
+        };
         this.hideSlide = true; //this will hide the slide
-
-        this.markdownValue = this.slides[index].content; //insert code to add the CodeMirror exercise here
-
-        console.log('Here is the exercise for slide of index ' + index + '. We will not display this slide but just show an empty canvas');
+        //this.markdownValue = this.slides[index].content
+        //insert code to add the CodeMirror exercise here
       }
 
       this.currentSlideIndex = index;
@@ -2568,7 +2531,7 @@ function $_initialize_text_editor_$() {
   $_CodeMirrorJavaScript_$ = CodeMirror(document.querySelector('#my-div'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "(function addHeading(){\n  var num = 3\n  var interval = setInterval(()=>{\n  if(num <= 0){\n    clearInterval(interval)\n      document.querySelectorAll('.added').forEach(el=>{\n      el.remove()\n      })\n    } else {\n    let a = document.createElement('h2')\n    a.className = 'added'\n   a.innerText = 'This text will be gone in ' + num + ' seconds'\n    document.body.appendChild(a)\n    num--\n    }\n    console.log('done')\n  },1000)\n})()\n",
+    value: "//type in some javaScript [o_0] ...",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'javascript',
     theme: 'monokai' // @@@ additional cdn is used for this.
@@ -2637,7 +2600,7 @@ function $_initialize_XML_editor_$() {
   $_CodeMirrorXMl_$ = CodeMirror(document.querySelector('#my-div-2'), {
     lineNumbers: true,
     tabSize: 4,
-    value: "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width\">\n  <title>JS Bin</title>\n</head>\n<body>\n    <h1>Heading example</h1>\n    <div style=\"display: flex; justify-content:space-around;\">\n      <div style='text-align:left;border:1px solid red;'>r</div>\n      <div style='text-align:left;border:1px solid red;'>r</div>\n    </div>\n\n</body>\n</html>",
+    value: "<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width\">\n  <title>JS Bin</title>\n</head>\n<body>\n    <!-- type some HTML... -->\n\n</body>\n</html>",
     // @@@ text is like this so that the new lines would not be indented in the browser.
     mode: 'xml',
     theme: 'monokai' // @@@ additional cdn is used for this.
@@ -47058,7 +47021,10 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("text-editor-component", {
-                attrs: { state: _vm.text_editor_state },
+                attrs: {
+                  state: _vm.text_editor_state,
+                  code_props: _vm.codeMirrorProps
+                },
                 on: {
                   javaScriptChange: _vm.updateJavaScript,
                   xmlChange: _vm.updateXML

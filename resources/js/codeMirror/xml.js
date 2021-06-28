@@ -17,11 +17,7 @@ function $_initialize_XML_editor_$(){
   <title>JS Bin</title>
 </head>
 <body>
-    <h1>Heading example</h1>
-    <div style="display: flex; justify-content:space-around;">
-      <div style='text-align:left;border:1px solid red;'>r</div>
-      <div style='text-align:left;border:1px solid red;'>r</div>
-    </div>
+    <!-- type some HTML... -->
 
 </body>
 </html>`, // @@@ text is like this so that the new lines would not be indented in the browser.

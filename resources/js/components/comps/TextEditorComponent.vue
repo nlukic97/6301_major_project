@@ -23,10 +23,13 @@
                 initialized:false
             }
         },
-        props:['state'],
+        props:['state','code_props'],
         watch:{
             state: function(){
                 this.initialize()
+            },
+            code_props: function(){
+                this.addCode(this.code_props)
             }
         },
         methods:{
@@ -47,71 +50,23 @@
 
                     /** Listeners for code changes*/
                     javaScript.getInstance().on('change',(instance,change)=>{
-                        this.$emit('javaScriptChange',javaScript.$_getJsValue_$())
-                      xml.getInstance().setValue(javaScript.$_getJsValue_$())
+                        //this.$emit('javaScriptChange',javaScript.$_getJsValue_$())
+                        console.log('change js')
                     })
                    xml.getInstance().on('change',(instance,change)=>{
-                       this.$emit('xmlChange',xml.$_getXMLValue_$())
-                        /** Can't be uncommented like this at the same time as line 51 to set the XML distance
-                         * because we make an infinite reaction loop.
-                         * We type something in javascript, the change registers it and updates it on the other users side.
-                         * However, the other user registers a change in javascript, so it will send us back the change, which
-                         * will cause or editor to change, and the loop goes on. So a keypress reaction would be better. */
-                        // javaScript.getInstance().setValue(xml.$_getXMLValue_$())
+                       //this.$emit('xmlChange',xml.$_getXMLValue_$())
+                       console.log('change xml')
                     })
 
-
-                    /** Testing different listeners to use for codemirror */
-                   /*xml.getInstance().on('focus',()=>{
-                        console.log('XML IS FOCUSED')
-                        xml.getInstance().on('change',()=>{
-                            console.log('You have typed something')
-                        })
-                    })
-                    xml.getInstance().on('blur',()=>{
-                        console.log('XML IS blur')
-                        xml.getInstance().on('change',()=>{
-                            console.log('This has been changed without you typing')
-                        })
-                    })
-
-                    xml.getInstance().on('update',()=>{
-                        console.log('XML HAS BEEN UPDATED')
-                    })*/
-
-
-                    /** This will work with ctrl+x and ctrl+v only if the user
-                     * types something into the text editor before doing a copy-paste*/
-                    xml.getInstance().on('paste',e=>{
-                        console.log('You have pasted text')
-                        setTimeout(function(){
-                            console.log(e.getValue())
-                        },2)
-                    })
-
-                    xml.getInstance().on('cut',e=>{
-                        console.log('You have cut text')
-                        setTimeout(function(){
-                            console.log(e.getValue())
-                        },2)
-                    })
-
-                    //maybe I could use key down, but only under the condition that the ctrl key is pressed
-
-                    //Keydown causes errors. Keyup might be ok, but it will not be a live update.
-                    // I should also add ctrl + z and ctrl + y for back and forth
-                    xml.getInstance().on('keydown',(e)=>{
-                        console.log('You are typing')
-                        setTimeout(function(){
-                            console.log(e.getValue())
-                        },2)
-                    })
-
-                    this.initialized = true /** This will prevent from reinitialization,
-                     since we only need it to happen once per page load. Reinitialization causes multiple
-                     text editor div's to be appended. It will only happen if this.state is shown
-                     which is a prop passed in from the CreateLesson.vue component */
+                    this.initialized = true
+                    /** This will prevent from reinitialization, which would cause
+                     * more than two coding text boxes to be generated. */
                 }
+            },
+            /** Activated when the code_props prop changes (when a new slide is loaded from the CreateLesson.vue component)*/
+            addCode(props){
+                javaScript.getInstance().setValue(props.javaScript)
+                xml.getInstance().setValue(props.xml)
             }
         },
         mounted(){

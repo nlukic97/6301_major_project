@@ -58,6 +58,7 @@
                     :state="text_editor_state"
                     v-on:javaScriptChange="updateJavaScript"
                     v-on:xmlChange="updateXML"
+                    v-bind:code_props="codeMirrorProps"
                 ></text-editor-component> <!-- Adding a class binding directly to the component does not display the text of the component until I click on it -->
 
             </div>
@@ -84,14 +85,32 @@
                 activeSlideText:``,
                 editing:false, /** For the interval in this.typing() */
                 secondsEditing:0, /** For the interval in this.typing() */
-                text_editor_state: null
+                text_editor_state: null,
+                codeMirrorProps:{
+                    xml:null,
+                    javaScript:null
+                }
             }
         },
         methods:{
             addNewSlide(slideType){
                 var newSlide;
                 if(slideType === 'exercise'){
-                    newSlide = {type:slideType,content:'Exercise',data:{xml:'someHtml',javaScript:'someJs'}}
+                    newSlide = {type:slideType,content:'Exercise',data:{
+                        xml:`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+</head>
+<body>
+    <!-- type some HTML... -->
+
+</body>
+</html>`,
+                     javaScript:`//type in some javaScript [o_0] ...`
+                    }}
                 } else {
                     newSlide = {type:slideType,content:''}
                 }
@@ -180,15 +199,21 @@
                 if(this.slides[index].type == 'slide'){
                     this.clearSlide()
                     this.hideSlide = false
+
                     this.displaySlide(this.slides[index].content)
                     this.text_editor_state = 'not_shown'
 
                 } else if(this.slides[index].type == 'exercise'){
                     this.text_editor_state = 'shown'
+
+                    this.codeMirrorProps = {
+                        xml: this.slides[index].data.xml,
+                        javaScript: this.slides[index].data.javaScript
+                    }
+
                     this.hideSlide = true //this will hide the slide
-                    this.markdownValue = this.slides[index].content
+                    //this.markdownValue = this.slides[index].content
                     //insert code to add the CodeMirror exercise here
-                    console.log('Here is the exercise for slide of index ' + index +'. We will not display this slide but just show an empty canvas');
                 }
 
                 this.currentSlideIndex = index;
