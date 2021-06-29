@@ -6,6 +6,7 @@
         <input type="number" v-model="receiver">
         <button @click="sendMessageToAll">Broadcast Message</button>
         <button @click="sendMessageToOne">Send to one user</button>
+        <button @click="whisper">Whisper</button>
     </div>
 </template>
 
@@ -22,7 +23,8 @@
                 userId: null,
                 roomId:null,
                 receiver:null,
-                users:[]
+                users:[],
+                channel:null
 
             }
         },
@@ -51,13 +53,19 @@
                 }
             },
 
+            whisper(){
+                this.channel.whisper('click',{
+                    id: this.userId
+                })
+            },
+
 
             /** @@@
              * Laravel Echo Init - based on passed props from views\class.blade.php, this will:
              * - join a presence channel for roomId
              * - join a private channel for roomId and userId*/
             async EchoInit(roomId,userId) {
-                await Echo.join(`home.${roomId}`)
+                this.channel = await Echo.join(`home.${roomId}`)
                     .here(e => {  //who is here when I join
                         console.log(e, ' is/are the users here, including you.')
                         this.users = e;
@@ -77,7 +85,11 @@
                     })
                     .listen('NewMessage', (e) => {
                         console.log('NewMessage:', e)
-                    });
+                    })
+                    .listenForWhisper('click',e=>{
+                        console.log(e.id + ' is typing.')
+                    })
+                ;
 
                 /** @@@
                  * Personal channel for receiving private messages.

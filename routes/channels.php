@@ -19,9 +19,11 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('home.{roomId}',function($user,$roomId){
-    return $user->id;
     /* @ Only all *authenticated* users will have access listen
      * to this room. The roomId depends on the url */
+    return $user->id;
+    // This will return the user ID to be be stored in
+    // an array of users present in the classroom (see Classroom.vue component).
 });
 
 Broadcast::channel('user.{roomId}.{id}',function($user,$roomId,$id){

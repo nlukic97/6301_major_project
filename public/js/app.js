@@ -1875,6 +1875,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 //import echoInit from '../../laravel-echo.js' //Module for Echo listeners
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Classroom",
@@ -1887,7 +1888,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       userId: null,
       roomId: null,
       receiver: null,
-      users: []
+      users: [],
+      channel: null
     };
   },
   methods: {
@@ -1962,6 +1964,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2, null, [[0, 7]]);
       }))();
     },
+    whisper: function whisper() {
+      this.channel.whisper('click', {
+        id: this.userId
+      });
+    },
 
     /** @@@
      * Laravel Echo Init - based on passed props from views\class.blade.php, this will:
@@ -1998,17 +2005,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log(_this3.users, ' are the users left');
                 }).listen('NewMessage', function (e) {
                   console.log('NewMessage:', e);
+                }).listenForWhisper('click', function (e) {
+                  console.log(e.id + ' is typing.');
                 });
 
               case 2:
-                _context3.next = 4;
+                _this3.channel = _context3.sent;
+                _context3.next = 5;
                 return Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 . //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 listen('NewPrivateMessage', function (e) {
                   console.log('New Private message:', e);
                 });
 
-              case 4:
+              case 5:
               case "end":
                 return _context3.stop();
             }
@@ -46756,7 +46766,9 @@ var render = function() {
     _vm._v(" "),
     _c("button", { on: { click: _vm.sendMessageToOne } }, [
       _vm._v("Send to one user")
-    ])
+    ]),
+    _vm._v(" "),
+    _c("button", { on: { click: _vm.whisper } }, [_vm._v("Whisper")])
   ])
 }
 var staticRenderFns = []
