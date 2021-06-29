@@ -1856,34 +1856,175 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _laravel_echo_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../laravel-echo.js */ "./resources/js/laravel-echo.js");
-/* harmony import */ var _laravel_echo_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_laravel_echo_js__WEBPACK_IMPORTED_MODULE_0__);
-//
-//
-//
-//
-//
-//
-//
- //Module for Echo listeners
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//import echoInit from '../../laravel-echo.js' //Module for Echo listeners
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Classroom",
-  props: ['user_id', 'class_id'],
+  props: ['user_id', 'class_id', 'room_id'],
+
+  /** Passed down from the database*/
   data: function data() {
     return {
       displayTextEditor: true,
-      id: null,
-      "class": null
+      userId: null,
+      roomId: null,
+      receiver: null,
+      users: []
     };
   },
-  methods: {},
-  beforeMount: function beforeMount() {
-    this.id = parseInt(this.user_id);
-    this["class"] = this.class_id;
-    _laravel_echo_js__WEBPACK_IMPORTED_MODULE_0___default().init(this.id);
+  methods: {
+    sendMessageToAll: function sendMessageToAll() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        var data;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return axios.post('/api/send-msg-all', {
+                  msg: 'Msg to all users except me',
+                  roomId: _this.roomId
+                });
+
+              case 3:
+                data = _context.sent;
+                console.log('Msg sent', data);
+                _context.next = 10;
+                break;
+
+              case 7:
+                _context.prev = 7;
+                _context.t0 = _context["catch"](0);
+                console.log(_context.t0);
+
+              case 10:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 7]]);
+      }))();
+    },
+    sendMessageToOne: function sendMessageToOne() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        var data;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return axios.post('/api/send-msg-one', {
+                  msg: 'Message to user 2',
+                  roomId: _this2.roomId,
+                  receiverId: _this2.receiver
+                });
+
+              case 3:
+                data = _context2.sent;
+                console.log('Msg to one user sent', data);
+                _context2.next = 10;
+                break;
+
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+
+              case 10:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, null, [[0, 7]]);
+      }))();
+    },
+
+    /** @@@
+     * Laravel Echo Init - based on passed props from views\class.blade.php, this will:
+     * - join a presence channel for roomId
+     * - join a private channel for roomId and userId*/
+    EchoInit: function EchoInit(roomId, userId) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return Echo.join("home.".concat(roomId)).here(function (e) {
+                  //who is here when I join
+                  console.log(e, ' is/are the users here, including you.');
+                  _this3.users = e;
+                }).joining(function (e) {
+                  //who is joining
+                  console.log(e, ' has joined');
+
+                  _this3.users.push(e);
+
+                  console.log(_this3.users, ' are the users who are here');
+                  console.log(_this3.users.indexOf(e));
+                }).leaving(function (e) {
+                  console.log(e, ' has left');
+
+                  var index = _this3.users.indexOf(e);
+
+                  _this3.users.splice(index, 1);
+
+                  console.log(_this3.users, ' are the users left');
+                }).listen('NewMessage', function (e) {
+                  console.log('NewMessage:', e);
+                });
+
+              case 2:
+                _context3.next = 4;
+                return Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
+                . //so each user should be subscribed to their own channel (maybe a hash from the db?)
+                listen('NewPrivateMessage', function (e) {
+                  console.log('New Private message:', e);
+                });
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    }
   },
-  mounted: function mounted() {}
+  beforeMount: function beforeMount() {
+    this.userId = parseInt(this.user_id);
+    this.roomId = parseInt(this.class_id);
+  },
+  mounted: function mounted() {
+    this.EchoInit(this.roomId, this.userId);
+    console.log("You are user ".concat(this.userId, " in room ").concat(this.roomId));
+  }
 });
 
 /***/ }),
@@ -1997,17 +2138,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
 //
 //
 //
@@ -2017,79 +2147,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoComponent.vue",
   data: function data() {
-    return {
-      receiver: null
-    };
+    return {};
   },
-  methods: {
-    sendMessageToAll: function sendMessageToAll() {
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        var data;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.prev = 0;
-                _context.next = 3;
-                return axios.post('/api/send-msg-all', {
-                  msg: 'Msg to all users except me'
-                });
-
-              case 3:
-                data = _context.sent;
-                console.log('Msg sent', data);
-                _context.next = 10;
-                break;
-
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](0);
-                console.log(_context.t0);
-
-              case 10:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, null, [[0, 7]]);
-      }))();
-    },
-    sendMessageToOne: function sendMessageToOne() {
-      var _this = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-        var data;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.prev = 0;
-                _context2.next = 3;
-                return axios.post('/api/send-msg-one', {
-                  msg: 'Message to user 2',
-                  receiverId: _this.receiver
-                });
-
-              case 3:
-                data = _context2.sent;
-                console.log('Msg to one user sent', data);
-                _context2.next = 10;
-                break;
-
-              case 7:
-                _context2.prev = 7;
-                _context2.t0 = _context2["catch"](0);
-                console.log(_context2.t0);
-
-              case 10:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, null, [[0, 7]]);
-      }))();
-    }
-  }
+  methods: {}
 });
 
 /***/ }),
@@ -2658,44 +2718,6 @@ module.exports = {
   $_initialize_XML_editor_$: $_initialize_XML_editor_$,
   $_xmlToIframe_$: $_xmlToIframe_$,
   getInstance: getInstance
-};
-
-/***/ }),
-
-/***/ "./resources/js/laravel-echo.js":
-/*!**************************************!*\
-  !*** ./resources/js/laravel-echo.js ***!
-  \**************************************/
-/***/ ((module) => {
-
-/** @@@ Laravel Echo
-    imported into Classroom.vue
- */
-function init(id) {
-  Echo.join("home").here(function (e) {
-    //who is here when I join
-    console.log(e, 'You are here');
-  }).joining(function (e) {
-    //who is joining
-    console.log(e, Echo.socketId() + ' has joined');
-  }).leaving(function (e) {
-    console.log(e, Echo.socketId() + ' has left');
-  }).listen('NewMessage', function (e) {
-    console.log('NewMessage:', e);
-  });
-  /** @@@
-   * Each user will have this be their personal channel for receiving messages.
-   * id is passed as a prop in the views/class.blade.php view in the classroom-component
-   * */
-
-  Echo["private"]("user.".concat(id)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
-  .listen('NewPrivateMessage', function (e) {
-    console.log('New Private message:', e);
-  });
-}
-
-module.exports = {
-  init: init
 };
 
 /***/ }),
@@ -46706,15 +46728,36 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      this.displayTextEditor
-        ? _c("text-editor-component", { attrs: { state: "shown" } })
-        : _vm._e()
-    ],
-    1
-  )
+  return _c("div", [
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.receiver,
+          expression: "receiver"
+        }
+      ],
+      attrs: { type: "number" },
+      domProps: { value: _vm.receiver },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.receiver = $event.target.value
+        }
+      }
+    }),
+    _vm._v(" "),
+    _c("button", { on: { click: _vm.sendMessageToAll } }, [
+      _vm._v("Broadcast Message")
+    ]),
+    _vm._v(" "),
+    _c("button", { on: { click: _vm.sendMessageToOne } }, [
+      _vm._v("Send to one user")
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -46790,40 +46833,16 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h1", [_vm._v("This is the video component")]),
-    _vm._v(" "),
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.receiver,
-          expression: "receiver"
-        }
-      ],
-      attrs: { type: "number" },
-      domProps: { value: _vm.receiver },
-      on: {
-        input: function($event) {
-          if ($event.target.composing) {
-            return
-          }
-          _vm.receiver = $event.target.value
-        }
-      }
-    }),
-    _vm._v(" "),
-    _c("button", { on: { click: _vm.sendMessageToAll } }, [
-      _vm._v("Broadcast Message")
-    ]),
-    _vm._v(" "),
-    _c("button", { on: { click: _vm.sendMessageToOne } }, [
-      _vm._v("Send to one user")
-    ])
-  ])
+  return _vm._m(0)
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [_c("h1", [_vm._v("This is the video component")])])
+  }
+]
 render._withStripped = true
 
 

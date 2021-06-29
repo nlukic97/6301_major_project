@@ -18,11 +18,13 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('home',function($user){
-    return true; /* @ All *authenticated* users will have access listen to this channel.*/
+Broadcast::channel('home.{roomId}',function($user,$roomId){
+    return $user->id;
+    /* @ Only all *authenticated* users will have access listen
+     * to this room. The roomId depends on the url */
 });
 
-Broadcast::channel('user.{id}',function($user,$id){
+Broadcast::channel('user.{roomId}.{id}',function($user,$roomId,$id){
     /***
      * You can only subscribe to this channel
      * if the $id you are subscribing is

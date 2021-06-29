@@ -1,9 +1,10 @@
 /** @@@ Laravel Echo
-    imported into Classroom.vue
+    imported into Classroom.vue. But not in use anymore.
  */
 
-function init(id){
-    Echo.join(`home`)
+/*
+function init(roomId,userId){
+    Echo.join(`home.${roomId}`)
         .here(e=>{  //who is here when I join
             console.log(e, 'You are here')
         })
@@ -18,11 +19,8 @@ function init(id){
             console.log('NewMessage:',e)
         });
 
-    /** @@@
-     * Each user will have this be their personal channel for receiving messages.
-     * id is passed as a prop in the views/class.blade.php view in the classroom-component
-     * */
-    Echo.private(`user.${id}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
+
+    Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
         .listen('NewPrivateMessage',e=>{
             console.log('New Private message:',e)
         })
@@ -31,3 +29,4 @@ function init(id){
 module.exports = {
     init
 }
+*/

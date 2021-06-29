@@ -16,16 +16,18 @@ class NewPrivateMessage implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $senderId;
-    public $receiverId; //we don't need to send this to the user
+    private $roomId;
+    private $receiverId; //we don't need to send this to the user
     public $message;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($senderId,$receiverId,$message)
+    public function __construct($senderId,$roomId,$receiverId,$message)
     {
         $this->senderId = $senderId;
+        $this->roomId = $roomId;
         $this->receiverId = $receiverId;
         $this->message = $message;
     }
@@ -37,6 +39,6 @@ class NewPrivateMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("user.".$this->receiverId);
+        return new PrivateChannel("user.".$this->roomId.".".$this->receiverId);
     }
 }
