@@ -34,6 +34,7 @@
 
     <!-- User code from codemirror which will be executed -->
 {{--    <script id="code-to-execute"></script>--}}
+    <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
 
     <script src="{{asset('js/app.js')}}"></script>
 

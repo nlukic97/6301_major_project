@@ -1876,6 +1876,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 //import echoInit from '../../laravel-echo.js' //Module for Echo listeners
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Classroom",
@@ -1886,10 +1891,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       displayTextEditor: true,
       userId: null,
+      myPeerId: null,
+      otherPeerId: null,
       roomId: '',
       receiver: null,
       users: [],
-      channel: null
+      channel: null,
+      otherPeer: null
     };
   },
   methods: {
@@ -1987,6 +1995,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   //who is here when I join
                   console.log(e, ' is/are the users here, including you.');
                   _this3.users = e;
+                  console.log("You are user ".concat(_this3.userId, " in room ").concat(_this3.roomId));
                 }).joining(function (e) {
                   //who is joining
                   console.log(e, ' has joined');
@@ -1995,6 +2004,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   console.log(_this3.users, ' are the users who are here');
                   console.log(_this3.users.indexOf(e));
+
+                  _this3.whisperMyPeerId('peer-to-connect-with');
                 }).leaving(function (e) {
                   console.log(e, ' has left');
 
@@ -2007,6 +2018,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log('NewMessage:', e);
                 }).listenForWhisper('click', function (e) {
                   console.log(e.id + ' is typing.');
+                }).listenForWhisper('peer-to-connect-with', function (e) {
+                  console.log('User 1 is whispering to you...');
+                  _this3.otherPeerId = e.otherPeerId;
+                  console.log('Other peer id', _this3.otherPeerId);
+                  console.log('Whispering back to user 1...');
+
+                  _this3.whisperMyPeerId('peer-to-connect-back');
+
+                  _this3.connectToPeer();
+                }).listenForWhisper('peer-to-connect-back', function (e) {
+                  console.log('User 2 is whispering back to you...');
+                  _this3.otherPeerId = e.otherPeerId;
+                  console.log('Other peer id', _this3.otherPeerId);
+
+                  _this3.connectToPeer();
                 });
 
               case 2:
@@ -2025,6 +2051,64 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee3);
       }))();
+    },
+
+    /** Peer functions */
+    peerInit: function peerInit() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return new Peer();
+
+              case 2:
+                _this4.peer = _context4.sent;
+
+                _this4.peer.on('open', function (id) {
+                  _this4.myPeerId = id; // console.log('added my peer id', this.myPeerId)
+                });
+
+                _this4.peer.on('connection', function (conn) {
+                  var _this5 = this;
+
+                  this.conn = conn;
+                  console.log('Connected to this guy:');
+                  console.log(this.conn);
+                  this.conn.on('open', function () {
+                    _this5.conn.on('data', function (data) {
+                      console.log('Received data:', data);
+                    });
+                  });
+                });
+
+              case 5:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+
+    /** This will happen when the 2nd user joins, the 1st
+     * will commence the connection process
+     * (laravel echo '.joining' presence channel listener)*/
+    whisperMyPeerId: function whisperMyPeerId(whisperName) {
+      if (this.users.length === 2) {
+        this.channel.whisper(whisperName, {
+          otherPeerId: this.myPeerId
+        });
+      }
+    },
+    connectToPeer: function connectToPeer() {
+      this.conn = this.peer.connect(this.otherPeerId);
+    },
+    sendPeerMsg: function sendPeerMsg() {
+      this.conn.send('Hi !');
     }
   },
   beforeMount: function beforeMount() {
@@ -2032,8 +2116,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.roomId = this.class_id;
   },
   mounted: function mounted() {
+    this.peerInit();
     this.EchoInit(this.roomId, this.userId);
-    console.log("You are user ".concat(this.userId, " in room ").concat(this.roomId));
   }
 });
 
@@ -46738,38 +46822,75 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.receiver,
-          expression: "receiver"
-        }
-      ],
-      attrs: { type: "number" },
-      domProps: { value: _vm.receiver },
-      on: {
-        input: function($event) {
-          if ($event.target.composing) {
-            return
+  return _c(
+    "div",
+    [
+      _c("video-component"),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.receiver,
+            expression: "receiver"
           }
-          _vm.receiver = $event.target.value
+        ],
+        attrs: { type: "number" },
+        domProps: { value: _vm.receiver },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.receiver = $event.target.value
+          }
         }
-      }
-    }),
-    _vm._v(" "),
-    _c("button", { on: { click: _vm.sendMessageToAll } }, [
-      _vm._v("Broadcast Message")
-    ]),
-    _vm._v(" "),
-    _c("button", { on: { click: _vm.sendMessageToOne } }, [
-      _vm._v("Send to one user")
-    ]),
-    _vm._v(" "),
-    _c("button", { on: { click: _vm.whisper } }, [_vm._v("Whisper")])
-  ])
+      }),
+      _vm._v(" "),
+      _c("button", { on: { click: _vm.sendMessageToAll } }, [
+        _vm._v("Broadcast Message")
+      ]),
+      _vm._v(" "),
+      _c("button", { on: { click: _vm.sendMessageToOne } }, [
+        _vm._v("Send to one user")
+      ]),
+      _vm._v(" "),
+      _c("button", { on: { click: _vm.whisper } }, [_vm._v("Whisper")]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.otherPeer,
+            expression: "otherPeer"
+          }
+        ],
+        attrs: { type: "text" },
+        domProps: { value: _vm.otherPeer },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.otherPeer = $event.target.value
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("button", { on: { click: _vm.connectToPeer } }, [
+        _vm._v("Connect to peer")
+      ]),
+      _vm._v(" "),
+      _c("button", { on: { click: _vm.sendPeerMsg } }, [_vm._v("Send msg")]),
+      _vm._v(" "),
+      _c("button", { on: { click: _vm.whisperMyPeerId } }, [
+        _vm._v("Send other peer my peerId")
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
