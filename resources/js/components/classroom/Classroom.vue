@@ -21,7 +21,7 @@
             return{
                 displayTextEditor:true,
                 userId: null,
-                roomId:null,
+                roomId:'',
                 receiver:null,
                 users:[],
                 channel:null
@@ -102,7 +102,7 @@
         },
         beforeMount(){
             this.userId = parseInt(this.user_id)
-            this.roomId = parseInt(this.class_id)
+            this.roomId = this.class_id
         },
         mounted() {
             this.EchoInit(this.roomId, this.userId)

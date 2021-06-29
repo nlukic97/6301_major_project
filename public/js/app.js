@@ -1886,7 +1886,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       displayTextEditor: true,
       userId: null,
-      roomId: null,
+      roomId: '',
       receiver: null,
       users: [],
       channel: null
@@ -2029,7 +2029,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   beforeMount: function beforeMount() {
     this.userId = parseInt(this.user_id);
-    this.roomId = parseInt(this.class_id);
+    this.roomId = this.class_id;
   },
   mounted: function mounted() {
     this.EchoInit(this.roomId, this.userId);

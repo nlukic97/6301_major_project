@@ -28,6 +28,13 @@ Route::middleware('auth')->get('/class/{id}', function($id){
     return view('class',compact('myId','classId'))    ; //the class view will open the text editor for now
 });
 
+Route::middleware('auth')->get('/class', function(){
+    return redirect('/start-lesson');
+});
+
 Route::middleware('auth')->get('/all-slides',[\App\Http\Controllers\SlideController::class,'index']);
 Route::middleware('auth')->get('/new-slides',[\App\Http\Controllers\SlideController::class,'new_slides']);
 Route::middleware('auth')->get('/edit-slides/{id}',[\App\Http\Controllers\SlideController::class,'edit_lesson']);
+
+
+Route::middleware('auth')->get('/start-lesson',[\App\Http\Controllers\CreateLessonController::class,'create_new_lesson']);
