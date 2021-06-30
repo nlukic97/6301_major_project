@@ -2115,24 +2115,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     sendPeerMsg: function sendPeerMsg() {
       this.conn.send('Hi !');
     },
+    saveMyVideoStream: function saveMyVideoStream(stream) {
+      console.log('emitted data');
+      this.myVideoStream = stream;
+      console.log(this.myVideoStream);
+      /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
 
-    /** Video stream functions */
-    getMediaStream: function getMediaStream() {
-      var _this6 = this;
-
-      /** 'navigator' only works with https / secure connections. For development, also works if you
-       *   serve this application with the following terminal command:
-       *
-       php artisan serve --port=443
-       *
-       * */
-      navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      }).then(function (stream) {
-        _this6.myVideoStream = stream;
-        /** 'this.myVideoStream' passed to VideoComponent.vue as 'my_video_stream' prop. */
-      });
+      this.EchoInit(this.roomId, this.userId);
+      this.peerInit();
     }
   },
   beforeMount: function beforeMount() {
@@ -2140,11 +2130,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.roomId = this.class_id;
   },
   mounted: function mounted() {
-    /** Maybe I should first get my video before doing anything else on the peer or echo server, but maybe it
-     *  is not necessary if my stream is assigned to a variable ?*/
-    this.EchoInit(this.roomId, this.userId);
-    this.getMediaStream();
-    this.peerInit();
+    /** Had this like this, but decided to change it just in case a user's video does not work - there is no point in connecting at all.*/
+
+    /*
+    this.EchoInit(this.roomId, this.userId)
+    this.peerInit()
+    */
   }
 });
 
@@ -2259,6 +2250,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -2268,12 +2267,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoComponent.vue",
-  props: ['my_video_stream', 'other_peer_video'],
-  watch: {
-    my_video_stream: function my_video_stream() {
-      this.myVideoStream = this.my_video_stream;
-      this.addVideoStream(this.myVideoStream);
-    }
+  props: ['other_peer_video'],
+  watch: {//  my_video_stream:function(){
+    //     this.myVideoStream = this.my_video_stream
+    //     this.addVideoStream(this.myVideoStream)
+    // }
   },
   data: function data() {
     return {
@@ -2281,12 +2279,51 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    /** Video stream functions */
+    getMediaStream: function getMediaStream() {
+      var _this = this;
+
+      /** 'navigator' only works with https / secure connections. For development, also works if you
+       *   serve this application with the following terminal command:
+       *
+       php artisan serve --port=443
+       *
+       * */
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      }).then(function (stream) {
+        _this.myVideoStream = stream;
+
+        _this.addVideoStream(_this.myVideoStream);
+      });
+    },
     addVideoStream: function addVideoStream(stream) {
-      this.$refs.myvideo.srcObject = stream;
-      this.$refs.myvideo.play();
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this2.$refs.myvideo.srcObject = stream;
+
+                _this2.$refs.myvideo.play(); //sending the stream to the Classroom.vue component so that it could be available for making the call
+
+
+                _this2.$emit('myOwnVideoStream', stream);
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
     }
   },
-  mounted: function mounted() {// this.getMediaStream()
+  mounted: function mounted() {
+    this.getMediaStream();
   }
 });
 
@@ -46870,10 +46907,8 @@ var render = function() {
     "div",
     [
       _c("video-component", {
-        attrs: {
-          my_video_stream: _vm.myVideoStream,
-          other_peer_video: _vm.otherPeerStream
-        }
+        attrs: { other_peer_video: _vm.otherPeerStream },
+        on: { myOwnVideoStream: _vm.saveMyVideoStream }
       }),
       _vm._v(" "),
       _c("input", {

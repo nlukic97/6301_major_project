@@ -2,8 +2,8 @@
     <div>
 <!--        <text-editor-component v-if="this.displayTextEditor" state="shown"></text-editor-component>-->
         <video-component
-            :my_video_stream="myVideoStream"
             :other_peer_video="otherPeerStream"
+            v-on:myOwnVideoStream="saveMyVideoStream"
         ></video-component>
 
         <input type="number" v-model="receiver">
@@ -178,21 +178,14 @@
             sendPeerMsg(){
                 this.conn.send('Hi !')
             },
+            saveMyVideoStream(stream){
+                console.log('emitted data')
+                this.myVideoStream = stream
+                console.log(this.myVideoStream)
 
-            /** Video stream functions */
-            getMediaStream(){
-                /** 'navigator' only works with https / secure connections. For development, also works if you
-                 *   serve this application with the following terminal command:
-                 *
-                 php artisan serve --port=443
-                 *
-                 * */
-                navigator.mediaDevices.getUserMedia({
-                    video:true,
-                    audio:true
-                }).then(stream=>{
-                    this.myVideoStream = stream /** 'this.myVideoStream' passed to VideoComponent.vue as 'my_video_stream' prop. */
-                })
+                /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
+                this.EchoInit(this.roomId, this.userId)
+                this.peerInit()
             }
         },
         beforeMount(){
@@ -200,11 +193,11 @@
             this.roomId = this.class_id
         },
         mounted() {
-            /** Maybe I should first get my video before doing anything else on the peer or echo server, but maybe it
-             *  is not necessary if my stream is assigned to a variable ?*/
+            /** Had this like this, but decided to change it just in case a user's video does not work - there is no point in connecting at all.*/
+            /*
             this.EchoInit(this.roomId, this.userId)
-            this.getMediaStream()
             this.peerInit()
+            */
         }
     }
 </script>
