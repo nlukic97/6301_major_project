@@ -1,7 +1,10 @@
 <template>
     <div>
 <!--        <text-editor-component v-if="this.displayTextEditor" state="shown"></text-editor-component>-->
-        <video-component :other_peer_video="otherPeerVideo"></video-component>
+        <video-component
+            :my_video_stream="myVideoStream"
+            :other_peer_video="otherPeerStream"
+        ></video-component>
 
         <input type="number" v-model="receiver">
         <button @click="sendMessageToAll">Broadcast Message</button>
@@ -33,7 +36,8 @@
                 users:[],
                 channel:null,
                 otherPeer:null,
-                otherPeerVideo:null
+                myVideoStream:null,
+                otherPeerStream:null
 
             }
         },
@@ -173,6 +177,22 @@
             },
             sendPeerMsg(){
                 this.conn.send('Hi !')
+            },
+
+            /** Video stream functions */
+            getMediaStream(){
+                /** 'navigator' only works with https / secure connections. For development, also works if you
+                 *   serve this application with the following terminal command:
+                 *
+                 php artisan serve --port=443
+                 *
+                 * */
+                navigator.mediaDevices.getUserMedia({
+                    video:true,
+                    audio:true
+                }).then(stream=>{
+                    this.myVideoStream = stream /** 'this.myVideoStream' passed to VideoComponent.vue as 'my_video_stream' prop. */
+                })
             }
         },
         beforeMount(){
@@ -180,7 +200,10 @@
             this.roomId = this.class_id
         },
         mounted() {
+            /** Maybe I should first get my video before doing anything else on the peer or echo server, but maybe it
+             *  is not necessary if my stream is assigned to a variable ?*/
             this.EchoInit(this.roomId, this.userId)
+            this.getMediaStream()
             this.peerInit()
         }
     }

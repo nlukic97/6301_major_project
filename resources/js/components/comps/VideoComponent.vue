@@ -8,36 +8,26 @@
 <script>
     export default {
         name: "VideoComponent.vue",
-        props:['other_peer_video'],
+        props:['my_video_stream','other_peer_video'],
+        watch:{
+           my_video_stream:function(){
+              this.myVideoStream = this.my_video_stream
+              this.addVideoStream(this.myVideoStream)
+          }
+        },
         data:function(){
             return{
                 myVideoStream:null,
             }
         },
         methods:{
-            getMediaStream(){
-                /** 'navigator' only works with https / secure connections.
-                 * For development, also works if you serve this application
-                 * with the following terminal command:
-                 *
-                   php artisan serve --port=443
-                 *
-                 * */
-                navigator.mediaDevices.getUserMedia({
-                    video:true,
-                    audio:true
-                }).then(stream=>{
-                    this.myVideoStream = stream
-                    this.addVideoStream(this.myVideoStream)
-                })
-            },
             addVideoStream(stream){
                 this.$refs.myvideo.srcObject = stream
                 this.$refs.myvideo.play()
             }
         },
         mounted(){
-            this.getMediaStream()
+            // this.getMediaStream()
         }
     }
 </script>

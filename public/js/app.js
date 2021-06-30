@@ -1881,6 +1881,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 //import echoInit from '../../laravel-echo.js' //Module for Echo listeners
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Classroom",
@@ -1898,7 +1901,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       users: [],
       channel: null,
       otherPeer: null,
-      otherPeerVideo: null
+      myVideoStream: null,
+      otherPeerStream: null
     };
   },
   methods: {
@@ -2110,6 +2114,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     sendPeerMsg: function sendPeerMsg() {
       this.conn.send('Hi !');
+    },
+
+    /** Video stream functions */
+    getMediaStream: function getMediaStream() {
+      var _this6 = this;
+
+      /** 'navigator' only works with https / secure connections. For development, also works if you
+       *   serve this application with the following terminal command:
+       *
+       php artisan serve --port=443
+       *
+       * */
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      }).then(function (stream) {
+        _this6.myVideoStream = stream;
+        /** 'this.myVideoStream' passed to VideoComponent.vue as 'my_video_stream' prop. */
+      });
     }
   },
   beforeMount: function beforeMount() {
@@ -2117,7 +2140,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.roomId = this.class_id;
   },
   mounted: function mounted() {
+    /** Maybe I should first get my video before doing anything else on the peer or echo server, but maybe it
+     *  is not necessary if my stream is assigned to a variable ?*/
     this.EchoInit(this.roomId, this.userId);
+    this.getMediaStream();
     this.peerInit();
   }
 });
@@ -2242,39 +2268,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoComponent.vue",
-  props: ['other_peer_video'],
+  props: ['my_video_stream', 'other_peer_video'],
+  watch: {
+    my_video_stream: function my_video_stream() {
+      this.myVideoStream = this.my_video_stream;
+      this.addVideoStream(this.myVideoStream);
+    }
+  },
   data: function data() {
     return {
       myVideoStream: null
     };
   },
   methods: {
-    getMediaStream: function getMediaStream() {
-      var _this = this;
-
-      /** 'navigator' only works with https / secure connections.
-       * For development, also works if you serve this application
-       * with the following terminal command:
-       *
-         php artisan serve --port=443
-       *
-       * */
-      navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      }).then(function (stream) {
-        _this.myVideoStream = stream;
-
-        _this.addVideoStream(_this.myVideoStream);
-      });
-    },
     addVideoStream: function addVideoStream(stream) {
       this.$refs.myvideo.srcObject = stream;
       this.$refs.myvideo.play();
     }
   },
-  mounted: function mounted() {
-    this.getMediaStream();
+  mounted: function mounted() {// this.getMediaStream()
   }
 });
 
@@ -46858,7 +46870,10 @@ var render = function() {
     "div",
     [
       _c("video-component", {
-        attrs: { other_peer_video: _vm.otherPeerVideo }
+        attrs: {
+          my_video_stream: _vm.myVideoStream,
+          other_peer_video: _vm.otherPeerStream
+        }
       }),
       _vm._v(" "),
       _c("input", {
