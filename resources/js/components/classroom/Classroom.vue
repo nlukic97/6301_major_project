@@ -1,7 +1,7 @@
 <template>
     <div>
 <!--        <text-editor-component v-if="this.displayTextEditor" state="shown"></text-editor-component>-->
-        <video-component></video-component>
+        <video-component :other_peer_video="otherPeerVideo"></video-component>
 
         <input type="number" v-model="receiver">
         <button @click="sendMessageToAll">Broadcast Message</button>
@@ -32,7 +32,8 @@
                 receiver:null,
                 users:[],
                 channel:null,
-                otherPeer:null
+                otherPeer:null,
+                otherPeerVideo:null
 
             }
         },
@@ -179,8 +180,8 @@
             this.roomId = this.class_id
         },
         mounted() {
-            this.peerInit()
             this.EchoInit(this.roomId, this.userId)
+            this.peerInit()
         }
     }
 </script>

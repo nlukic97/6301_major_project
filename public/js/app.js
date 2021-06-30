@@ -1897,7 +1897,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       receiver: null,
       users: [],
       channel: null,
-      otherPeer: null
+      otherPeer: null,
+      otherPeerVideo: null
     };
   },
   methods: {
@@ -2116,8 +2117,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.roomId = this.class_id;
   },
   mounted: function mounted() {
-    this.peerInit();
     this.EchoInit(this.roomId, this.userId);
+    this.peerInit();
   }
 });
 
@@ -2238,12 +2239,43 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoComponent.vue",
+  props: ['other_peer_video'],
   data: function data() {
-    return {};
+    return {
+      myVideoStream: null
+    };
   },
-  methods: {}
+  methods: {
+    getMediaStream: function getMediaStream() {
+      var _this = this;
+
+      /** 'navigator' only works with https / secure connections.
+       * For development, also works if you serve this application
+       * with the following terminal command:
+       *
+         php artisan serve --port=443
+       *
+       * */
+      navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      }).then(function (stream) {
+        _this.myVideoStream = stream;
+
+        _this.addVideoStream(_this.myVideoStream);
+      });
+    },
+    addVideoStream: function addVideoStream(stream) {
+      this.$refs.myvideo.srcObject = stream;
+      this.$refs.myvideo.play();
+    }
+  },
+  mounted: function mounted() {
+    this.getMediaStream();
+  }
 });
 
 /***/ }),
@@ -46825,7 +46857,9 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("video-component"),
+      _c("video-component", {
+        attrs: { other_peer_video: _vm.otherPeerVideo }
+      }),
       _vm._v(" "),
       _c("input", {
         directives: [
@@ -46966,16 +47000,17 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c("h1", [_vm._v("This is the video component")]),
+    _vm._v(" "),
+    _c("video", {
+      ref: "myvideo",
+      attrs: { muted: "" },
+      domProps: { muted: true }
+    })
+  ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("h1", [_vm._v("This is the video component")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
