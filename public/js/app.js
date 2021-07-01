@@ -1902,7 +1902,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       channel: null,
       otherPeer: null,
       myVideoStream: null,
-      otherPeerStream: null
+      otherPeerStream: null,
+      call: null
     };
   },
   methods: {
@@ -2019,25 +2020,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this3.users.splice(index, 1);
 
                   console.log(_this3.users, ' are the users left');
+                  _this3.otherPeerStream = null;
                 }).listen('NewMessage', function (e) {
                   console.log('NewMessage:', e);
                 }).listenForWhisper('click', function (e) {
                   console.log(e.id + ' is typing.');
                 }).listenForWhisper('peer-to-connect-with', function (e) {
-                  console.log('User 1 is whispering to you...');
+                  console.log('The user who joined first is whispering his ID to you, call them !');
                   _this3.otherPeerId = e.otherPeerId;
-                  console.log('Other peer id', _this3.otherPeerId);
-                  console.log('Whispering back to user 1...');
+                  _this3.call = _this3.peer.call(_this3.otherPeerId, _this3.myVideoStream);
 
-                  _this3.whisperMyPeerId('peer-to-connect-back');
-
-                  _this3.connectToPeer();
-                }).listenForWhisper('peer-to-connect-back', function (e) {
-                  console.log('User 2 is whispering back to you...');
-                  _this3.otherPeerId = e.otherPeerId;
-                  console.log('Other peer id', _this3.otherPeerId);
-
-                  _this3.connectToPeer();
+                  _this3.call.on('stream', function (stream) {
+                    console.log('call answered');
+                    _this3.otherPeerStream = stream;
+                  });
                 });
 
               case 2:
@@ -2074,19 +2070,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this4.peer = _context4.sent;
 
                 _this4.peer.on('open', function (id) {
-                  _this4.myPeerId = id; // console.log('added my peer id', this.myPeerId)
+                  _this4.myPeerId = id;
                 });
 
-                _this4.peer.on('connection', function (conn) {
-                  var _this5 = this;
-
-                  this.conn = conn;
-                  console.log('Connected to this guy:');
-                  console.log(this.conn);
-                  this.conn.on('open', function () {
-                    _this5.conn.on('data', function (data) {
-                      console.log('Received data:', data);
-                    });
+                _this4.peer.on('call', function (call) {
+                  console.log('Someone is calling: ', call);
+                  call.answer(_this4.myVideoStream);
+                  call.on('stream', function (stream) {
+                    _this4.otherPeerStream = stream;
                   });
                 });
 
@@ -2099,8 +2090,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
 
-    /** This will happen when the 2nd user joins, the 1st
-     * will commence the connection process
+    /** This will happen when the 2nd user joins, which will tell the 1st user to place the video call
      * (laravel echo '.joining' presence channel listener)*/
     whisperMyPeerId: function whisperMyPeerId(whisperName) {
       if (this.users.length === 2) {
@@ -2115,14 +2105,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     sendPeerMsg: function sendPeerMsg() {
       this.conn.send('Hi !');
     },
+
+    /** Called on emit from VideoComponent.vue*/
     saveMyVideoStream: function saveMyVideoStream(stream) {
-      console.log('emitted data');
       this.myVideoStream = stream;
-      console.log(this.myVideoStream);
       /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
 
       this.EchoInit(this.roomId, this.userId);
       this.peerInit();
+    },
+
+    /** testing out call functions*/
+    callPeer: function callPeer() {
+      this.call = this.peer.call(this.otherPeerId, this.myVideoStream);
     }
   },
   beforeMount: function beforeMount() {
@@ -2271,14 +2266,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoComponent.vue",
   props: ['other_peer_video'],
-  watch: {//  my_video_stream:function(){
-    //     this.myVideoStream = this.my_video_stream
-    //     this.addVideoStream(this.myVideoStream)
-    // }
+  watch: {
+    other_peer_video: function other_peer_video() {
+      this.otherVideoStream = this.other_peer_video;
+      this.addOtherVideoStream(this.otherVideoStream);
+    }
   },
   data: function data() {
     return {
-      myVideoStream: null
+      myVideoStream: null,
+      otherVideoStream: null
     };
   },
   methods: {
@@ -2322,6 +2319,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee);
+      }))();
+    },
+    addOtherVideoStream: function addOtherVideoStream(stream) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                console.log('stream passed');
+                _this3.$refs.myvideo2.srcObject = stream;
+
+                _this3.$refs.myvideo2.play();
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     }
   },
@@ -47063,11 +47081,7 @@ var render = function() {
         domProps: { muted: true }
       }),
       _vm._v(" "),
-      _c("video", {
-        ref: "myvideo2",
-        attrs: { muted: "" },
-        domProps: { muted: true }
-      })
+      _c("video", { ref: "myvideo2" })
     ])
   ])
 }

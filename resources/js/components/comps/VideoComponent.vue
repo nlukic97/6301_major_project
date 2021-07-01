@@ -3,7 +3,7 @@
         <h1>This is the video component</h1>
         <div class="d-flex justify-content-around">
             <video ref="myvideo" muted></video>
-            <video ref="myvideo2" muted></video>
+            <video ref="myvideo2"></video>
         </div>
     </div>
 </template>
@@ -13,14 +13,15 @@
         name: "VideoComponent.vue",
         props:['other_peer_video'],
         watch:{
-          //  my_video_stream:function(){
-          //     this.myVideoStream = this.my_video_stream
-          //     this.addVideoStream(this.myVideoStream)
-          // }
+            other_peer_video:function(){
+              this.otherVideoStream = this.other_peer_video
+              this.addOtherVideoStream(this.otherVideoStream)
+          }
         },
         data:function(){
             return{
                 myVideoStream:null,
+                otherVideoStream:null
             }
         },
         methods:{
@@ -46,6 +47,11 @@
 
                 //sending the stream to the Classroom.vue component so that it could be available for making the call
                 this.$emit('myOwnVideoStream',stream)
+            },
+            async addOtherVideoStream(stream){
+                console.log('stream passed')
+                this.$refs.myvideo2.srcObject = stream
+                this.$refs.myvideo2.play()
             }
         },
         mounted(){

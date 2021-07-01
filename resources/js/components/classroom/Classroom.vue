@@ -37,7 +37,8 @@
                 channel:null,
                 otherPeer:null,
                 myVideoStream:null,
-                otherPeerStream:null
+                otherPeerStream:null,
+                call:null,
 
             }
         },
@@ -101,6 +102,7 @@
                         let index = this.users.indexOf(e)
                         this.users.splice(index,1)
                         console.log(this.users,' are the users left')
+                        this.otherPeerStream = null
 
                     })
 
@@ -113,22 +115,24 @@
                     })
 
                     .listenForWhisper('peer-to-connect-with',e=>{
-                        console.log('User 1 is whispering to you...')
+                        console.log('The user who joined first is whispering his ID to you, call them !')
                         this.otherPeerId = e.otherPeerId
-                        console.log('Other peer id',this.otherPeerId)
 
-                        console.log('Whispering back to user 1...')
-                        this.whisperMyPeerId('peer-to-connect-back')
-                        this.connectToPeer()
+                        this.call = this.peer.call(this.otherPeerId,this.myVideoStream)
+
+                        this.call.on('stream',stream=>{
+                            console.log('call answered')
+                            this.otherPeerStream = stream;
+                        })
                     })
 
-                    .listenForWhisper('peer-to-connect-back',e=>{
-                        console.log('User 2 is whispering back to you...')
-
-                            this.otherPeerId = e.otherPeerId
-                            console.log('Other peer id',this.otherPeerId)
-                            this.connectToPeer()
-                        });
+                    // .listenForWhisper('peer-to-connect-back',e=>{
+                    //     console.log('User 2 is whispering back to you...')
+                    //
+                    //         this.otherPeerId = e.otherPeerId
+                    //         console.log('Other peer id',this.otherPeerId)
+                    //         // this.connectToPeer()
+                    //     });
 
                 /** @@@
                  * Personal channel for receiving private messages.
@@ -146,23 +150,18 @@
 
                 this.peer.on('open',(id)=>{
                     this.myPeerId = id
-                    // console.log('added my peer id', this.myPeerId)
                 })
 
-                this.peer.on('connection',function(conn){
-                    this.conn = conn
-                    console.log('Connected to this guy:')
-                    console.log(this.conn)
-                    this.conn.on('open',()=>{
-                        this.conn.on('data',function(data){
-                            console.log('Received data:', data)
-                        })
+                this.peer.on('call',call=>{
+                    console.log('Someone is calling: ',call)
+                    call.answer(this.myVideoStream)
+                    call.on('stream',stream=>{
+                        this.otherPeerStream = stream
                     })
                 })
             },
 
-            /** This will happen when the 2nd user joins, the 1st
-             * will commence the connection process
+            /** This will happen when the 2nd user joins, which will tell the 1st user to place the video call
              * (laravel echo '.joining' presence channel listener)*/
             whisperMyPeerId(whisperName){
                   if(this.users.length === 2){
@@ -178,14 +177,21 @@
             sendPeerMsg(){
                 this.conn.send('Hi !')
             },
+
+            /** Called on emit from VideoComponent.vue*/
             saveMyVideoStream(stream){
-                console.log('emitted data')
                 this.myVideoStream = stream
-                console.log(this.myVideoStream)
 
                 /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
                 this.EchoInit(this.roomId, this.userId)
                 this.peerInit()
+            },
+
+
+
+            /** testing out call functions*/
+            callPeer(){
+                this.call = this.peer.call(this.otherPeerId,this.myVideoStream)
             }
         },
         beforeMount(){
