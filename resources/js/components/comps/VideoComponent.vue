@@ -1,7 +1,10 @@
 <template>
     <div>
         <h1>This is the video component</h1>
-        <video ref="myvideo" muted></video>
+        <div class="d-flex justify-content-around">
+            <video ref="myvideo" muted></video>
+            <video ref="myvideo2" muted></video>
+        </div>
     </div>
 </template>
 

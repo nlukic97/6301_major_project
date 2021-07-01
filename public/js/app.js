@@ -2265,6 +2265,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "VideoComponent.vue",
   props: ['other_peer_video'],
@@ -47053,11 +47056,19 @@ var render = function() {
   return _c("div", [
     _c("h1", [_vm._v("This is the video component")]),
     _vm._v(" "),
-    _c("video", {
-      ref: "myvideo",
-      attrs: { muted: "" },
-      domProps: { muted: true }
-    })
+    _c("div", { staticClass: "d-flex justify-content-around" }, [
+      _c("video", {
+        ref: "myvideo",
+        attrs: { muted: "" },
+        domProps: { muted: true }
+      }),
+      _vm._v(" "),
+      _c("video", {
+        ref: "myvideo2",
+        attrs: { muted: "" },
+        domProps: { muted: true }
+      })
+    ])
   ])
 }
 var staticRenderFns = []
