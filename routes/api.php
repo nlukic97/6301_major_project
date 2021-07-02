@@ -25,4 +25,4 @@ Route::middleware('auth:api')->post('/send-msg-all',[App\Http\Controllers\UserCo
 Route::middleware('auth:api')->post('/send-msg-one',[App\Http\Controllers\UserController::class,'sendMsgToOne']);
 
 /** Slides */
-Route::middleware('auth:api')->post('/update-slides',[App\Http\Controllers\SlideController::class,'update_slides']);
+Route::middleware(['auth:api','teacher'])->post('/update-slides',[App\Http\Controllers\SlideController::class,'update_slides']);
