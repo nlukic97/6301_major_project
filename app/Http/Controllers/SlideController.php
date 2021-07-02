@@ -66,4 +66,10 @@ class SlideController extends Controller
         $slide->update($data);
         $slide->save();
     }
+
+
+    public function delete($id){
+        Slide::find($id)->delete();
+        return redirect('/home');
+    }
 }

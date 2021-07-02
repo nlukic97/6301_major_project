@@ -39,6 +39,7 @@ Route::middleware(['auth','teacher'])->get('/class', function(){
 Route::middleware(['auth','teacher'])->get('/all-slides',[\App\Http\Controllers\SlideController::class,'index']);
 Route::middleware(['auth','teacher'])->get('/new-slides',[\App\Http\Controllers\SlideController::class,'new_slides']);
 Route::middleware(['auth','teacher'])->get('/edit-slides/{id}',[\App\Http\Controllers\SlideController::class,'edit_lesson']);
+Route::middleware(['auth','teacher'])->get('/delete-slides/{id}',[\App\Http\Controllers\SlideController::class,'delete']);
 
 
 Route::middleware(['auth','teacher'])->get('/start-lesson',[\App\Http\Controllers\CreateLessonController::class,'create_new_lesson']);
