@@ -18,7 +18,7 @@ class VerifyTeacher
     public function handle(Request $request, Closure $next)
     {
         if(Auth::user()->type != 'teacher'){
-            return abort(404);
+            return abort(403);
         }
 
         return $next($request);
