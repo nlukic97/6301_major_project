@@ -2813,15 +2813,13 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',
   key: window.PUSHER_APP_KEY,
   wsHost: window.location.hostname,
-
-  /*wsPort:            window.APP_DEBUG ? 6001 : 6002,
-  wssPort:           window.APP_DEBUG ? 6001 : 6002,*/
-  wsPort: 6002,
-  wssPort: 6002,
+  wsPort: window.APP_DEBUG ? 6001 : 6002,
+  wssPort: window.APP_DEBUG ? 6001 : 6002,
   forceTLS: true,
   disableStats: true,
   enabledTransports: ['ws', 'wss']
 });
+console.log('Connected to laravel echo in the bootstrap.js file');
 
 /***/ }),
 
