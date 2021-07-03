@@ -151,6 +151,7 @@
 
                 this.peer.on('open',(id)=>{
                     this.myPeerId = id
+                    console.log('my peer id:' + id)
                 })
 
                 this.peer.on('call',call=>{
