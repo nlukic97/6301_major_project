@@ -2791,15 +2791,26 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+/*window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    wsHost: window.location.hostname,
+    wsPort: 6001,
+    wssPort: 6001,
+    forceTLS:true,
+    disableStats:true
+});*/
+
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',
-  key: "ABCDEFG",
-  cluster: "mt1",
+  key: window.PUSHER_APP_KEY,
   wsHost: window.location.hostname,
-  wsPort: 6001,
-  wssPort: 6001,
-  forceTLS: true,
-  disableStats: true
+  wsPort: window.APP_DEBUG ? 6001 : 6002,
+  wssPort: window.APP_DEBUG ? 6001 : 6002,
+  forceTLS: !window.APP_DEBUG,
+  disableStats: true,
+  enabledTransports: ['ws', 'wss']
 });
 
 /***/ }),
