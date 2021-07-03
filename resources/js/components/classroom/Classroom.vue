@@ -101,7 +101,7 @@
 
                     })
 
-                    .listen('NewMessage', (e) => {
+                    .listen('.NewMessage', (e) => {
                         console.log('NewMessage:', e)
                     })
 
@@ -133,7 +133,7 @@
                  * Personal channel for receiving private messages.
                  * */
                 await Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
-                    .listen('NewPrivateMessage', e => {
+                    .listen('.NewPrivateMessage', e => {
                         console.log('New Private message:', e)
                     })
 
@@ -149,9 +149,6 @@
                     this.myPeerId = id
                     console.log('my peer id: ' + id)
                 })
-
-                //just a test
-                this.peer.connect('573e8c83-df39-4494-847b-97f05d49f40a');
 
                 this.peer.on('call',call=>{
                     console.log('Someone is calling: ',call)

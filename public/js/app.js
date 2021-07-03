@@ -2018,7 +2018,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   console.log(_this3.users, ' are the users left');
                   _this3.otherPeerStream = null;
-                }).listen('NewMessage', function (e) {
+                }).listen('.NewMessage', function (e) {
                   console.log('NewMessage:', e);
                 }).listenForWhisper('click', function (e) {
                   console.log(e.id + ' is typing.');
@@ -2038,7 +2038,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context3.next = 6;
                 return Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 . //so each user should be subscribed to their own channel (maybe a hash from the db?)
-                listen('NewPrivateMessage', function (e) {
+                listen('.NewPrivateMessage', function (e) {
                   console.log('New Private message:', e);
                 });
 
@@ -2072,10 +2072,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this4.peer.on('open', function (id) {
                   _this4.myPeerId = id;
                   console.log('my peer id: ' + id);
-                }); //just a test
-
-
-                _this4.peer.connect('573e8c83-df39-4494-847b-97f05d49f40a');
+                });
 
                 _this4.peer.on('call', function (call) {
                   console.log('Someone is calling: ', call);
@@ -2085,7 +2082,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 });
 
-              case 6:
+              case 5:
               case "end":
                 return _context4.stop();
             }
