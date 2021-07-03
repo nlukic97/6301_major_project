@@ -1996,7 +1996,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
+                console.log('initiating echo');
+                _context3.next = 3;
                 return Echo.join("home.".concat(roomId)).here(function (e) {
                   //who is here when I join
                   console.log(e, ' is/are the users here, including you.');
@@ -2036,16 +2037,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 });
 
-              case 2:
+              case 3:
                 _this3.channel = _context3.sent;
-                _context3.next = 5;
+                _context3.next = 6;
                 return Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 . //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 listen('NewPrivateMessage', function (e) {
                   console.log('New Private message:', e);
                 });
 
-              case 5:
+              case 6:
               case "end":
                 return _context3.stop();
             }
@@ -2109,6 +2110,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     /** Called on emit from VideoComponent.vue*/
     saveMyVideoStream: function saveMyVideoStream(stream) {
       this.myVideoStream = stream;
+      console.log('stream added');
       /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
 
       this.EchoInit(this.roomId, this.userId);

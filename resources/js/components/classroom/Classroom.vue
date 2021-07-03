@@ -79,6 +79,7 @@
              * - join a presence channel for roomId
              * - join a private channel for roomId and userId*/
             async EchoInit(roomId,userId) {
+                console.log('initiating echo')
                 this.channel = await Echo.join(`home.${roomId}`)
 
                     .here(e => {  //who is here when I join
@@ -181,6 +182,7 @@
             /** Called on emit from VideoComponent.vue*/
             saveMyVideoStream(stream){
                 this.myVideoStream = stream
+                console.log('stream added')
 
                 /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
                 this.EchoInit(this.roomId, this.userId)
