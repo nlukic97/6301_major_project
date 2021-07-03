@@ -2042,7 +2042,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
        * */
 
       Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
-      .listen('NewPrivateMessage', function (e) {
+      .listen('.NewPrivateMessage', function (e) {
         console.log('New Private message:', e);
       });
       console.log(this.channel);

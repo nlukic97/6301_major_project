@@ -139,7 +139,7 @@
                  * Personal channel for receiving private messages.
                  * */
                 Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
-                    .listen('NewPrivateMessage', e => {
+                    .listen('.NewPrivateMessage', e => {
                         console.log('New Private message:', e)
                     })
 
