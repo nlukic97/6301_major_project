@@ -2045,6 +2045,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       .listen('NewPrivateMessage', function (e) {
         console.log('New Private message:', e);
       });
+      console.log(this.channel);
     },
 
     /** Peer functions */

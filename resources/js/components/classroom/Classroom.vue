@@ -142,6 +142,8 @@
                     .listen('NewPrivateMessage', e => {
                         console.log('New Private message:', e)
                     })
+
+                console.log(this.channel)
             },
 
 
