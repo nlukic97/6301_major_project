@@ -10,10 +10,7 @@
         <button @click="sendMessageToAll">Broadcast Message</button>
         <button @click="sendMessageToOne">Send to one user</button>
         <button @click="whisper">Whisper</button>
-
-        <input type="text" v-model="otherPeer">
-        <button @click="connectToPeer">Connect to peer</button>
-        <button @click="sendPeerMsg">Send msg</button>
+        
         <button @click="whisperMyPeerId">Send other peer my peerId</button>
     </div>
 </template>
@@ -78,9 +75,9 @@
              * Laravel Echo Init - based on passed props from views\class.blade.php, this will:
              * - join a presence channel for roomId
              * - join a private channel for roomId and userId*/
-            EchoInit(roomId,userId) {
+            async EchoInit(roomId,userId) {
                 console.log('initiating echo')
-                this.channel = Echo.join(`home.${roomId}`)
+                this.channel = await Echo.join(`home.${roomId}`)
 
                     .here(e => {  //who is here when I join
                         console.log(e, ' is/are the users here, including you.')
@@ -138,18 +135,19 @@
                 /** @@@
                  * Personal channel for receiving private messages.
                  * */
-                Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
-                    .listen('.NewPrivateMessage', e => {
+                await Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
+                    .listen('NewPrivateMessage', e => {
                         console.log('New Private message:', e)
                     })
 
-                console.log(this.channel)
+
+                console.log('this channel');
             },
 
 
             /** Peer functions */
-            peerInit(){
-                this.peer = new Peer();
+            async peerInit(){
+                this.peer = await new Peer();
 
                 this.peer.on('open',(id)=>{
                     this.myPeerId = id
@@ -173,13 +171,6 @@
                           otherPeerId: this.myPeerId
                       })
                   }
-            },
-
-            connectToPeer(){
-                this.conn = this.peer.connect(this.otherPeerId)
-            },
-            sendPeerMsg(){
-                this.conn.send('Hi !')
             },
 
             /** Called on emit from VideoComponent.vue*/

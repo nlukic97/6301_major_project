@@ -1881,9 +1881,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
 //import echoInit from '../../laravel-echo.js' //Module for Echo listeners
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Classroom",
@@ -1991,79 +1988,108 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     EchoInit: function EchoInit(roomId, userId) {
       var _this3 = this;
 
-      console.log('initiating echo');
-      this.channel = Echo.join("home.".concat(roomId)).here(function (e) {
-        //who is here when I join
-        console.log(e, ' is/are the users here, including you.');
-        _this3.users = e;
-        console.log("You are user ".concat(_this3.userId, " in room ").concat(_this3.roomId));
-      }).joining(function (e) {
-        //who is joining
-        console.log(e, ' has joined');
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                console.log('initiating echo');
+                _context3.next = 3;
+                return Echo.join("home.".concat(roomId)).here(function (e) {
+                  //who is here when I join
+                  console.log(e, ' is/are the users here, including you.');
+                  _this3.users = e;
+                  console.log("You are user ".concat(_this3.userId, " in room ").concat(_this3.roomId));
+                }).joining(function (e) {
+                  //who is joining
+                  console.log(e, ' has joined');
 
-        _this3.users.push(e);
+                  _this3.users.push(e);
 
-        console.log(_this3.users, ' are the users who are here');
-        console.log(_this3.users.indexOf(e));
+                  console.log(_this3.users, ' are the users who are here');
+                  console.log(_this3.users.indexOf(e));
 
-        _this3.whisperMyPeerId('peer-to-connect-with');
-      }).leaving(function (e) {
-        console.log(e, ' has left');
+                  _this3.whisperMyPeerId('peer-to-connect-with');
+                }).leaving(function (e) {
+                  console.log(e, ' has left');
 
-        var index = _this3.users.indexOf(e);
+                  var index = _this3.users.indexOf(e);
 
-        _this3.users.splice(index, 1);
+                  _this3.users.splice(index, 1);
 
-        console.log(_this3.users, ' are the users left');
-        _this3.otherPeerStream = null;
-      }).listen('NewMessage', function (e) {
-        console.log('NewMessage:', e);
-      }).listenForWhisper('click', function (e) {
-        console.log(e.id + ' is typing.');
-      }).listenForWhisper('peer-to-connect-with', function (e) {
-        console.log('The user who joined first is whispering his ID to you, call them !');
-        _this3.otherPeerId = e.otherPeerId;
-        _this3.call = _this3.peer.call(_this3.otherPeerId, _this3.myVideoStream);
+                  console.log(_this3.users, ' are the users left');
+                  _this3.otherPeerStream = null;
+                }).listen('NewMessage', function (e) {
+                  console.log('NewMessage:', e);
+                }).listenForWhisper('click', function (e) {
+                  console.log(e.id + ' is typing.');
+                }).listenForWhisper('peer-to-connect-with', function (e) {
+                  console.log('The user who joined first is whispering his ID to you, call them !');
+                  _this3.otherPeerId = e.otherPeerId;
+                  _this3.call = _this3.peer.call(_this3.otherPeerId, _this3.myVideoStream);
 
-        _this3.call.on('stream', function (stream) {
-          console.log('call answered');
-          _this3.otherPeerStream = stream;
-        });
-      }); // .listenForWhisper('peer-to-connect-back',e=>{
-      //     console.log('User 2 is whispering back to you...')
-      //
-      //         this.otherPeerId = e.otherPeerId
-      //         console.log('Other peer id',this.otherPeerId)
-      //         // this.connectToPeer()
-      //     });
+                  _this3.call.on('stream', function (stream) {
+                    console.log('call answered');
+                    _this3.otherPeerStream = stream;
+                  });
+                });
 
-      /** @@@
-       * Personal channel for receiving private messages.
-       * */
+              case 3:
+                _this3.channel = _context3.sent;
+                _context3.next = 6;
+                return Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
+                . //so each user should be subscribed to their own channel (maybe a hash from the db?)
+                listen('NewPrivateMessage', function (e) {
+                  console.log('New Private message:', e);
+                });
 
-      Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
-      .listen('.NewPrivateMessage', function (e) {
-        console.log('New Private message:', e);
-      });
-      console.log(this.channel);
+              case 6:
+                console.log('this channel');
+
+              case 7:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
     },
 
     /** Peer functions */
     peerInit: function peerInit() {
       var _this4 = this;
 
-      this.peer = new Peer();
-      this.peer.on('open', function (id) {
-        _this4.myPeerId = id;
-        console.log('my peer id:' + id);
-      });
-      this.peer.on('call', function (call) {
-        console.log('Someone is calling: ', call);
-        call.answer(_this4.myVideoStream);
-        call.on('stream', function (stream) {
-          _this4.otherPeerStream = stream;
-        });
-      });
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return new Peer();
+
+              case 2:
+                _this4.peer = _context4.sent;
+
+                _this4.peer.on('open', function (id) {
+                  _this4.myPeerId = id;
+                  console.log('my peer id:' + id);
+                });
+
+                _this4.peer.on('call', function (call) {
+                  console.log('Someone is calling: ', call);
+                  call.answer(_this4.myVideoStream);
+                  call.on('stream', function (stream) {
+                    _this4.otherPeerStream = stream;
+                  });
+                });
+
+              case 5:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
     },
 
     /** This will happen when the 2nd user joins, which will tell the 1st user to place the video call
@@ -2074,12 +2100,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           otherPeerId: this.myPeerId
         });
       }
-    },
-    connectToPeer: function connectToPeer() {
-      this.conn = this.peer.connect(this.otherPeerId);
-    },
-    sendPeerMsg: function sendPeerMsg() {
-      this.conn.send('Hi !');
     },
 
     /** Called on emit from VideoComponent.vue*/
@@ -46952,33 +46972,6 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("button", { on: { click: _vm.whisper } }, [_vm._v("Whisper")]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.otherPeer,
-            expression: "otherPeer"
-          }
-        ],
-        attrs: { type: "text" },
-        domProps: { value: _vm.otherPeer },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.otherPeer = $event.target.value
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("button", { on: { click: _vm.connectToPeer } }, [
-        _vm._v("Connect to peer")
-      ]),
-      _vm._v(" "),
-      _c("button", { on: { click: _vm.sendPeerMsg } }, [_vm._v("Send msg")]),
       _vm._v(" "),
       _c("button", { on: { click: _vm.whisperMyPeerId } }, [
         _vm._v("Send other peer my peerId")
