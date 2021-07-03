@@ -2018,7 +2018,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   console.log(_this3.users, ' are the users left');
                   _this3.otherPeerStream = null;
-                }).listen('.NewMessage', function (e) {
+                }).listen('NewMessage', function (e) {
                   console.log('NewMessage:', e);
                 }).listenForWhisper('click', function (e) {
                   console.log(e.id + ' is typing.');
@@ -2038,7 +2038,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context3.next = 6;
                 return Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 . //so each user should be subscribed to their own channel (maybe a hash from the db?)
-                listen('.NewPrivateMessage', function (e) {
+                listen('NewPrivateMessage', function (e) {
                   console.log('New Private message:', e);
                 });
 

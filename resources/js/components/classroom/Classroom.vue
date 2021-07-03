@@ -101,7 +101,7 @@
 
                     })
 
-                    .listen('.NewMessage', (e) => {
+                    .listen('NewMessage', (e) => {
                         console.log('NewMessage:', e)
                     })
 
@@ -133,7 +133,7 @@
                  * Personal channel for receiving private messages.
                  * */
                 await Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
-                    .listen('.NewPrivateMessage', e => {
+                    .listen('NewPrivateMessage', e => {
                         console.log('New Private message:', e)
                     })
 
