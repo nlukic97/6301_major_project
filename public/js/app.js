@@ -2075,6 +2075,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   console.log('my peer id:' + id);
                 });
 
+                _this4.peer.on('connection', function (e) {
+                  console.log('this person is connecting to you: ' + e);
+                });
+
                 _this4.peer.on('call', function (call) {
                   console.log('Someone is calling: ', call);
                   call.answer(_this4.myVideoStream);
@@ -2083,7 +2087,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   });
                 });
 
-              case 5:
+              case 6:
               case "end":
                 return _context4.stop();
             }

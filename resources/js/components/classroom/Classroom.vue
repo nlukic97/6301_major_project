@@ -154,6 +154,10 @@
                     console.log('my peer id:' + id)
                 })
 
+                this.peer.on('connection',e=>{
+                    console.log('this person is connecting to you: ' + e)
+                })
+
                 this.peer.on('call',call=>{
                     console.log('Someone is calling: ',call)
                     call.answer(this.myVideoStream)
