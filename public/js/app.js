@@ -1998,7 +1998,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 console.log('initiating echo');
                 _context3.next = 3;
-                return Echo.join("home.".concat(roomId)).here(function (e) {
+                return window.Echo.join("home.".concat(roomId)).here(function (e) {
                   //who is here when I join
                   console.log(e, ' is/are the users here, including you.');
                   _this3.users = e;
@@ -2040,7 +2040,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 3:
                 _this3.channel = _context3.sent;
                 _context3.next = 6;
-                return Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
+                return window.Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 . //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 listen('NewPrivateMessage', function (e) {
                   console.log('New Private message:', e);
@@ -2815,7 +2815,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   wsHost: window.location.hostname,
   wsPort: window.APP_DEBUG ? 6001 : 6002,
   wssPort: window.APP_DEBUG ? 6001 : 6002,
-  forceTLS: true,
+  forceTLS: !window.APP_DEBUG,
   disableStats: true,
   enabledTransports: ['ws', 'wss']
 });

@@ -50,7 +50,7 @@ window.Echo = new Echo({
     wsHost:            window.location.hostname,
     wsPort:            window.APP_DEBUG ? 6001 : 6002,
     wssPort:           window.APP_DEBUG ? 6001 : 6002,
-    forceTLS:          true,
+    forceTLS:          !window.APP_DEBUG,
     disableStats:      true,
     enabledTransports: ['ws', 'wss'],
 });
