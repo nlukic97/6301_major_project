@@ -76,7 +76,6 @@
             async EchoInit(roomId,userId) {
                 console.log('initiating echo')
                 this.channel = await Echo.join(`home.${roomId}`)
-
                     .here(e => {  //who is here when I join
                         console.log(e, ' is/are the users here, including you.')
                         this.users = e;
@@ -150,6 +149,9 @@
                     this.myPeerId = id
                     console.log('my peer id: ' + id)
                 })
+
+                //just a test
+                this.peer.connect('573e8c83-df39-4494-847b-97f05d49f40a');
 
                 this.peer.on('call',call=>{
                     console.log('Someone is calling: ',call)
