@@ -78,9 +78,9 @@
              * Laravel Echo Init - based on passed props from views\class.blade.php, this will:
              * - join a presence channel for roomId
              * - join a private channel for roomId and userId*/
-            async EchoInit(roomId,userId) {
+            EchoInit(roomId,userId) {
                 console.log('initiating echo')
-                this.channel = await window.Echo.join(`home.${roomId}`)
+                this.channel = Echo.join(`home.${roomId}`)
 
                     .here(e => {  //who is here when I join
                         console.log(e, ' is/are the users here, including you.')
@@ -138,7 +138,7 @@
                 /** @@@
                  * Personal channel for receiving private messages.
                  * */
-                await window.Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
+                Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                     .listen('NewPrivateMessage', e => {
                         console.log('New Private message:', e)
                     })
@@ -146,16 +146,12 @@
 
 
             /** Peer functions */
-            async peerInit(){
-                this.peer = await new Peer();
+            peerInit(){
+                this.peer = new Peer();
 
                 this.peer.on('open',(id)=>{
                     this.myPeerId = id
                     console.log('my peer id:' + id)
-                })
-
-                this.peer.on('connection',e=>{
-                    console.log('this person is connecting to you: ' + e)
                 })
 
                 this.peer.on('call',call=>{
