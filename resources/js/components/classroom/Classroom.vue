@@ -10,14 +10,12 @@
         <button @click="sendMessageToAll">Broadcast Message</button>
         <button @click="sendMessageToOne">Send to one user</button>
         <button @click="whisper">Whisper</button>
-        
+
         <button @click="whisperMyPeerId">Send other peer my peerId</button>
     </div>
 </template>
 
 <script>
-
-    //import echoInit from '../../laravel-echo.js' //Module for Echo listeners
 
     export default {
         name: "Classroom",
@@ -140,8 +138,7 @@
                         console.log('New Private message:', e)
                     })
 
-
-                console.log('this channel');
+                console.log('Here is the public channel you have subscribed to',this.channel)
             },
 
 
@@ -151,7 +148,7 @@
 
                 this.peer.on('open',(id)=>{
                     this.myPeerId = id
-                    console.log('my peer id:' + id)
+                    console.log('my peer id: ' + id)
                 })
 
                 this.peer.on('call',call=>{

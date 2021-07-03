@@ -40,7 +40,7 @@ window.Pusher = require('pusher-js');
     wsHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
-    forceTLS:true,
+    forceTLS:false,
     disableStats:true
 });*/
 
@@ -54,6 +54,4 @@ window.Echo = new Echo({
     disableStats:      true,
     enabledTransports: ['ws', 'wss'],
 });
-
-console.log('Connected to laravel echo in the bootstrap.js file');
 

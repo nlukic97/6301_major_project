@@ -1881,7 +1881,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//import echoInit from '../../laravel-echo.js' //Module for Echo listeners
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Classroom",
   props: ['user_id', 'class_id', 'room_id'],
@@ -2044,7 +2043,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 6:
-                console.log('this channel');
+                console.log('Here is the public channel you have subscribed to', _this3.channel);
 
               case 7:
               case "end":
@@ -2072,7 +2071,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 _this4.peer.on('open', function (id) {
                   _this4.myPeerId = id;
-                  console.log('my peer id:' + id);
+                  console.log('my peer id: ' + id);
                 });
 
                 _this4.peer.on('call', function (call) {
@@ -2795,7 +2794,7 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
     wsHost: window.location.hostname,
     wsPort: 6001,
     wssPort: 6001,
-    forceTLS:true,
+    forceTLS:false,
     disableStats:true
 });*/
 
@@ -2809,7 +2808,6 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   disableStats: true,
   enabledTransports: ['ws', 'wss']
 });
-console.log('Connected to laravel echo in the bootstrap.js file');
 
 /***/ }),
 
