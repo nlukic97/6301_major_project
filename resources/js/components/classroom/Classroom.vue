@@ -183,6 +183,9 @@
 
                 /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
                 this.peerInit()
+
+                //timeout is necessary to avoid having the laravel echo instance called before the peer is established.
+                // Maybe I should make peerInit into a promise, and after which I would call the EchoInit function ?
                 setTimeout(()=>{
                     this.EchoInit(this.roomId, this.userId)
                 },500)
