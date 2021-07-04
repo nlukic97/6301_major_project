@@ -10,6 +10,7 @@
         <button @click="sendMessageToAll">Broadcast Message</button>
         <button @click="sendMessageToOne">Send to one user</button>
         <button @click="whisper">Whisper</button>
+        <button @click="closeCall">close call</button>
 
         <button @click="whisperMyPeerId">Send other peer my peerId</button>
     </div>
@@ -61,7 +62,9 @@
                     console.log(error)
                 }
             },
-
+            closeCall(){
+                this.call.close()
+            }
             whisper(){
                 this.channel.whisper('click',{
                     id: this.userId
@@ -179,9 +182,8 @@
                 console.log('stream added')
 
                 /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
-                this.peerInit().then(()=>{
-                    this.EchoInit(this.roomId, this.userId)
-                })
+                this.peerInit()
+                this.EchoInit(this.roomId, this.userId)
             },
 
 
