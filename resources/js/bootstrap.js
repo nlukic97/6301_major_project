@@ -45,7 +45,7 @@ window.Pusher = require('pusher-js');
 });*/
 
 /** Settings 1 */
-window.Echo = new Echo({
+/*window.Echo = new Echo({
     broadcaster:       'pusher',
     key:               window.PUSHER_APP_KEY,
     wsHost:            window.location.hostname,
@@ -54,5 +54,17 @@ window.Echo = new Echo({
     forceTLS:          !window.APP_DEBUG,
     disableStats:      true,
     enabledTransports: ['ws', 'wss'],
+});*/
+
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    wsHost: process.env.MIX_PUSHER_HOST,
+    wsPort: 6001,
+    forceTLS: false,
+    disableStats: true,
+    scheme: process.env.MIX_PUSHER_SCHEME
 });
 

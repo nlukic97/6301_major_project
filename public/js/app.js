@@ -2769,6 +2769,7 @@ var app = new Vue({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
+/* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -2812,15 +2813,26 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 
 /** Settings 1 */
 
+/*window.Echo = new Echo({
+    broadcaster:       'pusher',
+    key:               window.PUSHER_APP_KEY,
+    wsHost:            window.location.hostname,
+    wsPort:            window.APP_DEBUG ? 6001 : 6002,
+    wssPort:           window.APP_DEBUG ? 6001 : 6002,
+    forceTLS:          !window.APP_DEBUG,
+    disableStats:      true,
+    enabledTransports: ['ws', 'wss'],
+});*/
+
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',
-  key: window.PUSHER_APP_KEY,
-  wsHost: window.location.hostname,
-  wsPort: window.APP_DEBUG ? 6001 : 6002,
-  wssPort: window.APP_DEBUG ? 6001 : 6002,
-  forceTLS: !window.APP_DEBUG,
+  key: "ABCDEFG",
+  cluster: "mt1",
+  wsHost: process.env.MIX_PUSHER_HOST,
+  wsPort: 6001,
+  forceTLS: false,
   disableStats: true,
-  enabledTransports: ['ws', 'wss']
+  scheme: process.env.MIX_PUSHER_SCHEME
 });
 
 /***/ }),

@@ -35,10 +35,13 @@
     <!-- User code from codemirror which will be executed -->
 {{--    <script id="code-to-execute"></script>--}}
     <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
-    <script>
+
+    {{--    settings 1--}}
+{{--
+<script>
         window.PUSHER_APP_KEY = '{{ config('broadcasting.connections.pusher.key') }}';
         window.APP_DEBUG = {{ config('app.debug') ? 'true' : 'false' }};
-    </script>
+    </script>--}}
     <script src="{{asset('js/app.js')}}"></script>
 
 </body>
