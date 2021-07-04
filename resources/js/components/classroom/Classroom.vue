@@ -74,7 +74,7 @@
              * - join a presence channel for roomId
              * - join a private channel for roomId and userId*/
             async EchoInit(roomId,userId) {
-                console.log('initiating echo')
+                console.log(`starting function to join channel: home.${roomId}`)
                 this.channel = await Echo.join(`home.${roomId}`)
                     .here(e => {  //who is here when I join
                         console.log(e, ' is/are the users here, including you.')
@@ -132,6 +132,7 @@
                 /** @@@
                  * Personal channel for receiving private messages.
                  * */
+                console.log(`starting function to join private channel: home.${roomId}.${userId}`)
                 await Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                     .listen('NewPrivateMessage', e => {
                         console.log('New Private message:', e)

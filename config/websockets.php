@@ -22,6 +22,7 @@ return [
      * messages to each other via the webSockets.
      */
     'apps' => [
+        //settings 1
         [
             'id' => env('PUSHER_APP_ID'),
             'name' => env('APP_NAME'),

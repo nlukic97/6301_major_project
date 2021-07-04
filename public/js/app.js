@@ -1992,7 +1992,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                console.log('initiating echo');
+                console.log("starting function to join channel: home.".concat(roomId));
                 _context3.next = 3;
                 return Echo.join("home.".concat(roomId)).here(function (e) {
                   //who is here when I join
@@ -2035,17 +2035,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 3:
                 _this3.channel = _context3.sent;
-                _context3.next = 6;
+                // .listenForWhisper('peer-to-connect-back',e=>{
+                //     console.log('User 2 is whispering back to you...')
+                //
+                //         this.otherPeerId = e.otherPeerId
+                //         console.log('Other peer id',this.otherPeerId)
+                //         // this.connectToPeer()
+                //     });
+
+                /** @@@
+                 * Personal channel for receiving private messages.
+                 * */
+                console.log("starting function to join private channel: home.".concat(roomId, ".").concat(userId));
+                _context3.next = 7;
                 return Echo["private"]("user.".concat(roomId, ".").concat(userId)) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 . //so each user should be subscribed to their own channel (maybe a hash from the db?)
                 listen('NewPrivateMessage', function (e) {
                   console.log('New Private message:', e);
                 });
 
-              case 6:
+              case 7:
                 console.log('Here is the public channel you have subscribed to', _this3.channel);
 
-              case 7:
+              case 8:
               case "end":
                 return _context3.stop();
             }
@@ -2797,6 +2809,8 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
     forceTLS:false,
     disableStats:true
 });*/
+
+/** Settings 1 */
 
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',

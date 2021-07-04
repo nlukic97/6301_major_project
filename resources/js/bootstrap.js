@@ -44,6 +44,7 @@ window.Pusher = require('pusher-js');
     disableStats:true
 });*/
 
+/** Settings 1 */
 window.Echo = new Echo({
     broadcaster:       'pusher',
     key:               window.PUSHER_APP_KEY,
