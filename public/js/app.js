@@ -2018,7 +2018,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   console.log(_this3.users, ' are the users left');
                   _this3.otherPeerStream = null;
-                }).listen('   NewMessage', function (e) {
+                }).listen('NewMessage', function (e) {
                   console.log('NewMessage:', e);
                 }).listenForWhisper('click', function (e) {
                   console.log(e.id + ' is typing.');
@@ -2031,17 +2031,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     console.log('call answered');
                     _this3.otherPeerStream = stream;
                   });
+                }).listenForWhisper('peer-to-connect-back', function (e) {
+                  console.log('User 2 is whispering back to you...');
+                  _this3.otherPeerId = e.otherPeerId;
+                  console.log('Other peer id', _this3.otherPeerId); // this.connectToPeer()
                 });
 
               case 3:
                 _this3.channel = _context3.sent;
-                // .listenForWhisper('peer-to-connect-back',e=>{
-                //     console.log('User 2 is whispering back to you...')
-                //
-                //         this.otherPeerId = e.otherPeerId
-                //         console.log('Other peer id',this.otherPeerId)
-                //         // this.connectToPeer()
-                //     });
 
                 /** @@@
                  * Personal channel for receiving private messages.
@@ -2823,6 +2820,8 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
     disableStats:      true,
     enabledTransports: ['ws', 'wss'],
 });*/
+
+/** Settings 2*/
 
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',

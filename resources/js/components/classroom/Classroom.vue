@@ -101,7 +101,7 @@
 
                     })
 
-                    .listen('   NewMessage', (e) => {
+                    .listen('NewMessage', (e) => {
                         console.log('NewMessage:', e)
                     })
 
@@ -121,13 +121,13 @@
                         })
                     })
 
-                    // .listenForWhisper('peer-to-connect-back',e=>{
-                    //     console.log('User 2 is whispering back to you...')
-                    //
-                    //         this.otherPeerId = e.otherPeerId
-                    //         console.log('Other peer id',this.otherPeerId)
-                    //         // this.connectToPeer()
-                    //     });
+                    .listenForWhisper('peer-to-connect-back',e=>{
+                        console.log('User 2 is whispering back to you...')
+
+                            this.otherPeerId = e.otherPeerId
+                            console.log('Other peer id',this.otherPeerId)
+                            // this.connectToPeer()
+                        });
 
                 /** @@@
                  * Personal channel for receiving private messages.

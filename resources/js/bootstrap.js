@@ -57,6 +57,7 @@ window.Pusher = require('pusher-js');
 });*/
 
 
+/** Settings 2*/
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: process.env.MIX_PUSHER_APP_KEY,
