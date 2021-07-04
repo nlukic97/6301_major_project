@@ -101,7 +101,7 @@
 
                     })
 
-                    .listen('NewMessage', (e) => {
+                    .listen('   NewMessage', (e) => {
                         console.log('NewMessage:', e)
                     })
 

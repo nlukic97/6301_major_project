@@ -2018,7 +2018,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   console.log(_this3.users, ' are the users left');
                   _this3.otherPeerStream = null;
-                }).listen('NewMessage', function (e) {
+                }).listen('   NewMessage', function (e) {
                   console.log('NewMessage:', e);
                 }).listenForWhisper('click', function (e) {
                   console.log(e.id + ' is typing.');
