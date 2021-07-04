@@ -74,7 +74,7 @@
              * - join a presence channel for roomId
              * - join a private channel for roomId and userId*/
             async EchoInit(roomId,userId) {
-                console.log(`starting function to join channel: home.${roomId}`)
+                // console.log(`starting function to join channel: home.${roomId}`)
                 this.channel = await Echo.join(`home.${roomId}`)
                     .here(e => {  //who is here when I join
                         console.log(e, ' is/are the users here, including you.')
@@ -114,8 +114,8 @@
                         this.otherPeerId = e.otherPeerId;
                         console.log('calling this peer:' + this.otherPeerId)
 
+                        console.log('My video stream:' + this.myVideoStream)
                         this.call = this.peer.call(this.otherPeerId,this.myVideoStream)
-
                         this.call.on('stream',stream=>{
                             console.log('call answered')
                             this.otherPeerStream = stream;
@@ -133,7 +133,7 @@
                 /** @@@
                  * Personal channel for receiving private messages.
                  * */
-                console.log(`starting function to join private channel: home.${roomId}.${userId}`)
+                // console.log(`starting function to join private channel: home.${roomId}.${userId}`)
                 await Echo.private(`user.${roomId}.${userId}`) //so each user should be subscribed to their own channel (maybe a hash from the db?)
                     .listen('NewPrivateMessage', e => {
                         console.log('New Private message:', e)
@@ -166,6 +166,7 @@
              * (laravel echo '.joining' presence channel listener)*/
             whisperMyPeerId(whisperName){
                   if(this.users.length === 2){
+                      console.log('telling the other person my peer id')
                       this.channel.whisper(whisperName,{
                           otherPeerId: this.myPeerId
                       })
