@@ -112,6 +112,7 @@
                     .listenForWhisper('peer-to-connect-with',e=>{
                         console.log('The user who joined first is whispering his ID to you, call them !')
                         this.otherPeerId = e.otherPeerId;
+                        console.log('calling this peer:' + this.otherPeerId)
 
                         this.call = this.peer.call(this.otherPeerId,this.myVideoStream)
 
@@ -147,6 +148,7 @@
                 this.peer = await new Peer();
 
                 this.peer.on('open',(id)=>{
+                    console.log('here is your peer id:')
                     this.myPeerId = id
                 })
 
