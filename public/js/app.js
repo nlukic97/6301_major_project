@@ -2766,7 +2766,6 @@ var app = new Vue({
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
-/* provided dependency */ var process = __webpack_require__(/*! process/browser */ "./node_modules/process/browser.js");
 window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -2827,11 +2826,11 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   broadcaster: 'pusher',
   key: "ABCDEFG",
   cluster: "mt1",
-  wsHost: process.env.MIX_PUSHER_HOST,
+  wsHost: "127.0.0.1",
   wsPort: 6001,
   forceTLS: false,
   disableStats: true,
-  scheme: process.env.MIX_PUSHER_SCHEME
+  scheme: "http"
 });
 
 /***/ }),
