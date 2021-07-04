@@ -183,7 +183,7 @@
 
                 /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
                 this.peerInit()
-                setTimeout(function(){
+                setTimeout(()=>{
                     this.EchoInit(this.roomId, this.userId)
                 },3000)
             },
