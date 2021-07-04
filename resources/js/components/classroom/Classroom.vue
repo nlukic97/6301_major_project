@@ -64,7 +64,7 @@
             },
             closeCall(){
                 this.call.close()
-            }
+            },
             whisper(){
                 this.channel.whisper('click',{
                     id: this.userId
