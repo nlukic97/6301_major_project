@@ -185,7 +185,7 @@
                 this.peerInit()
                 setTimeout(()=>{
                     this.EchoInit(this.roomId, this.userId)
-                },3000)
+                },500)
             },
 
 
