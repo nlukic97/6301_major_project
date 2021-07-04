@@ -2080,7 +2080,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 _this4.peer.on('open', function (id) {
                   _this4.myPeerId = id;
-                  console.log('my peer id: ' + id);
                 });
 
                 _this4.peer.on('call', function (call) {
