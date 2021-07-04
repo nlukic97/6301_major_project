@@ -178,8 +178,9 @@
                 console.log('stream added')
 
                 /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
-                this.EchoInit(this.roomId, this.userId)
-                this.peerInit()
+                this.peerInit().then(()=>{
+                    this.EchoInit(this.roomId, this.userId)
+                })
             },
 
 
