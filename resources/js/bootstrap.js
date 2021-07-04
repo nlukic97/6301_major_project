@@ -55,3 +55,33 @@ window.Echo = new Echo({
     enabledTransports: ['ws', 'wss'],
 });
 
+
+
+window.Echo.join(`home.7`)
+    .here(e => {  //who is here when I join
+        console.log(e, ' is/are the users here, including you.')
+        console.log(`You are user 1 in room 7`);
+
+    })
+
+    .joining(e => { //who is joining
+        console.log(e, ' has joined')
+    })
+
+    .leaving(e => {
+        console.log(e, ' has left')
+
+    })
+
+    .listen('   NewMessage', (e) => {
+        console.log('NewMessage:', e)
+    })
+
+    .listenForWhisper('click',e=>{
+        console.log(e.id + ' is typing.')
+    })
+
+    .listenForWhisper('peer-to-connect-with',e=>{
+        console.log('The user who joined first is whispering his ID to you, call them !')
+    })
+

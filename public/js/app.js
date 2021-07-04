@@ -2808,6 +2808,22 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   disableStats: true,
   enabledTransports: ['ws', 'wss']
 });
+window.Echo.join("home.7").here(function (e) {
+  //who is here when I join
+  console.log(e, ' is/are the users here, including you.');
+  console.log("You are user 1 in room 7");
+}).joining(function (e) {
+  //who is joining
+  console.log(e, ' has joined');
+}).leaving(function (e) {
+  console.log(e, ' has left');
+}).listen('   NewMessage', function (e) {
+  console.log('NewMessage:', e);
+}).listenForWhisper('click', function (e) {
+  console.log(e.id + ' is typing.');
+}).listenForWhisper('peer-to-connect-with', function (e) {
+  console.log('The user who joined first is whispering his ID to you, call them !');
+});
 
 /***/ }),
 
