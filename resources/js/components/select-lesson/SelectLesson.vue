@@ -3,11 +3,9 @@
         <form action="/new-lesson" method="POST">
             <input type="hidden" name="_token" :value="csrf">
             <div>
-                <label for="slide_id">Select slides</label>
-                <select name="slide_id" id="slide_id">
+                <label for="id">Select slides</label>
+                <select name="id" id="id">
                     <option value=""></option>
-                    <option value="2">2</option>
-                    <option value="22">22</option>
                     <option v-for="(slide,index) in slides" v-bind:value="slide.id" >{{slide.title}}</option>
                 </select>
 

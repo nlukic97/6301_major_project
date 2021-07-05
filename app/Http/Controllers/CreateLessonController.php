@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Lesson;
 use App\Models\Slide;
 use App\Models\User;
+use App\Rules\OwnsSlide;
+use Dotenv\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
@@ -27,23 +29,22 @@ class CreateLessonController extends Controller
     public function create_new_lesson(Request $request){
 
         $request->validate([
-            'slide_id'=>'required|integer|exists:slides,id',
+            'id'=>[
+                'required',
+                'integer',
+                'exists:slides,id',
+                new OwnsSlide()  /** Check if Auth::id() is the owner of the slide with this id */
+            ]
         ],
         [
-            'slide_id.required'=>'The slide field is required.',
-            'slide_id.integer'=>'This slide does not exist.',
-            'slide_id.exists'=>'This slide is not available.',
+            'id.required'=>'The slide field is required.',
+            'id.integer'=>'This slide does not exist.',
+            'id.exists'=>'This slide is not available.',
         ]);
 
-        $slideID = $request->only('slide_id')['slide_id'];
-
-        // If the user is trying to access the slides of another person
-        if(Slide::find($slideID)->owner_id !== Auth::id()){
-            return abort('403');
-//            return Redirect::back()->withErrors('')
-        }
-
+        $slideID = $request->only('id')['id'];
         $uuid = Str::uuid();
+
         //add this lesson with the selected slides to the database, and then open the class id
         Lesson::create([
             'uuid'=>$uuid,
