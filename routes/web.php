@@ -25,7 +25,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 /** Routes available both to teachers and students for accessing the lesson with url */
-Route::middleware('auth')->get('/class/{uuid}',[\App\Http\Controllers\LessonController::class,'open_lesson']);
+Route::middleware('auth')->get('/class/{uuid}',[\App\Http\Controllers\LessonController::class,'join_lesson']);
 
 
 /** Slide editing routes */

@@ -1,10 +1,13 @@
 <template>
     <div>
 <!--        <text-editor-component v-if="this.displayTextEditor" state="shown"></text-editor-component>-->
+        <slot></slot>
+
         <video-component
             :other_peer_video="otherPeerStream"
             v-on:myOwnVideoStream="saveMyVideoStream"
         ></video-component>
+
 
         <input type="number" v-model="receiver">
         <button @click="sendMessageToAll">Broadcast Message</button>
