@@ -17,7 +17,7 @@
                     {{ __('You are logged in!') }}
                 </div>
 
-                <a class='btn btn-primary' href="/start-lesson">Start new Class</a>
+                <a class='btn btn-primary' href="/new-lesson">Start new Class</a>
             </div>
         </div>
     </div>

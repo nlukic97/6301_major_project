@@ -20,7 +20,11 @@
 
     export default {
         name: "Classroom",
-        props: ['user_id','class_id','room_id'], /** Passed down from the database*/
+        props: [
+            'user_id',
+            'class_id',
+            'slides_id'
+        ],
         data:function () {
             return{
                 displayTextEditor:true,
@@ -28,6 +32,7 @@
                 myPeerId:null,
                 otherPeerId:null,
                 roomId:'',
+                slidesId:null,
                 receiver:null,
                 users:[],
                 channel:null,
@@ -130,7 +135,7 @@
 
                             this.otherPeerId = e.otherPeerId
                             console.log('Other peer id',this.otherPeerId)
-                            // this.connectToPeer()
+                            // this.connectToPeer() //This could be good for sending messages using peer rather than laravel websockets, take some load off the server
                         });
 
                 /** @@@
@@ -201,6 +206,7 @@
         beforeMount(){
             this.userId = parseInt(this.user_id)
             this.roomId = this.class_id
+            this.slidesId = parseInt(this.slides_id)
         },
         mounted() {
             /** Had this like this, but decided to change it just in case a user's video does not work - there is no point in connecting at all.*/

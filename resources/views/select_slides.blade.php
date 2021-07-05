@@ -1,4 +1,4 @@
-@extends('layouts.class') {{--Changed this to 'class' instead of 'app'. Check if I even need the class thing--}}
+@extends('layouts.app')
 
 @section('content')
     <div id="app">

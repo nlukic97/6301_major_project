@@ -12,13 +12,24 @@ class LessonController extends Controller
     {
         $myId = Auth::user()->id;
         $classId = $uuid;
-        $lesson = Lesson::where('uuid',$classId)->where('in_progress',true)->get();
+        $lesson = Lesson::where('uuid',$classId)->where('in_progress',true)->first();
 
-        /** If the lesson has not been created or is no longer in_progress, redirect to 404 */
-        if($lesson->isEmpty()){
+        /**
+         * If the lesson has not been created or
+         * is no longer in_progress, redirect to 404.
+         */
+        if(!$lesson){
             return redirect('404');
         }
 
-        return view('class',compact('myId','classId'))    ; //the class view will open the text editor for now
+        /**
+         * Some type of check to determine who can and can't
+         * change the slides would be good right about here
+         * (if the user is the teacher_id of this class or not).
+         */
+
+        $slideID = $lesson->slide_id;
+
+        return view('class',compact('myId','classId','slideID'))    ; //the class view will open the text editor for now
     }
 }
