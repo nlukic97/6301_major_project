@@ -7,6 +7,7 @@
                     <div>
                         <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
                         <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
+                        <button @click="resetAllExercises()">Reset All slides</button>
                     </div>
                 </div>
 
@@ -73,8 +74,10 @@
             /** Local storage checking methods */
             checkCurrIndexLocal(){
                 let index = parseInt(localStorage.getItem('currentSlideIndex'))
-                if(typeof index === "number"){
+                console.log(index)
+                if(index != null){
                     this.currentSlideIndex = index;
+                    console.log('its not nul')
                 }
             },
             updateIndexLocal(index){ //this.currentSlideIndex, it will happen upon slide change
@@ -82,17 +85,27 @@
             },
             checkCurrSlidesLocal(){
                 let slides = JSON.parse(localStorage.getItem('slides'))
+                console.log(slides)
                 if(slides !== null){
                     this.slides = slides
                 } else {
                     let rowFromDb = JSON.parse(this.load_slides);
                     let slidesFromDb = JSON.parse(rowFromDb.data);
-
                     this.slides = slidesFromDb
+
                 }
             },
             updateCurrSlidesLocal(){
                 localStorage.setItem('slides',JSON.stringify(this.slides))
+            },
+
+            resetAllExercises(){
+                let rowFromDb = JSON.parse(this.load_slides);
+                let slidesFromDb = JSON.parse(rowFromDb.data);
+                this.slides = slidesFromDb
+
+                localStorage.removeItem('slides');
+                this.slideTypeHandler(this.currentSlideIndex)
             },
 
 
@@ -172,7 +185,6 @@
             jumpToSlide(index){
                 if(index != this.currentSlideIndex){
                     this.slideTypeHandler(index) /** This seems to work as of now*/
-                    this.currentSlideIndex = index
                 }
             },
 
@@ -206,7 +218,7 @@
                     }
                 }
                 this.currentSlideIndex = index;
-                this.updateIndexLocal(index) //changing the local storage
+                this.updateIndexLocal(index)
             },
 
             shortenText(index){
@@ -229,10 +241,11 @@
                 this.typing()
             }
         },
-        mounted(){
+        beforeMount(){
             this.checkCurrSlidesLocal()
             this.checkCurrIndexLocal()
-
+        },
+        mounted(){
             if(this.slides.length > 0){ /** If the array returned is zero */
                 this.slideTypeHandler(this.currentSlideIndex)
             }
