@@ -48,4 +48,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Slide::class,'owner_id');
     }
+
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class,'teacher_id');
+    }
 }
