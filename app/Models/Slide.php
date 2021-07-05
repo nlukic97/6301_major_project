@@ -19,4 +19,9 @@ class Slide extends Model
     {
         return $this->belongsTo(User::class,'owner_id','id');
     }
+
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class,'slide_id','id');
+    }
 }

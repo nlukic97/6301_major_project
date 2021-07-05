@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Lesson;
+use http\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LessonController extends Controller
 {
-    public function join_lesson($uuid)
+    public function join_lesson($uuid, Request $request)
     {
         $myId = Auth::user()->id;
         $classId = $uuid;
@@ -16,8 +17,10 @@ class LessonController extends Controller
 
         /** If the lesson has not been created or is no longer in_progress, redirect to 404. */
         if(!$lesson){
-            return redirect('404');
+            return view('class-not-found');
         }
+
+        $slide = $lesson->slide()->first();
 
         $slideID = $lesson->slide_id;
 
@@ -29,7 +32,7 @@ class LessonController extends Controller
             $isTeacher = false;
         }
 
-        return view('class',compact('myId','classId','slideID','isTeacher'));
+        return view('class',compact('myId','classId','slideID','isTeacher','slide'));
 
 
 

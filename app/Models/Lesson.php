@@ -20,4 +20,9 @@ class Lesson extends Model
     {
         return $this->belongsTo(User::class,'teacher_id','id');
     }
+
+    public function slide()
+    {
+        return $this->hasOne(Slide::class,'id','slide_id');
+    }
 }

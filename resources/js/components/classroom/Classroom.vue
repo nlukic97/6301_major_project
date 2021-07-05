@@ -2,11 +2,13 @@
     <div>
 <!--        <text-editor-component v-if="this.displayTextEditor" state="shown"></text-editor-component>-->
         <slot></slot>
+        <class-slides v-bind:load_slides="pass_down_slide"></class-slides>
 
         <video-component
             :other_peer_video="otherPeerStream"
             v-on:myOwnVideoStream="saveMyVideoStream"
         ></video-component>
+
 
 
         <input type="number" v-model="receiver">
@@ -26,7 +28,8 @@
         props: [
             'user_id',
             'class_id',
-            'slides_id'
+            'is_teacher',
+            'pass_down_slide'
         ],
         data:function () {
             return{
@@ -35,7 +38,6 @@
                 myPeerId:null,
                 otherPeerId:null,
                 roomId:'',
-                slidesId:null,
                 receiver:null,
                 users:[],
                 channel:null,
@@ -43,6 +45,7 @@
                 myVideoStream:null,
                 otherPeerStream:null,
                 call:null,
+                teacher:null
 
             }
         },
@@ -83,7 +86,10 @@
             /** @@@
              * Laravel Echo Init - based on passed props from views\class.blade.php, this will:
              * - join a presence channel for roomId
-             * - join a private channel for roomId and userId*/
+             * - join a private channel for roomId and userId
+             *
+             * This is activated after the users video feed is established (see VideoComponent.vue)
+             * */
             async EchoInit(roomId,userId) {
                 // console.log(`starting function to join channel: home.${roomId}`)
                 this.channel = await Echo.join(`home.${roomId}`)
@@ -209,14 +215,10 @@
         beforeMount(){
             this.userId = parseInt(this.user_id)
             this.roomId = this.class_id
-            this.slidesId = parseInt(this.slides_id)
+            this.teacher = this.is_teacher
+            console.log(this.teacher)
         },
         mounted() {
-            /** Had this like this, but decided to change it just in case a user's video does not work - there is no point in connecting at all.*/
-            /*
-            this.EchoInit(this.roomId, this.userId)
-            this.peerInit()
-            */
         }
     }
 </script>

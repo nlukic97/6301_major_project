@@ -73,7 +73,6 @@
         },
         mounted(){
             console.log('Mounted text editor')
-            console.log(this.state)
 
             this.initialize()
 
