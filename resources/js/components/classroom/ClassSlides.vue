@@ -73,11 +73,9 @@
         methods:{
             /** Local storage checking methods */
             checkCurrIndexLocal(){
-                let index = parseInt(localStorage.getItem('currentSlideIndex'))
-                console.log(index)
-                if(index != null){
-                    this.currentSlideIndex = index;
-                    console.log('its not nul')
+                let index = localStorage.getItem('currentSlideIndex')
+                if(!(index == null || index == undefined)){
+                    this.currentSlideIndex = parseInt(index);
                 }
             },
             updateIndexLocal(index){ //this.currentSlideIndex, it will happen upon slide change
