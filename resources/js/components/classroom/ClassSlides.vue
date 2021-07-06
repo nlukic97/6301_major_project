@@ -53,7 +53,8 @@
     export default {
         name: "CreateLesson",
         props:[
-            'load_slides'
+            'load_slides',
+            'class_uuid'
         ],
         data: function(){
             return {
@@ -72,52 +73,13 @@
         },
         methods:{
             /** Local storage checking methods */
-            checkCurrIndexLocal(){
-                let index = localStorage.getItem('currentSlideIndex')
-                if(!(index == null || index == undefined)){
-                    this.currentSlideIndex = parseInt(index);
-                }
-            },
-            updateIndexLocal(index){ //this.currentSlideIndex, it will happen upon slide change
-                localStorage.setItem('currentSlideIndex',index)
-            },
-            checkCurrSlidesLocal(){
-                let slides = JSON.parse(localStorage.getItem('slides'))
-                console.log(slides)
-                if(slides !== null){
-                    this.slides = slides
-                } else {
-                    let rowFromDb = JSON.parse(this.load_slides);
-                    let slidesFromDb = JSON.parse(rowFromDb.data);
-                    this.slides = slidesFromDb
-
-                }
-            },
-            updateCurrSlidesLocal(){
-                localStorage.setItem('slides',JSON.stringify(this.slides))
-            },
-
-            resetAllExercises(){
-                let rowFromDb = JSON.parse(this.load_slides);
-                let slidesFromDb = JSON.parse(rowFromDb.data);
-                this.slides = slidesFromDb
-
-                localStorage.removeItem('slides');
-                this.slideTypeHandler(this.currentSlideIndex)
-            },
-
+            //add it all here
 
             /** Presentation methods }*/
             displaySlide(text){
                 this.activeSlideText = marked(text) //converts the entered xml into html to be displayed
                 this.markdownValue = text
             },
-            updateTitle(){
-                /** The title is already saved with a v-model. But upon typing, we want to update the row
-                 in the database with the slides and with the title */
-                // this.typing()
-            },
-
             /**  @@@
              * This will check if the user has already commenced with typing new content
              * both in regular slides and text editor slides.
@@ -149,7 +111,6 @@
                      *  but continue the previously set interval.
                      *  */
                     this.secondsEditing = 0;
-                    this.updateCurrSlidesLocal()
                 }
             },
 
@@ -216,7 +177,6 @@
                     }
                 }
                 this.currentSlideIndex = index;
-                this.updateIndexLocal(index)
             },
 
             shortenText(index){
@@ -240,8 +200,13 @@
             }
         },
         beforeMount(){
-            this.checkCurrSlidesLocal()
-            this.checkCurrIndexLocal()
+            let prevClass = localStorage.getItem(this.class_uuid);
+            if(prevClass === null){
+                let rowFromDb = JSON.parse(this.load_slides);
+                let slidesFromDb = JSON.parse(rowFromDb.data);
+                this.slides = slidesFromDb
+            }
+
         },
         mounted(){
             if(this.slides.length > 0){ /** If the array returned is zero */

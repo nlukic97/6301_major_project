@@ -2,7 +2,10 @@
     <div>
 <!--        <text-editor-component v-if="this.displayTextEditor" state="shown"></text-editor-component>-->
         <slot></slot>
-        <class-slides v-bind:load_slides="pass_down_slide"></class-slides>
+        <class-slides
+            v-bind:load_slides="pass_down_slide"
+            v-bind:class_uuid="class_id"
+        ></class-slides>
 
         <video-component
             :other_peer_video="otherPeerStream"
