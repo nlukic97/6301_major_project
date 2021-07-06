@@ -54,8 +54,18 @@
         name: "CreateLesson",
         props:[
             'load_slides',
-            'class_uuid'
+            'class_uuid',
+            'local_storage_from_peer'
         ],
+        watch:{
+            local_storage_from_peer(){
+                console.log('the data has changed')
+                let data = JSON.parse(this.local_storage_from_peer)
+                localStorage.setItem(this.class_uuid,data)
+                this.slides = data.slides;
+                this.slideTypeHandler(data.currIndex)
+            }
+        },
         data: function(){
             return {
                 currentSlideIndex:0,

@@ -5,6 +5,7 @@
         <class-slides
             v-bind:load_slides="pass_down_slide"
             v-bind:class_uuid="class_id"
+            v-bind:local_storage_from_peer="otherLocalFromPeer"
         ></class-slides>
 
         <video-component
@@ -48,7 +49,8 @@
                 myVideoStream:null,
                 otherPeerStream:null,
                 call:null,
-                teacher:null
+                teacher:null,
+                otherLocalFromPeer:null
 
             }
         },
@@ -99,7 +101,6 @@
                     .here(e => {  //who is here when I join
                         console.log(e, ' is/are the users here, including you.')
                         this.users = e;
-                        console.log(`You are user ${this.userId} in room ${this.roomId}`);
 
                     })
 
@@ -108,8 +109,12 @@
                         this.users.push(e)
                         console.log(this.users,' are the users who are here')
                         console.log(this.users.indexOf(e))
+                        if(this.users.length == 2){
+                            console.log('you are the 1st user to join, give other guy your slide info')
+                            this.whisperMyPeerId('peer-to-connect-with')
+                            this.whisperSlideLocalStorage('local-storage-class-session')
+                        }
 
-                        this.whisperMyPeerId('peer-to-connect-with')
                     })
 
                     .leaving(e => {
@@ -132,12 +137,12 @@
                     .listenForWhisper('peer-to-connect-with',e=>{
                         console.log('The user who joined first is whispering his ID to you, call them !')
                         this.otherPeerId = e.otherPeerId;
-                        console.log('calling this peer:' + this.otherPeerId)
+                        // console.log('calling this peer:' + this.otherPeerId)
 
-                        console.log('My video stream:' + this.myVideoStream)
+                        // console.log('My video stream:' + this.myVideoStream)
                         this.call = this.peer.call(this.otherPeerId,this.myVideoStream)
                         this.call.on('stream',stream=>{
-                            console.log('call answered')
+                            // console.log('call answered')
                             this.otherPeerStream = stream;
                         })
                     })
@@ -146,9 +151,14 @@
                         console.log('User 2 is whispering back to you...')
 
                             this.otherPeerId = e.otherPeerId
-                            console.log('Other peer id',this.otherPeerId)
+                            // console.log('Other peer id',this.otherPeerId)
                             // this.connectToPeer() //This could be good for sending messages using peer rather than laravel websockets, take some load off the server
-                        });
+                        })
+
+                    .listenForWhisper('local-storage-class-session',e=>{
+                        this.otherLocalFromPeer = e.data
+                        // console.log(this.otherLocalFromPeer)
+                    });
 
                 /** @@@
                  * Personal channel for receiving private messages.
@@ -159,7 +169,7 @@
                         console.log('New Private message:', e)
                     })
 
-                console.log('Here is the public channel you have subscribed to',this.channel)
+                // console.log('Here is the public channel you have subscribed to',this.channel)
             },
 
 
@@ -168,13 +178,13 @@
                 this.peer = await new Peer();
 
                 this.peer.on('open',(id)=>{
-                    console.log('here is your peer id:')
+                    // console.log('here is your peer id:')
                     this.myPeerId = id
-                    console.log(this.myPeerId)
+                    // console.log(this.myPeerId)
                 })
 
                 this.peer.on('call',call=>{
-                    console.log('Someone is calling: ',call)
+                    // console.log('Someone is calling: ',call)
                     call.answer(this.myVideoStream)
                     call.on('stream',stream=>{
                         this.otherPeerStream = stream
@@ -185,18 +195,25 @@
             /** This will happen when the 2nd user joins, which will tell the 1st user to place the video call
              * (laravel echo '.joining' presence channel listener)*/
             whisperMyPeerId(whisperName){
-                  if(this.users.length === 2){
-                      console.log('telling the other person my peer id')
-                      this.channel.whisper(whisperName,{
-                          otherPeerId: this.myPeerId
-                      })
-                  }
+                console.log('telling the other person my peer id')
+                this.channel.whisper(whisperName,{
+                    otherPeerId: this.myPeerId
+                })
+            },
+
+            whisperSlideLocalStorage(whisperName){
+                let data = localStorage.getItem(this.class_id)
+                if(data != null){
+                    console.log('sending my local storage')
+                    this.channel.whisper(whisperName,{
+                        data: data
+                    })
+                }
             },
 
             /** Called on emit from VideoComponent.vue*/
             saveMyVideoStream(stream){
                 this.myVideoStream = stream
-                console.log('stream added')
 
                 /**After the user video is available for manipulation, then we initialize laravel echo and peer js. */
                 this.peerInit()
@@ -219,7 +236,7 @@
             this.userId = parseInt(this.user_id)
             this.roomId = this.class_id
             this.teacher = this.is_teacher
-            console.log(this.teacher)
+            //console.log(this.teacher)
         },
         mounted() {
         }

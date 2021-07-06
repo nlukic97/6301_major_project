@@ -49,7 +49,7 @@
                 this.$emit('myOwnVideoStream',stream)
             },
             async addOtherVideoStream(stream){
-                console.log('stream passed')
+                // console.log('stream passed')
                 this.$refs.myvideo2.srcObject = stream
                 this.$refs.myvideo2.play()
             }

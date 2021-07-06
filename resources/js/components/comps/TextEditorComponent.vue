@@ -72,11 +72,7 @@
             }
         },
         mounted(){
-            console.log('Mounted text editor')
-
             this.initialize()
-
-
         }
     }
 </script>
