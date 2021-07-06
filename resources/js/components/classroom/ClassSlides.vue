@@ -7,7 +7,7 @@
                     <div>
                         <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
                         <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
-                        <button @click="resetAllExercises()">Reset All slides</button>
+                        <button @click="resetLocalStorage()">Reset All slides</button>
                     </div>
                 </div>
 
@@ -73,7 +73,31 @@
         },
         methods:{
             /** Local storage checking methods */
-            //add it all here
+            checkLocalStorage(uuid){
+                let prevClass = JSON.parse(localStorage.getItem(uuid));
+
+                if(prevClass === null){
+                    let rowFromDb = JSON.parse(this.load_slides);
+                    let slidesFromDb = JSON.parse(rowFromDb.data);
+                    this.slides = slidesFromDb
+
+                    localStorage.setItem(uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
+                } else {
+                    this.slides = prevClass.slides
+                    this.currentSlideIndex = prevClass.currIndex
+                }
+            },
+
+            resetLocalStorage(){
+                localStorage.removeItem(this.class_uuid);
+
+                let rowFromDb = JSON.parse(this.load_slides);
+                let slidesFromDb = JSON.parse(rowFromDb.data);
+                this.slides = slidesFromDb
+
+                localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
+                this.slideTypeHandler(this.currentSlideIndex)
+            },
 
             /** Presentation methods }*/
             displaySlide(text){
@@ -111,6 +135,8 @@
                      *  but continue the previously set interval.
                      *  */
                     this.secondsEditing = 0;
+
+                    localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
                 }
             },
 
@@ -177,6 +203,8 @@
                     }
                 }
                 this.currentSlideIndex = index;
+
+                localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
             },
 
             shortenText(index){
@@ -200,12 +228,7 @@
             }
         },
         beforeMount(){
-            let prevClass = localStorage.getItem(this.class_uuid);
-            if(prevClass === null){
-                let rowFromDb = JSON.parse(this.load_slides);
-                let slidesFromDb = JSON.parse(rowFromDb.data);
-                this.slides = slidesFromDb
-            }
+            this.checkLocalStorage(this.class_uuid)
 
         },
         mounted(){
