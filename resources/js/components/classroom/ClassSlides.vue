@@ -55,7 +55,8 @@
         props:[
             'load_slides',
             'class_uuid',
-            'local_storage_from_peer'
+            'local_storage_from_peer',
+            'change_slide'
         ],
         watch:{
             local_storage_from_peer(){
@@ -64,6 +65,10 @@
                 localStorage.setItem(this.class_uuid,data)
                 this.slides = data.slides;
                 this.slideTypeHandler(data.currIndex)
+            },
+            change_slide(){
+                console.log('time to change slide', this.change_slide)
+                this.slideTypeHandler(this.change_slide)
             }
         },
         data: function(){
@@ -215,6 +220,8 @@
                 this.currentSlideIndex = index;
 
                 localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
+
+                this.$emit('slide-changed',this.currentSlideIndex);
             },
 
             shortenText(index){

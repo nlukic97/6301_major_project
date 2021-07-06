@@ -6,6 +6,8 @@
             v-bind:load_slides="pass_down_slide"
             v-bind:class_uuid="class_id"
             v-bind:local_storage_from_peer="otherLocalFromPeer"
+            v-on:slide-changed="whisperSlideChange"
+            v-bind:change_slide="changeSlide"
         ></class-slides>
 
         <video-component
@@ -50,7 +52,8 @@
                 otherPeerStream:null,
                 call:null,
                 teacher:null,
-                otherLocalFromPeer:null
+                otherLocalFromPeer:null,
+                changeSlide:null
 
             }
         },
@@ -158,6 +161,16 @@
                     .listenForWhisper('local-storage-class-session',e=>{
                         this.otherLocalFromPeer = e.data
                         // console.log(this.otherLocalFromPeer)
+                    })
+
+                    .listenForWhisper('slide-change',e=>{
+                        let currIndex = JSON.parse(localStorage.getItem(this.class_id)).currIndex
+
+                        /** If the user is already on the slide, we will not change the prop,
+                         * because this would cause an endless loop of laravel echo whispers*/
+                        if(e.index != currIndex){
+                            this.changeSlide = e.index //this will update the prop in the ClassSlides, changing the slide
+                        }
                     });
 
                 /** @@@
@@ -208,6 +221,14 @@
                     this.channel.whisper(whisperName,{
                         data: data
                     })
+                }
+            },
+
+            /** Called when a slide is changed from the ClassSlides.vue */
+            whisperSlideChange(data){
+                if(this.users.length == 2){
+                    console.log('I will tell the other guy to change his slide',data)
+                    this.channel.whisper('slide-change',{index: data});
                 }
             },
 
