@@ -7,12 +7,19 @@
             v-bind:class_uuid="class_id"
             v-bind:local_storage_from_peer="otherLocalFromPeer"
 
+            v-bind:reset_slide_whisper="signalSlideReset"
+            v-on:slides-reset="reset_signalSlideReset"
+
             v-bind:change_slide="changeSlide"
             v-on:slide-changed="whisperSlideChange"
 
             v-on:live-code-update="live_code_update"
 
             v-on:reset-slides="reset_slides"
+
+            v-on:whisper-code-execute="whisperCodeExecute"
+            v-bind:signal_code_execution="signalCodeExecution"
+            v-on:code-executed="reset_signalCodeExecution"
         ></class-slides>
 
         <video-component
@@ -58,7 +65,9 @@
                 call:null,
                 teacher:null,
                 otherLocalFromPeer:null,
-                changeSlide:null
+                changeSlide:null,
+                signalSlideReset:false,
+                signalCodeExecution:false
 
             }
         },
@@ -176,6 +185,16 @@
                         if(e.index != currIndex){
                             this.changeSlide = e.index //this will update the prop in the ClassSlides, changing the slide
                         }
+                    })
+
+                    .listenForWhisper('reset-slides',e=>{
+                        console.log('time to reset slides')
+                        this.signalSlideReset = true
+                    })
+
+
+                    .listenForWhisper('execute-code',e=>{
+                        this.signalCodeExecution = true
                     });
 
 
@@ -246,7 +265,19 @@
             },
 
             reset_slides(){
+                this.channel.whisper('reset-slides')
+            },
 
+            reset_signalSlideReset(){
+                this.signalSlideReset = false
+            },
+
+            whisperCodeExecute(){
+                this.channel.whisper('execute-code');
+            },
+
+            reset_signalCodeExecution(){
+                this.signalCodeExecution = false
             },
 
 
@@ -272,6 +303,7 @@
             }
         },
         beforeMount(){
+            this.slidesForProp = this.pass_down_slide
             this.userId = parseInt(this.user_id)
             this.roomId = this.class_id
             this.teacher = this.is_teacher

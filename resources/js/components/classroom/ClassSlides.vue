@@ -40,6 +40,10 @@
                     v-on:javaScriptChange="updateJavaScript"
                     v-on:xmlChange="updateXML"
                     v-bind:code_props="codeMirrorProps"
+
+                    v-on:whisper-code-execute="whisper_code_execution"
+                    v-bind:execute_the_code="signal_code_execution"
+                    v-on:code-executed="$emit('code-executed')"
                 ></text-editor-component> <!-- Adding a class binding directly to the component does not display the text of the component until I click on it -->
 
             </div>
@@ -56,7 +60,9 @@
             'load_slides',
             'class_uuid',
             'local_storage_from_peer',
-            'change_slide'
+            'change_slide',
+            'reset_slide_whisper',
+            'signal_code_execution'
         ],
         watch:{
             local_storage_from_peer(){
@@ -69,6 +75,13 @@
             change_slide(){
                 console.log('time to change slide', this.change_slide)
                 this.slideTypeHandler(this.change_slide)
+            },
+            reset_slide_whisper(){
+                if(this.reset_slide_whisper === true){
+                    this.resetLocalStorage(false)
+                }
+
+                this.$emit('slides-reset')
             }
         },
         data: function(){
@@ -256,6 +269,9 @@
                 if(emitToOtherUser === 'whisper-to-other-user'){
                     this.$emit('live-code-update',this.slides)
                 }
+            },
+            whisper_code_execution(){
+                this.$emit('whisper-code-execute')
             }
         },
         beforeMount(){

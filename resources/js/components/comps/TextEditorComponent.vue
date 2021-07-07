@@ -6,7 +6,7 @@
         </div>
         <div style="width:50%">
             <!-- So iframe is where the DOM output of the js code will be displayed-->
-            <button id="exe-btn" @click="$_codeExecute">Execute</button>
+            <button id="exe-btn" @click="$_codeExecute(true)">Execute</button>
             <iframe frameborder="1" id="i-frame" style="width: 100%;height:40vh;"></iframe>
         </div>
     </div>
@@ -23,13 +23,19 @@
                 initialized:false
             }
         },
-        props:['state','code_props'],
+        props:['state','code_props','execute_the_code'],
         watch:{
             state: function(){
                 this.initialize()
             },
             code_props: function(){
                 this.addCode(this.code_props)
+            },
+            execute_the_code: function(){
+                if(this.execute_the_code === true){
+                    this.$_codeExecute()
+                    this.$emit('code-executed')
+                }
             }
         },
         methods:{
@@ -37,10 +43,16 @@
                 var $_ifrm_$ = document.getElementById(frame_id)
                 $_ifrm_$.contentWindow.document.body.textContent='';
             },
-            $_codeExecute(){
+            $_codeExecute(emitToOther){
                 this.$_removeIframeDom('i-frame')
                 xml.$_xmlToIframe_$('i-frame',xml.$_getXMLValue_$())
                 javaScript.$_scriptToIframe_$('i-frame',javaScript.$_getJsValue_$())
+
+                if(emitToOther === true){
+                    this.$emit('whisper-code-execute')
+                }
+
+
             },
             initialize(){
                 if(this.state == 'shown' && this.initialized === false){
