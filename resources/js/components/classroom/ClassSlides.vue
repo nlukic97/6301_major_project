@@ -90,8 +90,6 @@
                 hideSlide:false,
                 slides:[],
                 activeSlideText:``,
-                editing:false, /** For the interval in this.typing() */
-                secondsEditing:0, /** For the interval in this.typing() */
                 text_editor_state: null,
                 codeMirrorProps:{
                     xml:null,
@@ -140,38 +138,6 @@
              * This will check if the user has already commenced with typing new content
              * both in regular slides and text editor slides.
              * */
-            typing(){
-                console.log('typing')
-                if(this.editing === false){
-                    /** If they haven't started editing, start the interval counter*/
-                    this.editing = true;
-
-                    let int = setInterval( ()=> {
-                        this.secondsEditing++;
-
-                        /**
-                         * When clock reaches 2, it will stop
-                         * counting, reset, and will send the axios
-                         * request to the database to save all the slides */
-                        if(this.secondsEditing >= 2){
-                            clearInterval(int)
-                            this.editing = false;
-                            this.secondsEditing = 0;
-                            console.log('not typing')
-                            localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
-                        }
-                    },500)
-
-                } else {
-                    /** @@@@
-                     *  If a user types, it will reset the clock to 0
-                     *  but continue the previously set interval.
-                     *  */
-                    this.secondsEditing = 0;
-
-                }
-            },
-
             clearSlide(){
                 this.activeSlideText = ''
             },
@@ -254,7 +220,6 @@
             /** When the javascript or xml window are updated from textEditorComponent */
             updateJavaScript(data,emitToOtherUser){
                 this.slides[this.currentSlideIndex].data.javaScript = data
-                // this.typing()
 
                 localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}))
                 if(emitToOtherUser === 'whisper-to-other-user'){
@@ -263,7 +228,6 @@
             },
             updateXML(data, emitToOtherUser){
                 this.slides[this.currentSlideIndex].data.xml = data
-                // this.typing()
 
                 localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}))
                 if(emitToOtherUser === 'whisper-to-other-user'){

@@ -34,6 +34,7 @@
         <button @click="sendMessageToOne">Send to one user</button>
         <button @click="whisper">Whisper</button>
         <button @click="closeCall">close call</button>
+        <button @click="endClass">End class</button>
 
         <button @click="whisperMyPeerId">Send other peer my peerId</button>
     </div>
@@ -195,6 +196,12 @@
 
                     .listenForWhisper('execute-code',e=>{
                         this.signalCodeExecution = true
+                    })
+
+
+                    .listenForWhisper('end-class',e=>{
+                        localStorage.removeItem(this.class_id);
+                        location.href = 'https://hoopshooters.club'
                     });
 
 
@@ -300,6 +307,12 @@
             /** testing out call functions*/
             callPeer(){
                 this.call = this.peer.call(this.otherPeerId,this.myVideoStream)
+            },
+
+            endClass(){
+                localStorage.removeItem(this.class_id)
+                this.channel.whisper('end-class')
+                location.href = 'https://hoopshooters.club'
             }
         },
         beforeMount(){
