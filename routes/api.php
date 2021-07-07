@@ -26,3 +26,4 @@ Route::middleware('auth:api')->post('/send-msg-one',[App\Http\Controllers\UserCo
 
 /** Slides */
 Route::middleware(['auth:api','teacher'])->post('/update-slides',[App\Http\Controllers\SlideController::class,'update_slides']);
+Route::middleware(['auth:api','teacher'])->post('/end-lesson',[App\Http\Controllers\LessonController::class,'end_lesson']);

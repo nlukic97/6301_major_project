@@ -310,9 +310,20 @@
             },
 
             endClass(){
-                localStorage.removeItem(this.class_id)
-                this.channel.whisper('end-class')
-                location.href = 'https://hoopshooters.club'
+                console.log(this.class_id)
+                axios.post('/api/end-lesson',{
+                    uuid: this.class_id
+                })
+                .then((e)=>{
+                    localStorage.removeItem(this.class_id)
+                    this.channel.whisper('end-class')
+                    location.href = 'https://hoopshooters.club'
+                })
+                .catch((e)=>{
+                    console.log(e)
+                })
+
+
             }
         },
         beforeMount(){

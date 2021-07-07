@@ -41,8 +41,28 @@ class LessonController extends Controller
          * change the slides would be good right about here
          * (if the user is the teacher_id of this class or not).
          */
+    }
 
 
+    public function end_lesson(Request $request)
+    {
+        $request->validate([
+            'uuid'=>'required|uuid|exists:lessons,uuid'
+        ]);
 
+        $uuid = $request->all()['uuid'];
+
+        $lesson = Lesson::where('teacher_id',Auth::id())
+            ->where('in_progress',true)
+            ->where('uuid',$uuid)->first();
+
+        if(!$lesson){
+            return abort(403);
+        }
+
+        $lesson->in_progress = false;
+        $lesson->save();
+        return response('Success', 200)
+            ->header('Content-Type', 'text/plain');
     }
 }
