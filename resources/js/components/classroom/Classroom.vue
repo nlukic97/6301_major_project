@@ -6,8 +6,13 @@
             v-bind:load_slides="pass_down_slide"
             v-bind:class_uuid="class_id"
             v-bind:local_storage_from_peer="otherLocalFromPeer"
-            v-on:slide-changed="whisperSlideChange"
+
             v-bind:change_slide="changeSlide"
+            v-on:slide-changed="whisperSlideChange"
+
+            v-on:live-code-update="live_code_update"
+
+            v-on:reset-slides="reset_slides"
         ></class-slides>
 
         <video-component
@@ -173,6 +178,7 @@
                         }
                     });
 
+
                 /** @@@
                  * Personal channel for receiving private messages.
                  * */
@@ -231,6 +237,18 @@
                     this.channel.whisper('slide-change',{index: data});
                 }
             },
+
+            live_code_update(data){
+                if(this.users.length == 2){
+                    console.log('JS of XML have been changed update here:', data)
+                    this.whisperSlideLocalStorage('local-storage-class-session',data)
+                }
+            },
+
+            reset_slides(){
+
+            },
+
 
             /** Called on emit from VideoComponent.vue*/
             saveMyVideoStream(stream){

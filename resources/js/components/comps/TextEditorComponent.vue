@@ -48,15 +48,29 @@
                     xml.$_initialize_XML_editor_$()
                     javaScript.$_initialize_text_editor_$()
 
-                    /** Listeners for code changes, and emitting to CreateLesson.vue */
+                    /** Listeners for code changes, and emitting to CreateLesson.vue
+                     * - false means we don't want to whisper this change to the other user
+                     * - they most likely whispered it to us. */
                     javaScript.getInstance().on('change',(instance,change)=>{
                         this.$emit('javaScriptChange',javaScript.$_getJsValue_$())
                     })
                    xml.getInstance().on('change',(instance,change)=>{
                        this.$emit('xmlChange',xml.$_getXMLValue_$())
-
                        //adding the typed in html straight away as the user types
                        xml.$_xmlToIframe_$('i-frame',xml.$_getXMLValue_$())
+                    })
+
+
+                    /** When a user types something into the box themselves,
+                     * it will be sent to the other users because of the ''whisper-to-other-user'' parameter */
+                    javaScript.getInstance().on('keyup',e=>{
+                        this.$emit('javaScriptChange',javaScript.$_getJsValue_$(),'whisper-to-other-user')
+                        console.log('key pressed',e)
+                    })
+
+                    xml.getInstance().on('keyup',e=>{
+                        this.$emit('xmlChange',xml.$_getXMLValue_$(),'whisper-to-other-user')
+                        console.log('key pressed',e)
                     })
 
                     this.initialized = true

@@ -7,7 +7,7 @@
                     <div>
                         <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
                         <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
-                        <button @click="resetLocalStorage()">Reset All slides</button>
+                        <button @click="resetLocalStorage(true)">Reset All slides</button>
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@
                 }
             },
 
-            resetLocalStorage(){
+            resetLocalStorage(emitToOther){
                 localStorage.removeItem(this.class_uuid);
 
                 let rowFromDb = JSON.parse(this.load_slides);
@@ -112,6 +112,10 @@
 
                 localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
                 this.slideTypeHandler(this.currentSlideIndex)
+
+                if(emitToOther === true){
+                    this.$emit('reset-slides'); /** Only tell other user if the 1st user pressed the button to do so */
+                }
             },
 
             /** Presentation methods }*/
@@ -141,8 +145,9 @@
                             this.editing = false;
                             this.secondsEditing = 0;
                             console.log('not typing')
+                            localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
                         }
-                    },1000)
+                    },500)
 
                 } else {
                     /** @@@@
@@ -151,7 +156,6 @@
                      *  */
                     this.secondsEditing = 0;
 
-                    localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}));
                 }
             },
 
@@ -234,14 +238,24 @@
                 }
             },
 
-            /** When the javascript or xml window are updated */
-            updateJavaScript(data){
+            /** When the javascript or xml window are updated from textEditorComponent */
+            updateJavaScript(data,emitToOtherUser){
                 this.slides[this.currentSlideIndex].data.javaScript = data
-                this.typing()
+                // this.typing()
+
+                localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}))
+                if(emitToOtherUser === 'whisper-to-other-user'){
+                    this.$emit('live-code-update',this.slides)
+                }
             },
-            updateXML(data){
+            updateXML(data, emitToOtherUser){
                 this.slides[this.currentSlideIndex].data.xml = data
-                this.typing()
+                // this.typing()
+
+                localStorage.setItem(this.class_uuid,JSON.stringify({slides: this.slides,currIndex: this.currentSlideIndex}))
+                if(emitToOtherUser === 'whisper-to-other-user'){
+                    this.$emit('live-code-update',this.slides)
+                }
             }
         },
         beforeMount(){
