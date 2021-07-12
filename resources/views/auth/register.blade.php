@@ -26,6 +26,24 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="type" class="col-md-4 col-form-label text-md-right">{{ __('Type') }}</label>
+
+                            <div class="col-md-6">
+                                <select id="type" class="form-control @error('type') is-invalid @enderror" name="type" required autocomplete="type">
+                                    <option value=""></option>
+                                    <option value="student" {{ old('type') == 'student' ? "selected" :""}}>Student</option>
+                                    <option value="teacher" {{ old('type') == 'teacher' ? "selected" :""}}>Teacher</option>
+                                </select>
+
+                                @error('type')
+                                <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
 
                             <div class="col-md-6">
