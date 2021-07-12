@@ -19,4 +19,10 @@ class ForgotPasswordController extends Controller
     */
 
     use SendsPasswordResetEmails;
+
+    public function showLinkRequestForm(){
+        return abort(404); /** Will not be using a password form reset, so this will prevent the form from being shown. */
+    }
+
+
 }
