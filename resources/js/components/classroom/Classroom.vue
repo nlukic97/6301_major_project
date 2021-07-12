@@ -322,8 +322,21 @@
                 .catch((e)=>{
                     console.log(e)
                 })
+            },
 
+            /** This will check all classes this user has in local storage that are not in progress,
+             * and will delete them from the local storage. */
+            clear_finished_classes()
+            {
+                let uuids = Object.keys(localStorage)
 
+                axios.post('/api/clear-finished-lessons', uuids)
+                .then(e=>{
+                    let deleteUUIDs = e.data
+                    deleteUUIDs.forEach(el=>{
+                        localStorage.removeItem(el)
+                    })
+                });
             }
         },
         beforeMount(){
@@ -331,7 +344,9 @@
             this.userId = parseInt(this.user_id)
             this.roomId = this.class_id
             this.teacher = this.is_teacher
-            //console.log(this.teacher)
+
+            this.clear_finished_classes()
+            console.log(this.teacher)
         },
         mounted() {
         }

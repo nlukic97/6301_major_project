@@ -6,6 +6,7 @@ use App\Models\Lesson;
 use http\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class LessonController extends Controller
 {
@@ -64,5 +65,28 @@ class LessonController extends Controller
         $lesson->save();
         return response('Success', 200)
             ->header('Content-Type', 'text/plain');
+    }
+
+
+    public function clear_finished_lessons(Request $request)
+    {
+
+        $browserUUIDs = $request->validate([
+            '*'=>'string'
+        ]);
+        $finished_lessons = [];
+
+
+        foreach ($browserUUIDs as $key=> $item){
+            if(Str::isUuid($item) === true){
+                $lesson = Lesson::where('uuid',$item)->first();
+
+                if($lesson != null && $lesson['in_progress'] === 0){
+                    array_push($finished_lessons,$item);
+                }
+            }
+        }
+        return $finished_lessons;
+
     }
 }
