@@ -25,6 +25,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $type = Auth::user()->type;
+        if($type === 'teacher'){
+            return view('home-teacher');
+        }
+        return view('home-student');
     }
 }

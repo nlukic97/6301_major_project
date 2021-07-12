@@ -14,10 +14,8 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    <p>You are logged in a a student. Paste the link your professor gives you into the browser window.</p>
                 </div>
-
-                <a class='btn btn-primary' href="/new-lesson">Start new Class</a>
             </div>
         </div>
     </div>

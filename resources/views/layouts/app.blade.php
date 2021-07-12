@@ -79,11 +79,5 @@
             @yield('content')
         </main>
     </div>
-
-    {{--Settings 1--}}
-{{--    <script>
-        window.PUSHER_APP_KEY = '{{ config('broadcasting.connections.pusher.key') }}';
-        window.APP_DEBUG = {{ config('app.debug') ? 'true' : 'false' }};
-    </script>--}}
 </body>
 </html>

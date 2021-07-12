@@ -18,7 +18,7 @@ class SlideController extends Controller
     public function index()
     {
         $allSlides = Slide::where('owner_id',Auth::id())->get();
-        dd($allSlides);
+        return view('slides',compact('allSlides'));
     }
 
     public function edit_lesson($id)
@@ -69,7 +69,10 @@ class SlideController extends Controller
 
 
     public function delete($id){
-        Slide::find($id)->delete();
-        return redirect('/home');
+        $slide = Slide::find($id);
+        if($slide != null && $slide->owner_id === Auth::id()){
+            $slide->delete();
+        }
+        return redirect('/all-slides');
     }
 }
