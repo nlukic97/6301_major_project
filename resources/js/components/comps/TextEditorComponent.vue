@@ -1,13 +1,13 @@
 <template>
-    <div class="d-flex">
-        <div style="width:50%">
+    <div class="d-flex" id="container">
+        <div style="width:100%">
             <div id="my-div-2"></div>
             <div id="my-div"></div>
         </div>
-        <div style="width:50%">
+        <div style="width:100%">
             <!-- So iframe is where the DOM output of the js code will be displayed-->
             <button id="exe-btn" @click="$_codeExecute(true)">Execute</button>
-            <iframe frameborder="1" id="i-frame" style="width: 100%;height:40vh;"></iframe>
+            <iframe frameborder="1" id="i-frame"></iframe>
         </div>
     </div>
 </template>
@@ -104,5 +104,24 @@
 </script>
 
 <style scoped>
+    #container {
+        width: 100%;
+    }
 
+    #i-frame {
+        height:90vh;
+        width: 100%;
+    }
+
+    #my-div {
+        margin-bottom: 5px;
+    }
+
+    #my-div-2 {
+        margin-bottom: 5px;
+    }
+
+    .Codemirror-line {
+        display: none!important;
+    }
 </style>

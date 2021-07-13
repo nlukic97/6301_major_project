@@ -13,6 +13,7 @@ function $_initialize_text_editor_$(){
         mode: 'javascript',
         theme:'monokai', // @@@ additional cdn is used for this.
         // readOnly:true // @@@ can be used for 'view only' mode of the lesson
+        lineWrapping: true,
     });
 
     $_scriptToIframe_$('i-frame',$_CodeMirrorJavaScript_$.getValue())

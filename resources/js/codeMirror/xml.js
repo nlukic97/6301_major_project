@@ -11,7 +11,8 @@ function $_initialize_XML_editor_$(){
         tabSize: 4,
         value: ``, // @@@ text is like this so that the new lines would not be indented in the browser.
         mode: 'xml',
-        theme:'monokai' // @@@ additional cdn is used for this.
+        theme:'monokai', // @@@ additional cdn is used for this.
+        lineWrapping: true
     });
 
     $_xmlToIframe_$('i-frame',$_CodeMirrorXMl_$.getValue())

@@ -34,8 +34,10 @@
             </div>
 
             <!-- When it is an exercise-->
-            <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}">
+
                 <text-editor-component
+                    v-if="this.slides.length > 0" :class="{hidden: !hideSlide}"
+
                     :state="text_editor_state"
                     v-on:javaScriptChange="updateJavaScript"
                     v-on:xmlChange="updateXML"
@@ -46,7 +48,7 @@
                     v-on:code-executed="$emit('code-executed')"
                 ></text-editor-component> <!-- Adding a class binding directly to the component does not display the text of the component until I click on it -->
 
-            </div>
+
         </div>
     </div>
 </template>

@@ -51,7 +51,7 @@
             </div>
 
             <!-- When it is an exercise-->
-            <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}">
+            <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}" style="width: 100%">
                 <span class="x-btn" @click="removeSlide()">x</span>
 
                 <text-editor-component
