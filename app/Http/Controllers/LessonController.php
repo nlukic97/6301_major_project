@@ -78,7 +78,7 @@ class LessonController extends Controller
 
 
         foreach ($browserUUIDs as $key=> $item){
-            if(Str::isUuid($item) === true){
+            if(Str::isUuid($item) === true){ //this will remove anything that is not a uuid (lesson slides saved in local storage)
                 $lesson = Lesson::where('uuid',$item)->first();
 
                 if($lesson != null && $lesson['in_progress'] === 0){
@@ -86,7 +86,7 @@ class LessonController extends Controller
                 }
             }
         }
-        return $finished_lessons;
+        return $finished_lessons; //return the names of the local storage entries the user should delete
 
     }
 }

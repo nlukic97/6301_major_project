@@ -2,8 +2,8 @@
     <div>
         <h1>This is the video component</h1>
         <div class="d-flex justify-content-around">
-            <video ref="myvideo" muted></video>
-            <video ref="myvideo2"></video>
+            <video id="myvideo" ref="myvideo" muted></video>
+            <video id="myvideo2" ref="myvideo2"></video>
         </div>
     </div>
 </template>
@@ -61,4 +61,7 @@
 </script>
 
 <style scoped>
+    /*#myvideo {*/
+    /*    width:500px;*/
+    /*}*/
 </style>

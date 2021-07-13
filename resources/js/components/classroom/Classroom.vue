@@ -1,7 +1,13 @@
 <template>
     <div>
-<!--        <text-editor-component v-if="this.displayTextEditor" state="shown"></text-editor-component>-->
-        <slot></slot>
+<!--        <slot></slot>-->
+
+        <video-component
+            id="video-component"
+            :other_peer_video="otherPeerStream"
+            v-on:myOwnVideoStream="saveMyVideoStream"
+        ></video-component>
+
         <class-slides
             v-bind:load_slides="pass_down_slide"
             v-bind:class_uuid="class_id"
@@ -21,11 +27,6 @@
             v-bind:signal_code_execution="signalCodeExecution"
             v-on:code-executed="reset_signalCodeExecution"
         ></class-slides>
-
-        <video-component
-            :other_peer_video="otherPeerStream"
-            v-on:myOwnVideoStream="saveMyVideoStream"
-        ></video-component>
 
 
 
@@ -324,10 +325,9 @@
                 })
             },
 
-            /** This will check all classes this user has in local storage that are not in progress,
-             * and will delete them from the local storage. */
-            clear_finished_classes()
-            {
+            /** This will check all classes this user has in local storage,
+             * and will delete them from the local storage if they are no loner in progress. */
+            clear_finished_classes() {
                 let uuids = Object.keys(localStorage)
 
                 axios.post('/api/clear-finished-lessons', uuids)
@@ -354,5 +354,9 @@
 </script>
 
 <style scoped>
-
+    /*#video-component {*/
+    /*    position:absolute;*/
+    /*    top:0;*/
+    /*    left:0;*/
+    /*}*/
 </style>
