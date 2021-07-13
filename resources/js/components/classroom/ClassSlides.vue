@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div style="display: flex;">
+        <div class="d-flex">
 
-            <div>
+            <div id="slides-component">
                 <div>
                     <div>
                         <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
@@ -251,6 +251,10 @@
 </script>
 
 <style>
+    #slides-component {
+        margin-top:200px;
+    }
+
     #slide-list li span{
         cursor: pointer;
     }

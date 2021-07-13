@@ -1,11 +1,8 @@
 <template>
-    <div>
-        <h1>This is the video component</h1>
-        <div class="d-flex justify-content-around">
+        <div class="d-flex align-items-center justify-content-center" style="border:1px solid red; width:250px;">
             <video id="myvideo" ref="myvideo" muted></video>
             <video id="myvideo2" ref="myvideo2"></video>
         </div>
-    </div>
 </template>
 
 <script>
@@ -61,7 +58,15 @@
 </script>
 
 <style scoped>
-    /*#myvideo {*/
-    /*    width:500px;*/
-    /*}*/
+
+    #myvideo {
+        width:100px;
+        position: absolute;
+        bottom:0;
+        left:0;
+    }
+
+    #myvideo2 {
+        width:250px;
+    }
 </style>

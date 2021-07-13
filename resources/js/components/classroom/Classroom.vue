@@ -28,8 +28,6 @@
             v-on:code-executed="reset_signalCodeExecution"
         ></class-slides>
 
-
-
         <input type="number" v-model="receiver">
         <button @click="sendMessageToAll">Broadcast Message</button>
         <button @click="sendMessageToOne">Send to one user</button>
@@ -354,9 +352,9 @@
 </script>
 
 <style scoped>
-    /*#video-component {*/
-    /*    position:absolute;*/
-    /*    top:0;*/
-    /*    left:0;*/
-    /*}*/
+    #video-component {
+        position:absolute;
+        top:0;
+        left:0;
+    }
 </style>
