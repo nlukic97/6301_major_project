@@ -28,14 +28,9 @@
             v-on:code-executed="reset_signalCodeExecution"
         ></class-slides>
 
-        <input type="number" v-model="receiver">
-        <button @click="sendMessageToAll">Broadcast Message</button>
-        <button @click="sendMessageToOne">Send to one user</button>
-        <button @click="whisper">Whisper</button>
-        <button @click="closeCall">close call</button>
-        <button @click="endClass">End class</button>
-
-        <button @click="whisperMyPeerId">Send other peer my peerId</button>
+        <div>
+            <button class="float-right" @click="endClass">End class</button>
+        </div>
     </div>
 </template>
 
@@ -56,7 +51,6 @@
                 myPeerId:null,
                 otherPeerId:null,
                 roomId:'',
-                receiver:null,
                 users:[],
                 channel:null,
                 otherPeer:null,
@@ -72,39 +66,6 @@
             }
         },
         methods:{
-            async sendMessageToAll(){
-                try {
-                    let data = await axios.post('/api/send-msg-all',{
-                        msg:'Msg to all users except me',
-                        roomId: this.roomId
-                    })
-                    console.log('Msg sent',data)
-                } catch(error) {
-                    console.log(error)
-                }
-            },
-            async sendMessageToOne(){
-                try {
-                    let data = await axios.post('/api/send-msg-one',{
-                        msg:'Message to user 2',
-                        roomId: this.roomId,
-                        receiverId:this.receiver
-                    })
-                    console.log('Msg to one user sent',data)
-                } catch(error) {
-                    console.log(error)
-                }
-            },
-            closeCall(){
-                this.call.close()
-            },
-            whisper(){
-                this.channel.whisper('click',{
-                    id: this.userId
-                })
-            },
-
-
             /** @@@
              * Laravel Echo Init - based on passed props from views\class.blade.php, this will:
              * - join a presence channel for roomId
@@ -145,10 +106,6 @@
 
                     .listen('NewMessage', (e) => {
                         console.log('NewMessage:', e)
-                    })
-
-                    .listenForWhisper('click',e=>{
-                        console.log(e.id + ' is typing.')
                     })
 
                     .listenForWhisper('peer-to-connect-with',e=>{

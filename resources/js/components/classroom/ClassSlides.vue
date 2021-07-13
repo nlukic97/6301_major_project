@@ -5,9 +5,9 @@
             <div id="slides-component">
                 <div>
                     <div>
-                        <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
-                        <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
-                        <button @click="resetLocalStorage(true)">Reset</button>
+                        <span class="btn btn-primary" @click="presentPrevSlide(currentSlideIndex)">Previous</span>
+                        <span class="btn btn-primary" @click="presentNextSlide(currentSlideIndex)">Next</span>
+                        <span class="btn btn-success" @click="resetLocalStorage(true)">Reset</span>
                     </div>
                 </div>
 
@@ -256,6 +256,17 @@
     #slides-component {
         margin-top:200px;
         min-width:250px;
+    }
+
+    #slide-list {
+        padding:5px;
+        margin:0 0 0 5px;
+    }
+
+    #slide-list li {
+        list-style-type: none;
+        margin:0;
+        padding:0;
     }
 
     #slide-list li span{

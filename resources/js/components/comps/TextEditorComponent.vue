@@ -113,15 +113,7 @@
         width: 100%;
     }
 
-    #my-div {
+    #my-div, #my-div-2 {
         margin-bottom: 5px;
-    }
-
-    #my-div-2 {
-        margin-bottom: 5px;
-    }
-
-    .Codemirror-line {
-        display: none!important;
     }
 </style>
