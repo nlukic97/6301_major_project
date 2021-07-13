@@ -7,7 +7,7 @@
                     <div>
                         <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
                         <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
-                        <button @click="resetLocalStorage(true)">Reset All slides</button>
+                        <button @click="resetLocalStorage(true)">Reset</button>
                     </div>
                 </div>
 
@@ -253,6 +253,7 @@
 <style>
     #slides-component {
         margin-top:200px;
+        min-width:250px;
     }
 
     #slide-list li span{
