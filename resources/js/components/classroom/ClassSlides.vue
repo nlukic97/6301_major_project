@@ -213,7 +213,7 @@
                 let content = this.slides[index].content
                 if(content.length > 10){
                     /** displaying only part of the slide text within the slide list */
-                    return (this.slides[index].content).substring(0,10).trim() + '...'
+                    return (this.slides[index].content).substring(0,25).trim() + '...'
                 } else {
                     return content
                 }

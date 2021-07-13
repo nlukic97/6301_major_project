@@ -28,8 +28,8 @@
             v-on:code-executed="reset_signalCodeExecution"
         ></class-slides>
 
-        <div>
-            <button class="float-right" @click="endClass">End class</button>
+        <div class="position-absolute" id="bottom-banner">
+            <span class="btn btn-danger float-right" @click="endClass">End class</span>
         </div>
     </div>
 </template>
@@ -313,5 +313,14 @@
         position:absolute;
         top:0;
         left:0;
+    }
+
+    #bottom-banner {
+        background-color: #313940;
+        width: 100%;
+        bottom: 0;
+        left:0;
+        z-index: 3;
+
     }
 </style>

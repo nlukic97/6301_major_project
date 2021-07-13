@@ -6,8 +6,8 @@
         </div>
         <div style="width:100%">
             <!-- So iframe is where the DOM output of the js code will be displayed-->
-            <button id="exe-btn" @click="$_codeExecute(true)">Execute</button>
-            <iframe frameborder="1" id="i-frame"></iframe>
+            <span class="btn btn-success float-right" id="exe-btn" @click="$_codeExecute(true)">Execute</span>
+            <iframe frameborder="0" id="i-frame"></iframe>
         </div>
     </div>
 </template>
