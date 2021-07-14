@@ -4,7 +4,7 @@
             <div id="my-div-2"></div>
             <div id="my-div"></div>
         </div>
-        <div style="width:100%">
+        <div id="execution-div">
             <!-- So iframe is where the DOM output of the js code will be displayed-->
             <span class="btn btn-success float-right" id="exe-btn" @click="$_codeExecute(true)">
                 <i class="fas fa-play"></i>
@@ -111,6 +111,10 @@
         width: 100%;
     }
 
+    #execution-div {
+        width:100%;
+    }
+
     #i-frame {
         height:90vh;
         width: 100%;
@@ -118,5 +122,22 @@
 
     #my-div, #my-div-2 {
         margin-bottom: 5px;
+    }
+
+    #my-div ::-webkit-scrollbar,
+    #my-div-2 ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    #my-div ::-webkit-scrollbar-track,
+    #my-div-2 ::-webkit-scrollbar-track {
+        border-radius: 5px;
+        box-shadow: inset 0 0 10px #5c5e4e;
+    }
+
+    #my-div ::-webkit-scrollbar-thumb,
+    #my-div-2 ::-webkit-scrollbar-thumb{
+        border-radius: 5px;
+        background-color: #6a6d63;
     }
 </style>
