@@ -3,7 +3,7 @@
         <form action="/new-lesson" method="POST" id="start-lesson-form">
             <input type="hidden" name="_token" :value="csrf">
             <div class="form-group">
-                <label for="id" class="form-check-label">Select slides</label>
+
                 <select name="id" id="id" class="custom-select">
                     <option value=""></option>
                     <option v-for="(slide,index) in slides" v-bind:value="slide.id" >{{slide.title}}</option>

@@ -6,10 +6,14 @@
         </div>
         <div id="execution-div">
             <!-- So iframe is where the DOM output of the js code will be displayed-->
-            <span class="btn btn-success float-right" id="exe-btn" @click="$_codeExecute(true)">
-                <i class="fas fa-play"></i>
-                Execute
-            </span>
+            <div class="d-flex justify-content-between">
+                <h3>Output</h3>
+                <span class="btn btn-success" id="exe-btn" @click="$_codeExecute(true)">
+                    <i class="fas fa-play"></i>
+                    Execute
+                </span>
+            </div>
+            
             <iframe frameborder="0" id="i-frame"></iframe>
         </div>
     </div>
