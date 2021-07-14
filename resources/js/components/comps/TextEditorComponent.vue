@@ -13,8 +13,8 @@
                     Execute
                 </span>
             </div>
-            
-            <iframe frameborder="0" id="i-frame"></iframe>
+
+            <iframe frameborder="0" id="i-frame" class="border"></iframe>
         </div>
     </div>
 </template>
