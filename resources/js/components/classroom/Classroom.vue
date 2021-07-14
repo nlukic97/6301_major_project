@@ -31,6 +31,7 @@
         <div class="position-absolute" id="bottom-banner">
             <span v-if="is_teacher" class="btn btn-danger float-right" @click="endClass">End class</span>
         </div>
+
     </div>
 </template>
 
