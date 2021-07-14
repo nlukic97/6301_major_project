@@ -1,15 +1,22 @@
 <template>
     <div>
-        <form action="/new-lesson" method="POST">
+        <form action="/new-lesson" method="POST" id="start-lesson-form">
             <input type="hidden" name="_token" :value="csrf">
-            <div>
-                <label for="id">Select slides</label>
-                <select name="id" id="id">
+            <div class="form-group">
+                <label for="id" class="form-check-label">Select slides</label>
+                <select name="id" id="id" class="custom-select">
                     <option value=""></option>
                     <option v-for="(slide,index) in slides" v-bind:value="slide.id" >{{slide.title}}</option>
                 </select>
 
-                <button type="submit">Start lesson</button>
+                <slot></slot>
+
+                <div class="text-center">
+                    <a class="btn btn-primary"
+                       onclick="document.getElementById('start-lesson-form').submit();">
+                        Start lesson
+                    </a>
+                </div>
             </div>
         </form>
     </div>
