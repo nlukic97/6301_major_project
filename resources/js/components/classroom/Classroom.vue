@@ -29,7 +29,10 @@
         ></class-slides>
 
         <div class="position-absolute" id="bottom-banner">
-            <span v-if="is_teacher" class="btn btn-danger float-right" @click="endClass">End class</span>
+            <span v-if="is_teacher" class="btn btn-danger float-right" @click="endClass">
+                <i class="fas fa-sign-out-alt"></i>
+                End class
+            </span>
         </div>
 
     </div>

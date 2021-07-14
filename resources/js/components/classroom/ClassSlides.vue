@@ -5,9 +5,16 @@
             <div id="slides-component">
                 <div>
                     <div>
-                        <span class="btn btn-primary" @click="presentPrevSlide(currentSlideIndex)">Previous</span>
-                        <span class="btn btn-primary" @click="presentNextSlide(currentSlideIndex)">Next</span>
-                        <span class="btn btn-success" @click="resetLocalStorage(true)">Reset</span>
+                        <span class="btn btn-primary" @click="presentPrevSlide(currentSlideIndex)">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                        <span class="btn btn-primary" @click="presentNextSlide(currentSlideIndex)">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                        <span class="btn btn-success" @click="resetLocalStorage(true)">
+                            <i class="fas fa-sync"></i>
+                            Reset all
+                        </span>
                     </div>
                 </div>
 

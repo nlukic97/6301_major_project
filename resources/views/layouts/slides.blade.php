@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/theme/monokai.min.css">
 
+    <!-- Font awesome -->
+    <script src="https://kit.fontawesome.com/279db593be.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
 
