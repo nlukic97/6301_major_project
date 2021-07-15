@@ -22,7 +22,7 @@
     <!-- Font awesome -->
     <script src="https://kit.fontawesome.com/279db593be.js" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="bg-dark">
     <div id="app">
         <x-navigation></x-navigation>
 
