@@ -23,7 +23,27 @@ function $_initialize_XML_editor_$(){
 //adding user entered script to the iframe, which will execute it in there.
 function $_xmlToIframe_$(frame_id,text){
     var $_ifrm_$ = document.getElementById(frame_id)
-    $_ifrm_$.contentWindow.document.body.innerHTML=text;
+    $_ifrm_$.contentWindow.document.body.innerHTML= `
+<!-- Styling the scrollbar -->
+    <style>
+        ::-webkit-scrollbar,
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track,
+        ::-webkit-scrollbar-track {
+            border-radius: 5px;
+            box-shadow: inset 0 0 10px #5c5e4e;
+        }
+
+        ::-webkit-scrollbar-thumb,
+        ::-webkit-scrollbar-thumb{
+            border-radius: 5px;
+            background-color: #6a6d63;
+        }
+  </style>
+${text}`;
 }
 
 
