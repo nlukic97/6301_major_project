@@ -15,3 +15,11 @@
     height:289px!important; /* This might need to be dynamicly done with javascript */
 }
 
+#registration-select select:valid {
+    -webkit-appearance: menulist-button;
+    color: #000;
+}
+
+#registration-select select:invalid {
+    color: gray;
+}

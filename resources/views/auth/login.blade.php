@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center mt-4">
+    <div class="row justify-content-center">
         <div class="col-lg-4 col-md-6 col-12">
             <form method="POST" action="{{ route('login') }}">
                 @csrf
@@ -11,6 +11,7 @@
                         <div class="form-group row">
                             <div class="col-md-10 ml-auto mr-auto">
                                 <h2>Login</h2>
+
 {{--                                <label for="email" class="col-form-label">{{ __('E-Mail Address') }}</label>--}}
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="E-mail address">
 
