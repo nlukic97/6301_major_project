@@ -2,7 +2,7 @@
         <div>
             <div id="video-container" class="d-flex align-items-center justify-content-center">
                 <video id="myvideo" ref="myvideo" muted></video>
-                <video id="myvideo2" ref="myvideo2" :style="otherVideoCss" muted></video>
+                <video id="myvideo2" ref="myvideo2" :style="otherVideoCss"></video>
                 <span class="btn btn-light" @click="toggleOtherVideoView" id="toggle-vid-btn">
                     <i class="fas fa-photo-video"></i>
                 </span>
