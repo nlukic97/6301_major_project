@@ -13,9 +13,9 @@
            </div>
 
            @foreach($allSlides as $slide)
-               <div class="row border border-secondary mb-2 mt-4">
+               <div class="row border border-secondary mb-2 mt-4 pt-2 pb-2">
                    <div class="col-10">
-                       <a class='btn btn-block text-info mt-2 p-3 text-left' href="/edit-slides/{{$slide->id}}">
+                       <a class='btn btn-block text-info text-left' href="/edit-slides/{{$slide->id}}">
                            @if($slide->title)
                                {{$slide->title}}
                            @else
@@ -25,7 +25,7 @@
                    </div>
 
                    <div class="col-2 text-center">
-                       <span class='btn btn-danger mt-3' href="/delete-slides/{{$slide->id}}"><i class="fas fa-times"></i></span>
+                       <span class='btn btn-danger float-right' href="/delete-slides/{{$slide->id}}"><i class="fas fa-times"></i></span>
                    </div>
                </div>
            @endforeach
