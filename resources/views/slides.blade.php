@@ -2,20 +2,34 @@
 
 @section('content')
     <div id="app">
-        <h1>My slides</h1>
+       <div class="container">
+           <div class="row">
+               <div class="col-12">
+                   <h2 class="text-light text-center">Slides</h2>
+                   <div class="text-center">
+                       <a class='btn btn-primary' href="/new-slides"><i class="fas fa-plus"></i> New slides</a>
+                   </div>
+               </div>
+           </div>
 
+           @foreach($allSlides as $slide)
+               <div class="row border border-secondary mb-2 mt-4">
+                   <div class="col-10">
+                       <a class='btn btn-block text-info mt-2 p-3 text-left' href="/edit-slides/{{$slide->id}}">
+                           @if($slide->title)
+                               {{$slide->title}}
+                           @else
+                               untitled
+                           @endif
+                       </a>
+                   </div>
 
-        <a class='btn btn-primary' href="/new-slides">Create new presentation</a>
+                   <div class="col-2 text-center">
+                       <span class='btn btn-danger mt-3' href="/delete-slides/{{$slide->id}}"><i class="fas fa-times"></i></span>
+                   </div>
+               </div>
+           @endforeach
 
-        @foreach($allSlides as $slide)
-            <div class="d-flex justify-content-between">
-                @if($slide->title)
-                    <a class='d-inline-block' href="/edit-slides/{{$slide->id}}"><h2>{{$slide->title}}</h2></a>
-                @else
-                    <a class='d-inline-block' href="/edit-slides/{{$slide->id}}"><h2>untitled</h2></a>
-                    @endif
-                <a class='btn btn-danger' href="/delete-slides/{{$slide->id}}">Delete</a>
-            </div>
-        @endforeach
+       </div>
     </div>
 @endsection
