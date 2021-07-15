@@ -70,26 +70,29 @@
         </ul>
 
         <ul class="navbar-nav">
-            @if(Auth::user() && Auth::user()->type == 'teacher') {{--Only teachers can see these two links --}}
-                <li class="nav-item">
-                    <a href="/new-lesson" class="nav-link">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        New lesson
-                    </a>
-                </li>
 
-                <li class="nav-item">
-                    <a href="/all-slides" class="nav-link">
-                        <i class="fas fa-book-open"></i>
-                        Slides
-                    </a>
-                </li>
-            @endif
 
         </ul>
 
         <!-- Right Side Of Navbar -->
-        <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto mr-2">
+            @if(Auth::user() && Auth::user()->type == 'teacher') {{--Only teachers can see these two links --}}
+            <li class="nav-item">
+                <a href="/new-lesson" class="nav-link">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    New lesson
+                </a>
+            </li>
+
+            <li class="nav-item mr-2">
+                <a href="/all-slides" class="nav-link">
+                    <i class="fas fa-book-open"></i>
+                    Slides
+                </a>
+            </li>
+            @endif
+
+
             <!-- Authentication Links -->
             @guest
                 @if (Route::has('login'))

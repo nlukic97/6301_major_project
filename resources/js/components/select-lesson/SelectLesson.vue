@@ -6,13 +6,11 @@
 
                 <select name="id" id="id" class="custom-select">
                     <option value=""></option>
-                    <option v-for="(slide,index) in slides" v-bind:value="slide.id" >{{slide.title}}</option>
+                    <option v-for="(slide,index) in slides" v-bind:value="slide.id" >{{filterSlideName(slide.title)}}</option>
                 </select>
 
-                <slot></slot>
-
                 <div class="text-center">
-                    <a class="btn btn-primary"
+                    <a class="btn btn-primary btn-block mt-1"
                        onclick="document.getElementById('start-lesson-form').submit();">
                         Start lesson
                     </a>
@@ -30,6 +28,14 @@
             return {
                 slides:null
             }
+        },
+        methods:{
+          filterSlideName(slidename){
+              if(slidename === null){
+                  return 'untitled'
+              }
+              return slidename
+          }
         },
         mounted() {
             this.slides = JSON.parse(this.all_slides)

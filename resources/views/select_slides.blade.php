@@ -2,21 +2,29 @@
 
 @section('content')
     <div id="app" class="container-lg">
-        <h3 class="text-center">New lesson</h3>
+        <h3 class="text-center text-light">New lesson</h3>
 
-        @if(!$errors->any())
-        <div class="text-center alert alert-info">
-            Please select the slides you would like to use.
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 col-10">
+                @if(!$errors->any())
+                    <div class="text-center alert alert-info">
+                        Please select the slides you would like to use.
+                    </div>
+                @endif
+
+                @error('id')
+                <div class="alert alert-danger text-center">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
-        @endif
 
-        <select-lesson all_slides="{{$slides}}" csrf="{{csrf_token()}}">
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 col-10">
 
-            @error('id')
-            <div class="alert alert-danger">{{ $message }}</div>
-            @enderror
+                <select-lesson all_slides="{{$slides}}" csrf="{{csrf_token()}}"></select-lesson>
 
-        </select-lesson>
+            </div>
+        </div>
 
     </div>
 @endsection
