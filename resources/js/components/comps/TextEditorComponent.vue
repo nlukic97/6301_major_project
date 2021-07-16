@@ -7,7 +7,7 @@
         <div id="execution-div">
             <!-- So iframe is where the DOM output of the js code will be displayed-->
             <div class="d-flex justify-content-between">
-                <h3 class="text-light pt-1">Output</h3>
+                <h3 class="text-light pt-1 mb-0">Output</h3>
                 <span class="btn btn-success" id="exe-btn" @click="$_codeExecute(true)">
                     <i class="fas fa-play"></i>
                     Execute
@@ -120,7 +120,7 @@
     }
 
     #i-frame {
-        height:87vh;
+        height:88vh;
         width: 100%;
     }
 
