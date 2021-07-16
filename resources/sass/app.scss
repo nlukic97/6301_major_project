@@ -23,3 +23,34 @@
 #registration-select select:invalid {
     color: gray;
 }
+
+.one-slide:hover .slides-section-btns {
+    display: block;
+}
+
+.one-slide {
+    border-left:1px solid #6a6a6a;
+    border-right:1px solid #6a6a6a;
+    border-top:1px solid #6a6a6a;
+}
+
+.one-slide:last-child {
+    border-bottom: 1px solid #6a6a6a; // It targets all of them for some reason.
+}
+
+.one-slide:hover {
+    transform: scale(1.03);
+    border:1px solid #fff;
+    z-index: 4;
+    cursor: default;
+}
+
+.one-slide {
+    word-break: break-all;
+    background-color: #343A40!important;
+}
+
+.slides-section-btns {
+    width:40%;
+    display: none;
+}
