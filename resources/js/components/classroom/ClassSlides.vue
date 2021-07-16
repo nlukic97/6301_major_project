@@ -3,7 +3,7 @@
         <div class="d-flex">
 
             <div id="slides-component">
-                <div>
+                <div class="mt-2">
                     <div>
                         <span class="btn btn-primary" @click="presentPrevSlide(currentSlideIndex)">
                             <i class="fas fa-chevron-left"></i>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
 
-                <ul v-for="(slide,index) in slides" :key="index" id="slide-list">
+                <ul v-for="(slide,index) in slides" :key="index" id="slide-list" class="text-light">
                     <li v-if="index === currentSlideIndex">
                         <strong>
                             <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>

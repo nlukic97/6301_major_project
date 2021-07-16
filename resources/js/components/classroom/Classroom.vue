@@ -28,7 +28,7 @@
             v-on:code-executed="reset_signalCodeExecution"
         ></class-slides>
 
-        <div class="position-absolute bg-dark" id="bottom-banner">
+        <div class="position-fixed bg-dark border-top border-secondary" id="bottom-banner">
             <span v-if="is_teacher" class="btn btn-dark float-right" @click="endClass">
                 <i class="fas fa-sign-out-alt"></i>
                 End class
@@ -323,7 +323,7 @@
         width: 100%;
         bottom: 0;
         left:0;
-        z-index: 3;
+        z-index: 10;
 
     }
 </style>

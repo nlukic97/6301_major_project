@@ -1,6 +1,6 @@
 <template>
         <div>
-            <div id="video-container" class="d-flex align-items-center justify-content-center">
+            <div id="video-container" class="d-flex align-items-center justify-content-center bg-white">
                 <video id="myvideo" ref="myvideo" muted></video>
                 <video id="myvideo2" ref="myvideo2" :style="otherVideoCss"></video>
                 <span class="btn btn-light" @click="toggleOtherVideoView" id="toggle-vid-btn">
