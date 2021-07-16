@@ -10020,6 +10020,7 @@ h3 {
   color: gray;
 }
 
+/** ------ slides.blade.php ------ */
 .one-slide:hover .slides-section-btns {
   display: block;
 }
@@ -10028,15 +10029,16 @@ h3 {
   border-left: 1px solid #6a6a6a;
   border-right: 1px solid #6a6a6a;
   border-top: 1px solid #6a6a6a;
+  transition: 0.3s ease;
 }
 
-.one-slide:last-child {
+#slides-list div:last-child .one-slide {
   border-bottom: 1px solid #6a6a6a;
 }
 
 .one-slide:hover {
-  transform: scale(1.03);
-  border: 1px solid #fff;
+  transform: scale(1.02);
+  border: 1px solid #fff !important;
   z-index: 4;
   cursor: default;
 }

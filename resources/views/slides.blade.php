@@ -11,27 +11,28 @@
                    </div>
                </div>
            </div>
+            <div  id="slides-list" class="mt-3">
+               @foreach($allSlides as $key=>$slide)
+                   <div class="row d-flex justify-content-center">
+                       <div class="col-lg-8 col-md-9 col-11 d-flex justify-content-between align-items-center pt-2 pb-2 one-slide">
 
-           @foreach($allSlides as $key=>$slide)
-               <div class="row d-flex justify-content-center" id="slides-list">
-                   <div class="col-lg-8 col-md-9 col-11 d-flex justify-content-between align-items-center pt-2 pb-2 one-slide">
+                           <div class="text-light">
+                               @if($slide->title)
+                                   {{$key+1}} - {{$slide->title}}
+                               @else
+                                   {{$key+1}} - untitled
+                               @endif
+                           </div>
 
-                       <div class="text-light">
-                           @if($slide->title)
-                               {{$key+1}} - {{$slide->title}}
-                           @else
-                               {{$key+1}} - untitled
-                           @endif
+                           <div class="text-right slides-section-btns">
+                               <a class='btn btn-primary' href="/edit-slides/{{$slide->id}}"><i class="fas fa-pen"></i></a>
+                               <a class='btn btn-danger' href="/delete-slides/{{$slide->id}}"><i class="fas fa-times"></i></a>
+                           </div>
+
                        </div>
-
-                       <div class="text-right slides-section-btns">
-                           <a class='btn btn-primary' href="/edit-slides/{{$slide->id}}"><i class="fas fa-pen"></i></a>
-                           <a class='btn btn-danger' href="/delete-slides/{{$slide->id}}"><i class="fas fa-times"></i></a>
-                       </div>
-
                    </div>
-               </div>
-           @endforeach
+               @endforeach
+            </div>
 
        </div>
     </div>
