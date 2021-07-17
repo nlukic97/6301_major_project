@@ -28,5 +28,11 @@ class SlideSeeder extends Seeder
 
         ]);
 
+        Slide::factory()->create([
+           'owner_id'=>1,
+           'title'=>'Lesson 1',
+           'data'=>'[{"type":"slide","content":"# Welcome\n- HTML\n- Tags\n- Some other stuff"},{"type":"slide","content":"# HTML tags\n- h1 - h6\n- div\n- p\n"},{"type":"exercise","content":"Exercise","data":{"xml":"<!DOCTYPE html>\n<html>\n<head>\n  <title>JS Bin</title>\n\n  <style>\n  </style>\n</head>\n<body>\n  <h1>h1 tag</h1>\n  <h2>h2 tag</h2>\n  <h3>h3 tag</h3>\n  <h4>h4 tag</h4>\n  <h5>h5 tag</h5>\n  <h6>h5 tag</h6>\n  \n  <p>paragrpah</p>\n  <p>paragrpah</p>\n  \n  <div>this is a div</div>\n  <div>this is a div</div>\n\n</body>\n</html>","javaScript":"//type in some javaScript [o_0] ..."}},{"type":"slide","content":"## Task\n- inside of a div element  create a h1 element with the text \"Hello world\""},{"type":"exercise","content":"Exercise","data":{"xml":"<!DOCTYPE html>\n<html>\n<head>\n  <title>JS Bin</title>\n\n  <style>\n  </style>\n</head>\n<body>\n    <!-- type some HTML... -->\n\n</body>\n</html>","javaScript":""}},{"type":"slide","content":"## Inline styling\n- we use CSS to style elements on a webpage\n- we can use \n  - css files\n  - the HTML style tag\n  - inline css\n\n- We will be using inline CSS today"},{"type":"slide","content":"## How does it work ?\n- < h1 style=\'color:red\'> TEXT </ h1>\n- < p style=\'color:red\'> TEXT </ p>\n"},{"type":"exercise","content":"Exercise","data":{"xml":"<!DOCTYPE html>\n<html>\n<head>\n  <title>JS Bin</title>\n\n  <style>\n  </style>\n</head>\n<body>\n  <h1>Make this element have a white color and black background color</h1>\n\n</body>\n</html>","javaScript":"//type in some javaScript [o_0] ..."}}]'
+        ]);
+
     }
 }
