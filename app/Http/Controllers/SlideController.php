@@ -39,7 +39,7 @@ class SlideController extends Controller
     {
         $newSlides = Slide::create([
             'owner_id'=>Auth::id(),
-            'title'=>null,
+            'title'=>'undefined',
             'data'=>'[]'
         ]);
 
