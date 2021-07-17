@@ -20,15 +20,14 @@
 
                 <ul id="slide-list" class="text-light">
                     <li v-for="(slide,index) in slides" :key="index">
+
                         <strong v-if="index === currentSlideIndex">
                             <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
                         </strong>
 
                         <span v-else @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
+
                     </li>
-
-
-
                 </ul>
             </div>
 
@@ -41,20 +40,19 @@
                 ></div>
             </div>
 
-            <!-- When it is an exercise-->
+            <!-- When it is an exercise -->
+            <text-editor-component
+                v-if="this.slides.length > 0" :class="{hidden: !hideSlide}"
 
-                <text-editor-component
-                    v-if="this.slides.length > 0" :class="{hidden: !hideSlide}"
+                :state="text_editor_state"
+                v-on:javaScriptChange="updateJavaScript"
+                v-on:xmlChange="updateXML"
+                v-bind:code_props="codeMirrorProps"
 
-                    :state="text_editor_state"
-                    v-on:javaScriptChange="updateJavaScript"
-                    v-on:xmlChange="updateXML"
-                    v-bind:code_props="codeMirrorProps"
-
-                    v-on:whisper-code-execute="whisper_code_execution"
-                    v-bind:execute_the_code="signal_code_execution"
-                    v-on:code-executed="$emit('code-executed')"
-                ></text-editor-component> <!-- Adding a class binding directly to the component does not display the text of the component until I click on it -->
+                v-on:whisper-code-execute="whisper_code_execution"
+                v-bind:execute_the_code="signal_code_execution"
+                v-on:code-executed="$emit('code-executed')"
+            ></text-editor-component> <!-- Adding a class binding directly to the component does not display the text of the component until I click on it -->
 
 
         </div>

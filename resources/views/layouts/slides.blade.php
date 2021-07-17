@@ -25,7 +25,7 @@
     <script src="https://kit.fontawesome.com/279db593be.js" crossorigin="anonymous"></script>
 
 </head>
-<body>
+<body class="bg-dark text-light">
 
 <x-navigation></x-navigation> {{-- found in views/components/navigation.blade.php --}}
 

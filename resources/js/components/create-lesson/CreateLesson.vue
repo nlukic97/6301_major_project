@@ -1,25 +1,32 @@
 <template>
     <div>
-        <div>
-            <label for="slide_title">Slide title</label>
-            <input type="text" id="slide_title" v-model="slideTitle" @keyup="updateTitle()">
+        <div class="container-fluid position-sticky">
+            <div class="row pt-2 pl-2 pr-2">
+                <input class="form-control-plaintext font-weight-bold text-light pl-2 pr-2" type="text" id="slide_title" v-model="slideTitle" @keyup="updateTitle()">
+            </div>
         </div>
-        <div style="display: flex;">
 
-            <div>
-                <div>
+        <div class="d-flex">
+            <div class="position-fixed">
+                <div class="mt-2">
                     <div>
-                        <button @click="addNewSlide('slide')">New Slide</button>
-                        <button @click="addNewSlide('exercise')">Exercise Slide</button>
+                        <span class="btn btn-primary" @click="addNewSlide('slide')"><i class="fas fa-plus"></i> Text</span>
+                        <span class="btn btn-primary" @click="addNewSlide('exercise')"><i class="fas fa-plus"></i> Exercise</span>
+                        <span class="btn btn-danger" @click="removeSlide()"><i class="fas fa-times"></i></span>
                     </div>
-                    <div>
-                        <button @click="presentPrevSlide(currentSlideIndex)">Previous slide</button>
-                        <button @click="presentNextSlide(currentSlideIndex)">Next slide</button>
+
+                    <div class="mt-2">
+                        <span class="btn btn-primary" @click="presentPrevSlide(currentSlideIndex)">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                        <span class="btn btn-primary" @click="presentNextSlide(currentSlideIndex)">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
                     </div>
+
                 </div>
 
                 <ul id="slide-list">
-<!--                <ul>-->
                     <li v-for="(slide,index) in slides" :key="index">
                         <strong v-if="index === currentSlideIndex">
                             <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
@@ -29,19 +36,18 @@
 
                 </ul>
 
-                <textarea v-if="this.slides.length > 0"
-                          id="the-slide"
-                          cols="30"
-                          rows="10"
-                          v-model="markdownValue"
-                          @keyup="updateSlide(markdownValue)"
-                          :class="{hidden: hideSlide}"
-                ></textarea>
+                <div class="d-flex justify-content-center">
+                    <textarea v-if="this.slides.length > 0"
+                              id="the-slide"
+                              v-model="markdownValue"
+                              @keyup="updateSlide(markdownValue)"
+                              :class="{hidden: hideSlide}"
+                    ></textarea>
+                </div>
             </div>
 
             <!-- When it is a regular display slide-->
-            <div v-if="this.slides.length > 0" id="content" :class="{hidden: hideSlide}">
-                <span class="x-btn" @click="removeSlide()">x</span>
+            <div v-if="this.slides.length > 0" id="content" :class="{hidden: hideSlide}" class="mt-2">
                 <div
                     class="slide"
                      id="display-slide"
@@ -50,9 +56,7 @@
             </div>
 
             <!-- When it is an exercise-->
-            <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}" style="width: 100%">
-                <span class="x-btn" @click="removeSlide()">x</span>
-
+            <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}" id="text-editor" class="mt-2">
                 <text-editor-component
                     :state="text_editor_state"
                     v-on:javaScriptChange="updateJavaScript"
@@ -254,7 +258,7 @@
                 let content = this.slides[index].content
                 if(content.length > 10){
                     /** displaying only part of the slide text within the slide list */
-                    return (this.slides[index].content).substring(0,10).trim() + '...'
+                    return (this.slides[index].content).substring(0,25).trim() + '...'
                 } else {
                     return content
                 }
@@ -315,7 +319,17 @@
     }
 </script>
 
-<style>
+<style scoped>
+    #slide_title {
+        font-size: 16px;
+    }
+
+    #slide_title:focus {
+        background-color: white!important;
+        color:black!important;
+        font-weight: normal!important;
+    }
+
     #slide-list li span{
         cursor: pointer;
     }
@@ -324,8 +338,20 @@
         cursor: pointer;
     }
 
+    #the-slide {
+        width: 95%;
+        height:200px;
+        resize:none;
+    }
+
+    #text-editor {
+        width: 100%;
+        margin-left: 250px;
+    }
+
     #content {
         width: 100%;
+        margin-left: 250px;
     }
 
     #content .slide {
@@ -392,14 +418,5 @@
 
     .hidden {
         display: none!important;
-    }
-
-    .x-btn {
-        background-color: red;
-        color:#fff;
-        border-radius: 50%;
-        border:1px solid #000;
-        padding:0 8px;
-        display: inline-block;
     }
 </style>
