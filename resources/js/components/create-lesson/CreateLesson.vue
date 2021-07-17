@@ -29,9 +29,9 @@
                 <ul id="slide-list">
                     <li v-for="(slide,index) in slides" :key="index">
                         <strong v-if="index === currentSlideIndex">
-                            <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
+                            <span @click="jumpToSlide(index)">{{index + 1}} - {{shortenText(index)}}</span>
                         </strong>
-                        <span v-else @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
+                        <span v-else @click="jumpToSlide(index)">{{index + 1}} - {{shortenText(index)}}</span>
                     </li>
 
                 </ul>
@@ -258,7 +258,7 @@
                 let content = this.slides[index].content
                 if(content.length > 10){
                     /** displaying only part of the slide text within the slide list */
-                    return (this.slides[index].content).substring(0,25).trim() + '...'
+                    return (this.slides[index].content).substring(0,20).trim() + '...'
                 } else {
                     return content
                 }
@@ -322,12 +322,22 @@
 <style scoped>
     #slide_title {
         font-size: 16px;
+        padding-left: 0!important;
     }
 
     #slide_title:focus {
         background-color: white!important;
         color:black!important;
         font-weight: normal!important;
+    }
+
+    #slide-list {
+        padding:0 10px;
+    }
+
+    #slide-list li {
+        list-style-type: none;
+        padding:3px 0;
     }
 
     #slide-list li span{
