@@ -314,7 +314,7 @@
 
 <style scoped>
     #video-component {
-        position:absolute;
+        position:fixed;
         top:0;
         left:0;
     }

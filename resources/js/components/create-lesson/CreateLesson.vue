@@ -18,16 +18,15 @@
                     </div>
                 </div>
 
-                <ul v-for="(slide,index) in slides" :key="index" id="slide-list">
-                    <li v-if="index === currentSlideIndex">
-                        <strong>
+                <ul id="slide-list">
+<!--                <ul>-->
+                    <li v-for="(slide,index) in slides" :key="index">
+                        <strong v-if="index === currentSlideIndex">
                             <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
                         </strong>
+                        <span v-else @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
                     </li>
 
-                    <li v-else>
-                        <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
-                    </li>
                 </ul>
 
                 <textarea v-if="this.slides.length > 0"

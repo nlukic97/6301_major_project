@@ -3,7 +3,7 @@
         <div class="d-flex">
 
             <div id="slides-component">
-                <div class="mt-2">
+                <div class="mt-2" id="slide-toggle-btns">
                     <div>
                         <span class="btn btn-primary" @click="presentPrevSlide(currentSlideIndex)">
                             <i class="fas fa-chevron-left"></i>
@@ -18,16 +18,17 @@
                     </div>
                 </div>
 
-                <ul v-for="(slide,index) in slides" :key="index" id="slide-list" class="text-light">
-                    <li v-if="index === currentSlideIndex">
-                        <strong>
+                <ul id="slide-list" class="text-light">
+                    <li v-for="(slide,index) in slides" :key="index">
+                        <strong v-if="index === currentSlideIndex">
                             <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
                         </strong>
+
+                        <span v-else @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
                     </li>
 
-                    <li v-else>
-                        <span @click="jumpToSlide(index)">{{index + 1}} {{shortenText(index)}}</span>
-                    </li>
+
+
                 </ul>
             </div>
 
@@ -259,21 +260,26 @@
     }
 </script>
 
-<style>
+<style scoped>
     #slides-component {
         margin-top:200px;
         min-width:250px;
     }
 
+    #slide-toggle-btns {
+        position: fixed;
+    }
+
     #slide-list {
+        position:fixed;
         padding:5px;
-        margin:0 0 0 5px;
+        margin:45px 0 0 5px;
     }
 
     #slide-list li {
         list-style-type: none;
         margin:0;
-        padding:0;
+        padding:3px 0;
     }
 
     #slide-list li span{
