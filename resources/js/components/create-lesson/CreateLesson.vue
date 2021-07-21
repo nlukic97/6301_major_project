@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="container-fluid position-sticky">
+        <div class="container-fluid">
             <div class="row pt-2 pl-2 pr-2">
                 <input class="form-control-plaintext font-weight-bold text-light pl-2 pr-2" type="text" id="slide_title" v-model="slideTitle" @keyup="updateTitle()">
             </div>
         </div>
 
         <div class="d-flex">
-            <div class="position-fixed">
+            <div>
                 <div class="mt-2">
                     <div>
                         <span class="btn btn-primary" @click="addNewSlide('slide')"><i class="fas fa-plus"></i> Text</span>
@@ -26,7 +26,7 @@
 
                 </div>
 
-                <ul id="slide-list">
+                <ul id="slide-list" :class="{slide_list_height2: !hideSlide}">
                     <li v-for="(slide,index) in slides" :key="index">
                         <strong v-if="index === currentSlideIndex">
                             <span @click="jumpToSlide(index)">{{index + 1}} - {{shortenText(index)}}</span>
@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <!-- When it is a regular display slide-->
+            <!-- When it is a regular text slide, this will be shown -->
             <div v-if="this.slides.length > 0" id="content" :class="{hidden: hideSlide}" class="mt-2">
                 <div
                     class="slide"
@@ -55,7 +55,7 @@
                 ></div>
             </div>
 
-            <!-- When it is an exercise-->
+            <!-- When it is an exercise slide, this will be shown -->
             <div v-if="this.slides.length > 0" :class="{hidden: !hideSlide}" id="text-editor" class="mt-2">
                 <text-editor-component
                     :state="text_editor_state"
@@ -333,7 +333,32 @@
 
     #slide-list {
         padding:0 10px;
+        max-height: 65vh;
+        width: 225px;
+        overflow-y: scroll;
     }
+
+    .slide_list_height2 {
+        max-height: 30vh!important;
+    }
+
+
+    /*If I add #slide-list before the webkit selector, this will not work. Like this, it works fine. */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 5px;
+        box-shadow: inset 0 0 10px #5c5e4e;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #6a6d63;
+    }
+
+
 
     #slide-list li {
         list-style-type: none;
@@ -349,19 +374,18 @@
     }
 
     #the-slide {
-        width: 95%;
+        width: 100%;
         height:200px;
         resize:none;
+        border-radius: 5px;
     }
 
     #text-editor {
         width: 100%;
-        margin-left: 250px;
     }
 
     #content {
         width: 100%;
-        margin-left: 250px;
     }
 
     #content .slide {

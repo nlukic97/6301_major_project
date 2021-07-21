@@ -269,10 +269,29 @@
     }
 
     #slide-list {
-        position:fixed;
         padding:5px;
         margin:45px 0 0 5px;
+        max-height: 54vh;
+        overflow-y: scroll;
     }
+
+
+    /*If I add #slide-list before the webkit selector, this will not work. Like this, it works fine. */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 5px;
+        box-shadow: inset 0 0 10px #5c5e4e;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #6a6d63;
+    }
+
+
 
     #slide-list li {
         list-style-type: none;

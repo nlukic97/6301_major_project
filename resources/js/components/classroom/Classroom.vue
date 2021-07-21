@@ -277,7 +277,7 @@
                 .then((e)=>{
                     localStorage.removeItem(this.class_id)
                     this.channel.whisper('end-class')
-                    location.href = 'https://hoopshooters.club'
+                    location.href = window.location.origin //this will send the user to the homepage
                 })
                 .catch((e)=>{
                     console.log(e)
