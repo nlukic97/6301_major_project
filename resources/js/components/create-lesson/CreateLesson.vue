@@ -168,13 +168,13 @@
                          * When clock reaches 2, it will stop
                          * counting, reset, and will send the axios
                          * request to the database to save all the slides */
-                        if(this.secondsEditing >= 2){
+                        if(this.secondsEditing >= 4){
                             clearInterval(int)
                             this.editing = false;
                             this.secondsEditing = 0;
                             this.saveSlidesToDb()
                         }
-                    },1000)
+                    },250)
 
                 } else {
                     /** @@@@
