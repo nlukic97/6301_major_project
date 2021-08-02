@@ -13,12 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+
 Auth::routes();
-
-
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
-
-
 
 /** Routes available both to teachers and students for accessing the lesson with url */
 Route::middleware('auth')->get('/class/{uuid}',[\App\Http\Controllers\LessonController::class,'join_lesson']);
