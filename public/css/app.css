@@ -10058,3 +10058,10 @@ h3 {
 }
 
 /*----- Landing page ----- */
+#hero2 {
+  width: 100%;
+  height: 400px;
+  background-position: center center;
+  background-size: cover;
+  background-image: url("/storage/images/boy-laptop.jpg");
+}
