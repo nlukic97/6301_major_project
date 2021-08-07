@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-4 text-light text-right" style="margin-top:100px">
+            <div class="col-4 text-light" style="margin-top:100px">
                <h1>Learning to <span class="text-warning">code</span> has never been this <span class="text-warning">easy.</span></h1>
                 <p class="pl-2">Slides, code, and video calls...</p>
                 <p>...all from your browser.</p>
