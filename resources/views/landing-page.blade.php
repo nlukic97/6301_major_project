@@ -9,7 +9,7 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid autem deserunt earum esse, ex labore molestias perspiciatis placeat recusandae sit suscipit tenetur totam voluptatum! Assumenda delectus deleniti dolore incidunt odio perspiciatis quae quaerat? Eius iste numquam officia omnis porro provident.</p>
             </div>
             <div class="col-md-6 mt-5 mb-5">
-                <img class="w-100" src="/storage/images/laptop_lesson.png" alt="online class">
+                <img class="w-100" src="images/laptop_lesson.png" alt="online class">
             </div>
         </div>
     </div>
