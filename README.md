@@ -14,3 +14,7 @@ Write it here
     
 
 - **[example_link](https://example.com/)**
+
+### Image attribution
+1. **[laptop_lesson.png](https://pixabay.com/illustrations/macbook-pro-macbook-display-empty-5351705/)**
+2. **[boy-laptop.jpg](https://unsplash.com/photos/Y8TiLvKnLeg)**
