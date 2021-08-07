@@ -1,8 +1,15 @@
 <template>
     <div>
         <div class="container-fluid">
-            <div class="row pt-2 pl-2 pr-2">
-                <input class="form-control-plaintext font-weight-bold text-light pl-2 pr-2" type="text" id="slide_title" v-model="slideTitle" @keyup="updateTitle()">
+            <div class="row pt-2 pl-2 pr-2 position-relative">
+                <!-- Update status symbol -->
+                <div class="position-absolute" id="icon">
+                    <span v-if="editing" ><i class="fas fa-sync-alt rotation"></i></span>
+                    <span v-else><i class="fas fa-cloud"></i></span>
+                </div>
+
+                <!-- The input for the slide title -->
+                <input class="form-control-plaintext font-weight-bold text-light p-2" type="text" id="slide_title" v-model="slideTitle" @keyup="updateTitle()">
             </div>
         </div>
 
@@ -320,9 +327,24 @@
 </script>
 
 <style scoped>
+    #icon {
+        font-size: 20px;
+        margin-top: 5px;
+        margin-left: 5px;
+        color:#fff;
+        background-color: transparent;
+    }
     #slide_title {
         font-size: 16px;
-        padding-left: 0!important;
+        display: inline-block;
+        width: 100%;
+        margin-left: 40px;
+        /*A border is set in the app.scss file for this element */
+    }
+
+    #slide_title:hover {
+        border-color: #808080;
+        border-radius: 5px;
     }
 
     #slide_title:focus {
@@ -450,7 +472,23 @@
         font-size: 1.11vw;
     }
 
+    /* --- Utility classes --- */
     .hidden {
         display: none!important;
     }
+
+    .rotation {
+        animation: spin 1400ms infinite linear;
+    }
+
+    @keyframes spin {
+        from {
+            transform:rotate(0deg);
+        }
+        to {
+            transform:rotate(360deg);
+        }
+    }
+
+
 </style>

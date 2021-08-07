@@ -12,7 +12,7 @@
 }
 
 .CodeMirror {
-    height:291px!important; /* This might need to be dynamicly done with javascript */
+    height:291px!important;
 }
 
 #registration-select select:valid {
@@ -57,6 +57,9 @@
     display: none;
 }
 
-body {
-    //height:2000px; //just for testing
+/** ------- Slide making section (found in the 'CreateLesson.vue' component) ----- **/
+#slide_title {
+    border:1px solid $dark;
 }
+
+

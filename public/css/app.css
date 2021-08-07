@@ -10008,7 +10008,6 @@ h3 {
 
 .CodeMirror {
   height: 291px !important;
-  /* This might need to be dynamicly done with javascript */
 }
 
 #registration-select select:valid {
@@ -10051,4 +10050,9 @@ h3 {
 .slides-section-btns {
   width: 40%;
   display: none;
+}
+
+/** ------- Slide making section (found in the 'CreateLesson.vue' component) ----- **/
+#slide_title {
+  border: 1px solid #343a40;
 }
