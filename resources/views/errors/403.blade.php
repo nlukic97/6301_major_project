@@ -6,7 +6,7 @@
 
     <div class="container text-center text-light">
         <div class="bg-danger d-inline-block p-4 rounded">
-            <h2>404 - Permission denied</h2>
+            <h2>403 - Permission denied</h2>
             <h5>You do not have permission to view this page.</h5>
             <h5>Please return to the <a href="/"> homepage</a>.</h5>
         </div>
