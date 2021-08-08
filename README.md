@@ -74,4 +74,3 @@ This project is an online interface for conducting 1 to 1 software development l
 ### Third party images used in this project (all on the landing page):
 1. **[laptop_lesson.png](https://pixabay.com/illustrations/macbook-pro-macbook-display-empty-5351705/)**
 2. **[boy-laptop.jpg](https://unsplash.com/photos/Y8TiLvKnLeg)**
--
