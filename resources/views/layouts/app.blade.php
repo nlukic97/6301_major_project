@@ -25,7 +25,6 @@
 <body class="bg-dark">
     <div id="app">
         <x-navigation></x-navigation>
-
         <main class="py-4">
             @yield('content')
         </main>

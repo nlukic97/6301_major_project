@@ -3,7 +3,6 @@
 @section('content') {{--This is not within the Vue, because it is not in a div with id: #app --}}
 
 <div id='app'>
-
     <div class="container text-center text-light">
         <div class="bg-info d-inline-block p-4 rounded">
             <h2>Whoops! This page is unavailable.</h2>
