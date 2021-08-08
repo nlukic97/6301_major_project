@@ -5,10 +5,10 @@ Live platform demo available here:
 
 - **[https://hoopshooters.club](https://hoopshooters.club/)**
 
-Note - the virtual class feature will only work for two computers/laptops that are connected to the same network.
+Note - for this url, the virtual class feature will only work for two computers/laptops that are connected to the same network.
 
 ### About
-This project is an online interface for conducting 1 to 1 software development lessons. With this, the video chat, text editor, and output are all available in one place, making the class easier both for students and teachers
+This project is an online interface for conducting 1 to 1 software development lessons. With this, the video chat, text editor, and output are all available in one place, making the class easier both for students and teachers.
 
 ---
 ### Functionalities
@@ -21,7 +21,7 @@ This project is an online interface for conducting 1 to 1 software development l
 - End a class, which will end it for both lesson participants
     
 ##### 2. For students:
-- Joining lessons by sharable link
+- Joining lessons by sharable link provided from teacher
 - Type code in the text editor
     
 ##### 3. During a live lesson, both teachers and students can:
@@ -48,6 +48,8 @@ This project is an online interface for conducting 1 to 1 software development l
 
         php artisan migrate --seed
         
+        php artisan key:generate
+        
         php artisan passport:install
         
         php artisan passport:keys 
@@ -65,8 +67,10 @@ This project is an online interface for conducting 1 to 1 software development l
 ---
 ### Important note:
 - The videochat on the locally hosted version will only work on one laptop (due to the https context required for the browser navigator to get access to the camera and microphone). 
-- For testing the video chat locally, please open the platform in a  regular window and an incognito window of your browser and log in to both using different credentials (a teacher account and a student account)
-- The window with the teacher account should be used to start a lesson, and the window with the student account should be used to enter the class (through the link provided from the teacher window) 
-### Image attribution
+- For testing the video chat locally, please open the platform in a  regular window and an incognito window of your browser and log in to both using different credentials (a teacher account and a student account).
+- The window with the teacher account should be used to start a lesson, and the window with the student account should be used to enter the class (through the link provided from the teacher window). 
+
+---
+### Third party images used in this project (all on the landing page):
 1. **[laptop_lesson.png](https://pixabay.com/illustrations/macbook-pro-macbook-display-empty-5351705/)**
 2. **[boy-laptop.jpg](https://unsplash.com/photos/Y8TiLvKnLeg)**
