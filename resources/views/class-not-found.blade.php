@@ -4,7 +4,13 @@
 
 <div id='app'>
 
-    <h3>Woops. This page isn't available.</h3>
-    <h5>The link might not be valid, or it might have expired. Check to see if you have the correct link.</h5>
+    <div class="container text-center text-light">
+        <div class="bg-info d-inline-block p-4 rounded">
+            <h2>Whoops! This page is unavailable.</h2>
+            <h5>The link might not be valid, or it may have expired.</h5>
+            <h5>Please check if you entered the correct link.</h5>
+        </div>
+    </div>
 </div>
 @endsection
+
